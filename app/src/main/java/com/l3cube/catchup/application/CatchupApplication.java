@@ -26,7 +26,7 @@ public class CatchupApplication extends Application {
         Parse.Configuration configuration = new Parse.Configuration.Builder(CatchupApplication.this)
                 .applicationId("a5ffb6374b9b25d0d43d247b153ff03d")
                 .clientKey("catchup_client_key")
-                .server("https://a6cc2df2.ngrok.io/parse/")
+                .server("http://192.168.0.105:8080/parse/")
                 .build();
         Parse.initialize(configuration);
         ParseFacebookUtils.initialize(CatchupApplication.this);

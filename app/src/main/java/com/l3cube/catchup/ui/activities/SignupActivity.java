@@ -6,12 +6,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
+import com.l3cube.catchup.MainActivity;
 import com.l3cube.catchup.R;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseUser;
+import com.parse.SignUpCallback;
 
 public class SignupActivity extends AppCompatActivity {
     protected Button mLoginButton;
@@ -33,15 +36,38 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     private void loginWithFacebook() {
-        ParseFacebookUtils.logInWithReadPermissionsInBackground(this, null, new LogInCallback() {
+        /*ParseFacebookUtils.logInWithReadPermissionsInBackground(this, null, new LogInCallback() {
             @Override
             public void done(ParseUser user, ParseException err) {
                 if (user == null) {
-                    Log.d("MyApp", "Uh oh. The user cancelled the Facebook login.");
+                    Log.e("MyApp", err.getMessage());
                 } else if (user.isNew()) {
                     Log.d("MyApp", "User signed up and logged in through Facebook!");
+                    Intent intent = new Intent(SignupActivity.this, MainActivity.class);
+                    startActivity(intent);
                 } else {
                     Log.d("MyApp", "User logged in through Facebook!");
+                    Intent intent = new Intent(SignupActivity.this, MainActivity.class);
+                    startActivity(intent);
+                }
+            }
+        });*/
+        ParseUser user = new ParseUser();
+        user.setUsername("Push");
+        user.setPassword("pass");
+        user.signUpInBackground(new SignUpCallback() {
+            public void done(ParseException e) {
+                if (e == null) {
+                    // Show a simple Toast message upon successful registration
+                    Toast.makeText(getApplicationContext(),
+                            "Successfully Signed up, please log in.",
+                            Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(SignupActivity.this, MainActivity.class);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(getApplicationContext(),
+                            "Sign up Error", Toast.LENGTH_LONG)
+                            .show();
                 }
             }
         });

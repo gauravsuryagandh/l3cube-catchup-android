@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:focusable="true"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:clickable="true"
+                android:background="?android:attr/selectableItemBackground"
+                android:orientation="vertical">
+    <ImageView
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:id="@+id/iv_catchup_list_row"
+        android:src="@drawable/image" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/iv_catchup_list_row"
+        android:id="@+id/tv_catchup_list_row_title"
+        android:text="L3Cube Meet"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_catchup_list_row_title"
+        android:layout_toRightOf="@id/iv_catchup_list_row"
+        android:id="@+id/tv_catchup_list_row_inviter"
+        android:text="By Pushkaraj" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="#c0c0c0"
+        android:layout_below="@id/tv_catchup_list_row_inviter"
+        android:layout_toRightOf="@id/iv_catchup_list_row"
+        android:id="@+id/hr_catchup_list_data" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/hr_catchup_list_data"
+        android:layout_toRightOf="@id/iv_catchup_list_row"
+        android:id="@+id/tv_catchup_list_row_place"
+        android:text="JW" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_catchup_list_row_place"
+        android:layout_toRightOf="@id/iv_catchup_list_row"
+        android:id="@+id/tv_catchup_list_row_time"
+        android:text="Today" />
+
+</RelativeLayout>
