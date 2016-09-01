@@ -1,8 +1,7 @@
-package com.l3cube.catchup;
+package com.l3cube.catchup.ui.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Movie;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -12,9 +11,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Toast;
 
-import com.l3cube.catchup.ui.activities.SignupActivity;
+import com.l3cube.catchup.models.Catchup;
+import com.l3cube.catchup.ui.adapters.CatchupListAdapter;
+import com.l3cube.catchup.R;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;

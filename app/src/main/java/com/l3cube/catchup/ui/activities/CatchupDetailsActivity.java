@@ -1,8 +1,10 @@
-package com.l3cube.catchup;
+package com.l3cube.catchup.ui.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
+
+import com.l3cube.catchup.R;
 
 public class CatchupDetailsActivity extends AppCompatActivity {
 

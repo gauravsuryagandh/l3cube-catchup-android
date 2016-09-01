@@ -1,6 +1,4 @@
-package com.l3cube.catchup;
-
-import android.graphics.drawable.Drawable;
+package com.l3cube.catchup.models;
 
 /**
  * Created by push on 31/8/16.

@@ -15,7 +15,7 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
-        <activity android:name=".MainActivity" >
+        <activity android:name=".ui.activities.MainActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,7 +24,7 @@
         </activity>
         <activity android:name=".ui.activities.SignupActivity" />
         <activity android:name=".CatcupdetailsActivity" />
-        <activity android:name=".NewcatchupActivity" >
+        <activity android:name=".ui.activities.NewcatchupActivity" >
         </activity>
     </application>
 
