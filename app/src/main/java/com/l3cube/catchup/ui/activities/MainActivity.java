@@ -20,6 +20,8 @@ import com.parse.ParseUser;
 import java.util.ArrayList;
 import java.util.List;
 
+//done
+
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private List<Catchup> mCatchupList = new ArrayList<>();
@@ -42,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
             mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(MainActivity.this, NewCatchupActivity.class);//verify
+                    Intent intent = new Intent(MainActivity.this, NewcatchupActivity.class);//verify
                     startActivity(intent);
                 }
             });
