@@ -6,7 +6,10 @@
 .DS_Store
 /build
 /captures
-/.idea
-/.idea/modules.xml
-/.idea/vcs.xml
-/.idea/misc.xml
+
+# Android Studio / IntelliJ IDEA
+*.iws
+.idea/libraries
+.idea/tasks.xml
+.idea/vcs.xml
+.idea/workspace.xml
