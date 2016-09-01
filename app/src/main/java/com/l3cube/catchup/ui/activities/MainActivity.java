@@ -12,16 +12,17 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.l3cube.catchup.R;
 import com.l3cube.catchup.models.Catchup;
 import com.l3cube.catchup.ui.adapters.CatchupListAdapter;
-import com.l3cube.catchup.R;
+import com.l3cube.catchup.ui.decorators.SpacesItemDecoration;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    private static final String TAG = "MainActivity";
+    private static final String TAG = MainActivity.class.getSimpleName();
     private List<Catchup> mCatchupList = new ArrayList<>();
     private RecyclerView mRecyclerView;
     private CatchupListAdapter mCatchupListAdapter;
@@ -32,43 +33,55 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (ParseUser.getCurrentUser() == null) {
-            Intent intent = new Intent(MainActivity.this, SignupActivity.class);
-            startActivity(intent);
+        if (ParseUser.getCurrentUser() == null && false) {
+            navigateToSignUp();
         } else {
-            mRecyclerView = (RecyclerView) findViewById(R.id.rv_catchup_list);
-            mFloatingActionButton = (FloatingActionButton) findViewById(R.id.fab_catchup_list);
-
-            mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(MainActivity.this, NewCatchupActivity.class);//verify
-                    startActivity(intent);
-                }
-            });
-
-            mCatchupListAdapter = new CatchupListAdapter(mCatchupList);
-            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-            mRecyclerView.setLayoutManager(mLayoutManager);
-            mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-            mRecyclerView.setAdapter(mCatchupListAdapter);
-
-            mRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), mRecyclerView, new ClickListener() {
-                @Override
-                public void onClick(View view, int position) {
-                    Intent intent = new Intent(MainActivity.this, CatchupDetailsActivity.class);
-                    intent.putExtra("position",position);
-                    startActivity(intent);
-                }
-
-                @Override
-                public void onLongClick(View view, int position) {
-
-                }
-            }));
-
+            setupVariables();
             getCatchupsList();
         }
+    }
+
+    private void setupVariables() {
+        mRecyclerView = (RecyclerView) findViewById(R.id.rv_catchup_list);
+        mFloatingActionButton = (FloatingActionButton) findViewById(R.id.fab_catchup_list);
+
+        mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                navigateToNewCatchup();
+            }
+        });
+
+        mCatchupListAdapter = new CatchupListAdapter(mCatchupList);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mRecyclerView.addItemDecoration(new SpacesItemDecoration(16));
+        mRecyclerView.setAdapter(mCatchupListAdapter);
+
+        mRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), mRecyclerView, new ClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                Intent intent = new Intent(MainActivity.this, CatchupDetailsActivity.class);
+                intent.putExtra("position",position);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
+        }));
+    }
+
+    private void navigateToNewCatchup() {
+        Intent intent = new Intent(MainActivity.this, NewcatchupActivity.class);//verify
+        startActivity(intent);
+    }
+
+    private void navigateToSignUp() {
+        Intent intent = new Intent(MainActivity.this, SignupActivity.class);
+        startActivity(intent);
     }
 
     private void getCatchupsList() {
