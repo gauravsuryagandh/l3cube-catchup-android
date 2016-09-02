@@ -1,6 +1,5 @@
 package com.l3cube.catchup.ui.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -8,14 +7,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
+import android.util.Log;
 import android.view.View;
 
 import com.l3cube.catchup.R;
 import com.l3cube.catchup.models.Catchup;
 import com.l3cube.catchup.ui.adapters.CatchupListAdapter;
 import com.l3cube.catchup.ui.decorators.SpacesItemDecoration;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
@@ -37,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
             navigateToSignUp();
         } else {
             setupVariables();
-            getCatchupsList();
+            populateCatchups();
         }
     }
 
@@ -59,23 +61,11 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.addItemDecoration(new SpacesItemDecoration(16));
         mRecyclerView.setAdapter(mCatchupListAdapter);
 
-        mRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), mRecyclerView, new ClickListener() {
-            @Override
-            public void onClick(View view, int position) {
-                Intent intent = new Intent(MainActivity.this, CatchupDetailsActivity.class);
-                intent.putExtra("position",position);
-                startActivity(intent);
-            }
 
-            @Override
-            public void onLongClick(View view, int position) {
-
-            }
-        }));
     }
 
     private void navigateToNewCatchup() {
-        Intent intent = new Intent(MainActivity.this, NewcatchupActivity.class);//verify
+        Intent intent = new Intent(MainActivity.this, NewCatchupActivity.class);//verify
         startActivity(intent);
     }
 
@@ -84,7 +74,50 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void getCatchupsList() {
+    private void populateCatchups() {
+        // Use this function to add Hard Coded Catchups
+        //addHardCodedCatchups();
+        //notifyCatchupsAdapter();
+
+        // Adding from Parse
+        addCatchupsFromParse();
+
+    }
+
+    private void addCatchupsFromParse() {
+        ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery("CatchupParse");
+        parseQuery.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> catchupParses, ParseException e) {
+                if (e == null) {
+                    Log.i(TAG, "done: Found Objects = " + catchupParses.size());
+                    if (catchupParses.size() > 0) {
+                        Catchup catchup;
+                        for (int i = 0; i < catchupParses.size(); i++) {
+                            catchup = new Catchup(
+                                  R.drawable.image,
+                                  catchupParses.get(i).getString("title"),
+                                  "Aditya Shirole",
+                                  "Cafe Goodluck",
+                                  "Today @ 4pm"
+                            );
+                            mCatchupList.add(catchup);
+                        }
+                        notifyCatchupsAdapter();
+                    }
+
+                } else {
+                    Log.e(TAG, "done: Error: " + e.getMessage() );
+                }
+            }
+        });
+    }
+
+    private void notifyCatchupsAdapter() {
+        mCatchupListAdapter.notifyDataSetChanged();
+    }
+
+    private void addHardCodedCatchups() {
         Catchup catchup = new Catchup(R.drawable.image,"L3Cube Meet","Aditya Shirole","The Chaai, F.C. Road","Today @ 4:30pm");
         mCatchupList.add(catchup);
 
@@ -93,57 +126,7 @@ public class MainActivity extends AppCompatActivity {
 
         catchup = new Catchup(R.drawable.image,"Pokemon Hunt","Sejal Abhangrao","BVP ground, Dhankawadi","12th September @ 4:30pm");
         mCatchupList.add(catchup);
-
-        mCatchupListAdapter.notifyDataSetChanged();
     }
 
-    public interface ClickListener {
-        void onClick(View view, int position);
-
-        void onLongClick(View view, int position);
-    }
-
-    public static class RecyclerTouchListener implements RecyclerView.OnItemTouchListener {
-
-        private GestureDetector gestureDetector;
-        private MainActivity.ClickListener clickListener;
-
-        public RecyclerTouchListener(Context context, final RecyclerView recyclerView, final MainActivity.ClickListener clickListener) {
-            this.clickListener = clickListener;
-            gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
-                @Override
-                public boolean onSingleTapUp(MotionEvent e) {
-                    return true;
-                }
-
-                @Override
-                public void onLongPress(MotionEvent e) {
-                    View child = recyclerView.findChildViewUnder(e.getX(), e.getY());
-                    if (child != null && clickListener != null) {
-                        clickListener.onLongClick(child, recyclerView.getChildPosition(child));
-                    }
-                }
-            });
-        }
-
-        @Override
-        public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
-
-            View child = rv.findChildViewUnder(e.getX(), e.getY());
-            if (child != null && clickListener != null && gestureDetector.onTouchEvent(e)) {
-                clickListener.onClick(child, rv.getChildPosition(child));
-            }
-            return false;
-        }
-
-        @Override
-        public void onTouchEvent(RecyclerView rv, MotionEvent e) {
-        }
-
-        @Override
-        public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
-        }
-    }
 
 }
