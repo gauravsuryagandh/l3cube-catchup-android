@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (ParseUser.getCurrentUser() == null && false) {
+        if (ParseUser.getCurrentUser() == null) {
             navigateToSignUp();
         } else {
             setupVariables();
@@ -97,9 +97,9 @@ public class MainActivity extends AppCompatActivity {
                             catchup = new Catchup(
                                   R.drawable.image,
                                   catchupParses.get(i).getString("title"),
-                                  "Aditya Shirole",
-                                  "Cafe Goodluck",
-                                  "Today @ 4pm"
+                                  catchupParses.get(i).getString("inviter"),
+                                  catchupParses.get(i).getString("place"),
+                                  catchupParses.get(i).getString("date").concat(" @ ").concat(catchupParses.get(i).getString("time"))
                             );
                             mCatchupList.add(catchup);
                         }

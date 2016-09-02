@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
         android:text="Title"
-        android:id="@+id/textView"
+        android:id="@+id/tv_new_catchup_title"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
@@ -23,9 +23,9 @@
     <EditText
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/TFtitle"
+        android:id="@+id/et_new_catchup_date"
         android:hint="Enter a name for the Catchup"
-        android:layout_below="@+id/textView"
+        android:layout_below="@id/tv_new_catchup_title"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
@@ -34,8 +34,8 @@
         android:layout_height="wrap_content"
         android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
         android:text="Select Date"
-        android:id="@+id/textView2"
-        android:layout_below="@+id/TFtitle"
+        android:id="@+id/tv_new_catchup_date"
+        android:layout_below="@id/et_new_catchup_date"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
@@ -46,8 +46,8 @@
         android:layout_height="wrap_content"
         android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
         android:text="Select Time"
-        android:id="@+id/textView3"
-        android:layout_below="@id/textView2"
+        android:id="@+id/tv_new_catchup_time"
+        android:layout_below="@id/tv_new_catchup_date"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
@@ -56,17 +56,17 @@
         android:layout_height="wrap_content"
         android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
         android:text="Place"
-        android:id="@+id/textView4"
+        android:id="@+id/tv_new_catchup_place"
         android:layout_marginTop="16dp"
-        android:layout_below="@id/textView3"
+        android:layout_below="@id/tv_new_catchup_time"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
     <EditText
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/TFplace"
-        android:layout_below="@+id/textView4"
+        android:id="@+id/et_new_catchup_place"
+        android:layout_below="@id/tv_new_catchup_place"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
@@ -79,7 +79,7 @@
         android:text="Invite Contacts"
         android:textColor="@color/colorAccent"
         android:background="@android:color/white"
-        android:layout_below="@+id/TFplace"
+        android:layout_below="@id/et_new_catchup_place"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 

@@ -1,5 +1,6 @@
 package com.l3cube.catchup.ui.activities;
 
+import android.app.TimePickerDialog;
 import android.support.v7.app.AppCompatActivity;
 
 
@@ -22,12 +23,14 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.l3cube.catchup.R;
 import com.l3cube.catchup.models.Person;
 import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import java.util.ArrayList;
@@ -36,30 +39,38 @@ import java.util.List;
 import java.util.Calendar;
 
 public class NewCatchupActivity extends AppCompatActivity {
-    private EditText mDateObj;
     private int year;
     private int month;
     private int day;
+    private int hour;
+    private int minute;
     private StringBuilder mDate;
+    private StringBuilder mTime;
     static final int DATE_PICKER_ID = 1111;
+    static final int TIME_DIALOG_ID = 2222;
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 8956;
     private static final String TAG = NewCatchupActivity.class.getSimpleName();
     private Button mInviteContacts;
     private List<Person> invitedList = new ArrayList<Person>(); // this list will store the name,number of invited ppl
     private Button createCatchup;
     private TextView selectDate;
+    private TextView selectTime;
+    private EditText mTitle;
+    private EditText mPlace;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_catchup);
 
-        selectDate = (TextView) findViewById(R.id.textView2);
+        selectDate = (TextView) findViewById(R.id.tv_new_catchup_date);
+        selectTime = (TextView) findViewById(R.id.tv_new_catchup_time);
         final Calendar c = Calendar.getInstance();
-        year  = c.get(Calendar.YEAR);
+        year = c.get(Calendar.YEAR);
         month = c.get(Calendar.MONTH);
-        day   = c.get(Calendar.DAY_OF_MONTH);
-
+        day = c.get(Calendar.DAY_OF_MONTH);
+        hour = c.get(Calendar.HOUR_OF_DAY);
+        minute = c.get(Calendar.MINUTE);
 
         selectDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,7 +79,12 @@ public class NewCatchupActivity extends AppCompatActivity {
             }
         });
 
-
+        selectTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialog(TIME_DIALOG_ID);
+            }
+        });
 
         mInviteContacts = (Button) findViewById(R.id.btn_invite_contacts);
         createCatchup = (Button) findViewById(R.id.btn_create_catchup);
@@ -86,12 +102,18 @@ public class NewCatchupActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // Create Catchup on Server
+                mTitle =(EditText) findViewById(R.id.et_new_catchup_date);
+                mPlace = (EditText) findViewById(R.id.et_new_catchup_place);
                 String title = null,inviter = null,place = null,date = null,time = null;
-                title = "L3Cube Meet";
-                inviter = "Gaurav Suryagandh";
-                date = "3rd September";
-                time = "4pm";
-                place = "The Chaai";
+                title = mTitle.getText().toString();
+                if (ParseUser.getCurrentUser()!=null) {
+                    inviter = ParseUser.getCurrentUser().getUsername();
+                } else {
+                    inviter = "Gaurav Suryagandh";
+                }
+                date = String.valueOf(mDate);
+                time = String.valueOf(mTime);
+                place = mPlace.getText().toString();
                 createCatchupOnServer(title,inviter,date,time,place);
             }
         });
@@ -258,6 +280,10 @@ public class NewCatchupActivity extends AppCompatActivity {
                 // set date picker for current date
                 // add pickerListener listner to date picker
                 return new DatePickerDialog(this, pickerListener, year, month,day);
+            case TIME_DIALOG_ID:
+
+                // set time picker as current time
+                return new TimePickerDialog(this, timePickerListener, hour, minute,false);
         }
         return null;
     }
@@ -281,5 +307,30 @@ public class NewCatchupActivity extends AppCompatActivity {
 
         }
     };
+
+    private TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDialog.OnTimeSetListener() {
+
+
+        @Override
+        public void onTimeSet(TimePicker view, int hourOfDay, int minutes) {
+            // TODO Auto-generated method stub
+            hour   = hourOfDay;
+            minute = minutes;
+
+            mTime = new StringBuilder().append(utilTime(hour))
+                    .append(":").append(utilTime(minute));
+            // set current time into output textview
+            selectTime.setText(mTime);
+        }
+
+    };
+
+    private static String utilTime(int value) {
+
+        if (value < 10)
+            return "0" + String.valueOf(value);
+        else
+            return String.valueOf(value);
+    }
 
 }
