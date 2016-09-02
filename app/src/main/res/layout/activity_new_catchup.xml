@@ -44,6 +44,8 @@
         android:id="@+id/TFdate"
         android:layout_below="@+id/textView2"
         android:layout_alignParentLeft="true"
+        android:clickable="true"
+        android:onClick="onClick"
         android:layout_alignParentStart="true" />
 
     <TextView
