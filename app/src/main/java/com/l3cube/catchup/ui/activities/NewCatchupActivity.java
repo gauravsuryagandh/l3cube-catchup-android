@@ -28,12 +28,16 @@ import android.widget.Toast;
 
 import com.l3cube.catchup.R;
 import com.l3cube.catchup.models.Person;
+import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import java.util.Calendar;
@@ -107,7 +111,10 @@ public class NewCatchupActivity extends AppCompatActivity {
                 String title = null,inviter = null,place = null,date = null,time = null;
                 title = mTitle.getText().toString();
                 if (ParseUser.getCurrentUser()!=null) {
-                    inviter = ParseUser.getCurrentUser().getUsername();
+                    inviter = new String(ParseUser.getCurrentUser().getString("firstName")
+                            .concat(" ")
+                            .concat(ParseUser.getCurrentUser().getString("lastName"))
+                    );
                 } else {
                     inviter = "Gaurav Suryagandh";
                 }
@@ -121,13 +128,22 @@ public class NewCatchupActivity extends AppCompatActivity {
     }
 
     private void createCatchupOnServer(String title, String inviter, String date, String time, String place) {
+        String[] invitedIds = new String[invitedList.size()];
+        int i =0;
+//        ParseQuery<ParseObject> query = ParseQuery.getQuery("User");
         ParseObject catchupParse = new ParseObject("CatchupParse");
+
         catchupParse.put("title",title);
         catchupParse.put("inviter",inviter);
         catchupParse.put("date",date);
         catchupParse.put("time",time);
         catchupParse.put("place",place);
 
+        for (final Person person: invitedList){
+            invitedIds[i++] = person.getPhone();
+        }
+
+        catchupParse.put("invited", Arrays.asList(invitedIds));
         catchupParse.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
