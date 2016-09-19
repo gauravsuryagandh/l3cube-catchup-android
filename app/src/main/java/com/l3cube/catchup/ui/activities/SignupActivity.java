@@ -6,12 +6,23 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.l3cube.catchup.R;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class SignupActivity extends AppCompatActivity {
     protected Button mLoginButton;
@@ -34,7 +45,8 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     private void loginWithFacebook() {
-        ParseFacebookUtils.logInWithReadPermissionsInBackground(this, null, new LogInCallback() {
+        List<String> permissions = Arrays.asList("public_profile", "email");
+        ParseFacebookUtils.logInWithReadPermissionsInBackground(this, permissions, new LogInCallback() {
             @Override
             public void done(ParseUser user, ParseException err) {
                 if (err == null) {
@@ -42,6 +54,7 @@ public class SignupActivity extends AppCompatActivity {
                         Log.e(TAG, "User was null");
                     } else if (user.isNew()) {
                         Log.d(TAG, "User signed up and logged in through Facebook!");
+                        getUserData(user);
                         Intent intent = new Intent(SignupActivity.this, MainActivity.class);
                         startActivity(intent);
                     } else {
@@ -81,5 +94,39 @@ public class SignupActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         ParseFacebookUtils.onActivityResult(requestCode, resultCode, data);
 
+    }
+
+    private void getUserData(final ParseUser user) {
+        GraphRequest request = GraphRequest.newMeRequest(
+                AccessToken.getCurrentAccessToken(),
+                new GraphRequest.GraphJSONObjectCallback(){
+                    @Override
+                    public void onCompleted(JSONObject object, GraphResponse response) {
+                        try {
+                            //Log.d("fb", response.toString()+" "+object.get("email"));
+                            user.put("emailId",object.getString("email"));
+                            user.put("firstName",object.getString("first_name"));
+                            user.put("lastName",object.getString("last_name"));
+                            user.put("profilePicture",object.getJSONObject("picture").getJSONObject("data").getString("url"));
+                            user.put("fbId",object.getString("id"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        user.saveInBackground(/*new SaveCallback() {
+                            @Override
+                            public void done(ParseException e) {
+                                Toast.makeText(SignupActivity.this, "Saved user Data", Toast.LENGTH_SHORT).show();
+                            }
+                        }*/);
+                    }
+                }
+        );
+        Bundle parameters = new Bundle();
+        parameters.putString(
+                "fields",
+                "first_name, last_name, email, picture, id"
+        );
+        request.setParameters(parameters);
+        request.executeAsync();
     }
 }
