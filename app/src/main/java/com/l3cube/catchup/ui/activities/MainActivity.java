@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                navigateToNewCatchup();
+                navigate();
             }
         });
 
@@ -64,9 +64,13 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void navigateToNewCatchup() {
-        Intent intent = new Intent(MainActivity.this, NewCatchupActivity.class);//verify
-        startActivity(intent);
+    private void navigate() {
+        //navigate to Digits Signup if user number not verified
+        if (ParseUser.getCurrentUser().getInt("digitsAuth")==0){
+            startActivity(new Intent(MainActivity.this, DigitsSignup.class));
+        }else{
+            startActivity(new Intent(MainActivity.this, NewCatchupActivity.class));
+        }
     }
 
     private void navigateToSignUp() {
