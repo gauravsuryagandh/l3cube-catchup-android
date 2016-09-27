@@ -17,6 +17,9 @@ import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
@@ -28,6 +31,8 @@ import android.widget.Toast;
 
 import com.l3cube.catchup.R;
 import com.l3cube.catchup.models.Person;
+import com.l3cube.catchup.ui.adapters.InvitedListAdapter;
+import com.l3cube.catchup.ui.decorators.SpacesItemDecoration;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -61,6 +66,8 @@ public class NewCatchupActivity extends AppCompatActivity {
     private TextView selectTime;
     private EditText mTitle;
     private EditText mPlace;
+    private RecyclerView mRecyclerView;
+    private InvitedListAdapter mInvitedListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +107,13 @@ public class NewCatchupActivity extends AppCompatActivity {
             }
         };
 
+        mRecyclerView = (RecyclerView) findViewById(R.id.rv_invited_contacts_list);
+        mInvitedListAdapter = new InvitedListAdapter(invitedList);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mRecyclerView.addItemDecoration(new SpacesItemDecoration(16));
+        mRecyclerView.setAdapter(mInvitedListAdapter);
 
         mInviteContacts.setOnClickListener(inviteContactsListener);
         createCatchup.setOnClickListener(new View.OnClickListener() {
@@ -131,7 +145,7 @@ public class NewCatchupActivity extends AppCompatActivity {
         String[] invitedIds = new String[invitedList.size()];
         int i =0;
 //        ParseQuery<ParseObject> query = ParseQuery.getQuery("User");
-        ParseObject catchupParse = new ParseObject("CatchupParse");
+        final ParseObject catchupParse = new ParseObject("CatchupParse");
 
         catchupParse.put("title",title);
         catchupParse.put("inviter",inviter);
@@ -150,6 +164,9 @@ public class NewCatchupActivity extends AppCompatActivity {
                 if (e == null) {
                     Log.i(TAG, "done: Created CatchupParse");
                     Toast.makeText(NewCatchupActivity.this, "Created Catchup Successfully", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(NewCatchupActivity.this, CatchupDetailsActivity.class);
+                    intent.putExtra("objectId", catchupParse.getObjectId());
+                    startActivity(intent);
                 } else {
                     Log.e(TAG, "done: Error: " + e.getMessage() );
                 }
@@ -239,6 +256,11 @@ public class NewCatchupActivity extends AppCompatActivity {
     private void addPersonToInvitedList(Person personToBeAdded) {
         invitedList.add(personToBeAdded);
         showCurrentInvitedList();
+        notifyInvitedListAdapter();
+    }
+
+    private void notifyInvitedListAdapter() {
+        mInvitedListAdapter.notifyDataSetChanged();
     }
 
     private void showCurrentInvitedList() {
