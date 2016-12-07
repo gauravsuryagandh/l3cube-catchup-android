@@ -7,10 +7,15 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <RelativeLayout
+
+        android:padding="16dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <TextView
+            android:textColor="#333"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:text="Pushkaraj Shinde"
             android:id="@+id/tv_contact_list_row_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />

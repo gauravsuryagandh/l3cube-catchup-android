@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:background="@android:color/white"
     android:layout_marginTop="8dp"
+    android:id="@+id/root"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <RelativeLayout
@@ -17,63 +18,71 @@
 
         <ImageView
             android:layout_marginLeft="0dp"
-            android:layout_width="108dp"
-            android:layout_height="108dp"
+            android:layout_width="match_parent"
+            android:layout_height="196dp"
+            android:scaleType="centerCrop"
             android:id="@+id/iv_catchup_list_row"
             android:src="@drawable/image" />
 
+        <RelativeLayout
+            android:layout_below="@id/iv_catchup_list_row"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
         <TextView
+            android:textColor="#333"
             android:id="@+id/tv_catchup_list_row_title"
-            android:layout_marginLeft="16dp"
+            android:layout_marginLeft="32dp"
             android:layout_marginTop="8dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/iv_catchup_list_row"
             android:text="L3Cube Meet"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline"
             />
 
         <TextView
-            android:layout_marginLeft="16dp"
+            android:textColor="#666"
+            android:layout_marginLeft="32dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_catchup_list_row_title"
-            android:layout_toRightOf="@id/iv_catchup_list_row"
             android:id="@+id/tv_catchup_list_row_inviter"
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
             android:text="By Pushkaraj" />
 
         <View
-            android:layout_marginLeft="16dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="32dp"
             android:layout_width="fill_parent"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:layout_height="1dp"
             android:background="#c0c0c0"
             android:layout_below="@id/tv_catchup_list_row_inviter"
-            android:layout_toRightOf="@id/iv_catchup_list_row"
             android:id="@+id/hr_catchup_list_data" />
 
         <TextView
-            android:layout_marginLeft="16dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginLeft="32dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/hr_catchup_list_data"
-            android:layout_toRightOf="@id/iv_catchup_list_row"
-            android:id="@+id/tv_catchup_list_row_place"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:text="JW Mariott" />
-
-        <TextView
-            android:layout_marginLeft="16dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tv_catchup_list_row_place"
-            android:layout_toRightOf="@id/iv_catchup_list_row"
             android:id="@+id/tv_catchup_list_row_time"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:text="Today"
-            android:layout_marginBottom="4dp"/>
+            android:layout_below="@id/hr_catchup_list_data"
+            />
+
+            <TextView
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginLeft="32dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_catchup_list_row_time"
+                android:id="@+id/tv_catchup_list_row_place"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:text="JW Mariott" />
+        </RelativeLayout>
 
     </RelativeLayout>
 

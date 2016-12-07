@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mCatchupListAdapter = new CatchupListAdapter(mCatchupList);
+        mCatchupListAdapter = new CatchupListAdapter(mCatchupList,MainActivity.this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -103,7 +103,8 @@ public class MainActivity extends AppCompatActivity {
                                   catchupParses.get(i).getString("title"),
                                   catchupParses.get(i).getString("inviter"),
                                   catchupParses.get(i).getString("place"),
-                                  catchupParses.get(i).getString("date").concat(" @ ").concat(catchupParses.get(i).getString("time"))
+                                  catchupParses.get(i).getString("date").concat(" @ ").concat(catchupParses.get(i).getString("time")),
+                                  catchupParses.get(i).getObjectId()
                             );
                             mCatchupList.add(catchup);
                         }
@@ -121,16 +122,6 @@ public class MainActivity extends AppCompatActivity {
         mCatchupListAdapter.notifyDataSetChanged();
     }
 
-    private void addHardCodedCatchups() {
-        Catchup catchup = new Catchup(R.drawable.image,"L3Cube Meet","Aditya Shirole","The Chaai, F.C. Road","Today @ 4:30pm");
-        mCatchupList.add(catchup);
-
-        catchup = new Catchup(R.drawable.image,"Dinner Party","Shrunoti","Goodluck Cafe, F.C. Road","Tomorrow @ 8:30pm");
-        mCatchupList.add(catchup);
-
-        catchup = new Catchup(R.drawable.image,"Pokemon Hunt","Sejal Abhangrao","BVP ground, Dhankawadi","12th September @ 4:30pm");
-        mCatchupList.add(catchup);
-    }
 
 
 }

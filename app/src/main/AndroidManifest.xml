@@ -25,7 +25,8 @@
         </activity>
         <activity android:name=".ui.activities.SignupActivity"/>
         <activity android:name=".ui.activities.CatchupDetailsActivity"/>
-        <activity android:name=".ui.activities.NewCatchupActivity"/>
+        <activity android:name=".ui.activities.NewCatchupActivity"
+            android:windowSoftInputMode="adjustPan"/>
 
         <meta-data
             android:name="io.fabric.ApiKey"
