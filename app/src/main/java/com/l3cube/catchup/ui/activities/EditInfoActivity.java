@@ -14,21 +14,17 @@ import com.parse.ParseUser;
 
 public class EditInfoActivity extends AppCompatActivity {
 
-    TextView fname = (TextView) findViewById(R.id.firstNameLabel);
-    TextView lname = (TextView) findViewById(R.id.lastNameLabel);
-    TextView email = (TextView) findViewById(R.id.emailAddressLabel);
-    TextView birthDate = (TextView) findViewById(R.id.birthDateLabel);
     private static final String TAG = MainActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_details);
+        setContentView(R.layout.activity_edit_info);
 
-        fname = (TextView) findViewById(R.id.firstNameLabel);
-        lname = (TextView) findViewById(R.id.lastNameLabel);
-        email = (TextView) findViewById(R.id.emailAddressLabel);
-        birthDate = (TextView) findViewById(R.id.birthDateLabel);
+        TextView fname = (TextView) findViewById(R.id.firstNameLabel);
+        TextView lname = (TextView) findViewById(R.id.lastNameLabel);
+        TextView email = (TextView) findViewById(R.id.emailAddressLabel);
+        TextView birthDate = (TextView) findViewById(R.id.birthDateLabel);
         lname.setText(ParseUser.getCurrentUser().getString("lastName"));
         email.setText(ParseUser.getCurrentUser().getString("emailId"));
         birthDate.setText(ParseUser.getCurrentUser().getString("birthDate"));
