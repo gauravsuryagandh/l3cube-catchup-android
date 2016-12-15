@@ -37,12 +37,9 @@ public class UserDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_details);
-        final ParseUser user = ParseUser.getCurrentUser();
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("CatchupParse");
+        String user = String.valueOf(ParseUser.getCurrentUser().getObjectId());
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("_User");
         query.whereEqualTo("objectId",user);
-
-
-
         query.getFirstInBackground(new GetCallback<ParseObject>() {
             @Override
                public void done(ParseObject object, ParseException e) {
@@ -51,11 +48,11 @@ public class UserDetailsActivity extends AppCompatActivity {
                       TextView lname = (TextView) findViewById(R.id.lastNameLabel);
                       TextView email = (TextView) findViewById(R.id.emailAddressLabel);
                       TextView birthDate = (TextView) findViewById(R.id.birthDateLabel);
-                      String first = object.getString("first_name");
-                      Log.d("FirstName", " " + first + " done");
+                      String first = object.getString("firstName");
                       fname.setText(first);
-                      //lname.setText(object.getString("last_name"));
-                      //email.setText(object.getString("email"));//birthDate.setText(object.getString("birthday"));
+                      lname.setText(object.getString("lastName"));
+                      email.setText(object.getString("emailId"));
+                      birthDate.setText(object.getString("birthDate"));
                   } else {
                       Log.d("K0sglFv6Ix", "Error: " + e.getMessage());
                   }
