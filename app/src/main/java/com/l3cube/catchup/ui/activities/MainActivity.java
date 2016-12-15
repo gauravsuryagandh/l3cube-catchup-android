@@ -38,8 +38,11 @@ public class MainActivity extends AppCompatActivity {
         if (ParseUser.getCurrentUser() == null) {
             navigateToSignUp();
         } else {
-            setupVariables();
-            populateCatchups();
+            Intent intent = new Intent(MainActivity.this, CatchupDetailsActivity.class);
+            intent.putExtra("objectId", "X7F03tNNwG");
+            startActivity(intent);
+//            setupVariables();
+//            populateCatchups();
         }
     }
 
