@@ -35,6 +35,8 @@
 
         <activity android:name=".ui.activities.UserDetailsActivity">
         </activity>
+        <activity android:name=".ui.activities.EditInfoActivity">
+        </activity>
     </application>
 
 </manifest>

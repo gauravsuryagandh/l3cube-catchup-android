@@ -61,28 +61,6 @@ public class UserDetailsActivity extends AppCompatActivity {
         });
 
 
-
-      //  String currentUser = user.getUsername();
-        //String emailid = user.getEmail();
-
-        //fname.setText(user.getString("first_name"));
-       // fname.setText(currentUser);
-
-
-        //lname.setText(user.getString("last_name"));
-
-
-        //email.setText( user.getString("email"));
-         //email.setText(emailid);
-
-       // birthDate.setText(user.getString("birthday"));
-
-       // String email = (String) user1.get("email");
-        //Log.d(TAG,"Email" + email);
-        //Toast.makeText(UserDetailsActivity.this, "Email" + email, Toast.LENGTH_SHORT).show();
-
-
-
         DigitsAuthButton digitsAuthButton = (DigitsAuthButton) findViewById(R.id.btn_digits_auth);
         digitsAuthButton.setCallback(new AuthCallback() {
             @Override

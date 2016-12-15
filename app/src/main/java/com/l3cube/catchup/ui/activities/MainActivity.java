@@ -8,6 +8,9 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.l3cube.catchup.R;
@@ -42,6 +45,35 @@ public class MainActivity extends AppCompatActivity {
             populateCatchups();
         }
     }
+
+
+    //from here
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Take appropriate action for each action item click
+        switch (item.getItemId()) {
+            case R.id.action_bar:
+                EditDetails();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void EditDetails() {
+        Intent i = new Intent(MainActivity.this, EditInfoActivity.class);
+        startActivity(i);
+    }
+
+    //till here
+
 
     private void setupVariables() {
         mRecyclerView = (RecyclerView) findViewById(R.id.rv_catchup_list);
@@ -121,6 +153,7 @@ public class MainActivity extends AppCompatActivity {
     private void notifyCatchupsAdapter() {
         mCatchupListAdapter.notifyDataSetChanged();
     }
+
 
 
 
