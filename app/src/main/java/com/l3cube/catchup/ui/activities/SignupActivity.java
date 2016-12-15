@@ -55,11 +55,11 @@ public class SignupActivity extends AppCompatActivity {
                     } else if (user.isNew()) {
                         Log.d(TAG, "User signed up and logged in through Facebook!");
                         getUserData(user);
-                        Intent intent = new Intent(SignupActivity.this, MainActivity.class);
+                        Intent intent = new Intent(SignupActivity.this, UserDetailsActivity.class);
                         startActivity(intent);
                     } else {
                         Log.d(TAG, "User logged in through Facebook!");
-                        Intent intent = new Intent(SignupActivity.this, MainActivity.class);
+                        Intent intent = new Intent(SignupActivity.this, UserDetailsActivity.class);
                         startActivity(intent);
                     }
                 } else {
@@ -96,6 +96,7 @@ public class SignupActivity extends AppCompatActivity {
 
     }
 
+    //
     private void getUserData(final ParseUser user) {
         GraphRequest request = GraphRequest.newMeRequest(
                 AccessToken.getCurrentAccessToken(),
@@ -103,7 +104,7 @@ public class SignupActivity extends AppCompatActivity {
                     @Override
                     public void onCompleted(JSONObject object, GraphResponse response) {
                         try {
-                            //Log.d("fb", response.toString()+" "+object.get("email"));
+                            // Log.d("fb", response.toString()+" "+object.get("email"));
                             user.put("emailId",object.getString("email"));
                             user.put("firstName",object.getString("first_name"));
                             user.put("lastName",object.getString("last_name"));
@@ -129,4 +130,6 @@ public class SignupActivity extends AppCompatActivity {
         request.setParameters(parameters);
         request.executeAsync();
     }
+
+    //
 }
