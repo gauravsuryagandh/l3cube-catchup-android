@@ -40,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
 
         if (ParseUser.getCurrentUser() == null) {
             navigateToSignUp();
+        } else if (ParseUser.getCurrentUser().getInt("digitsAuth")==0) {
+            startActivity(new Intent(MainActivity.this, UserDetailsActivity.class));
         } else {
             setupVariables();
             populateCatchups();
@@ -97,12 +99,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void navigate() {
-        //navigate to Digits Signup if user number not verified
-        if (ParseUser.getCurrentUser().getInt("digitsAuth")==0){
-            startActivity(new Intent(MainActivity.this, SignupActivity.class));
-        }else{
-            startActivity(new Intent(MainActivity.this, NewCatchupActivity.class));
-        }
+        startActivity(new Intent(MainActivity.this, NewCatchupActivity.class));
     }
 
     private void navigateToSignUp() {

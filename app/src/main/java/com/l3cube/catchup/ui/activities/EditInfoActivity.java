@@ -14,31 +14,25 @@ import com.parse.ParseUser;
 
 public class EditInfoActivity extends AppCompatActivity {
 
+    TextView fname = (TextView) findViewById(R.id.firstNameLabel);
+    TextView lname = (TextView) findViewById(R.id.lastNameLabel);
+    TextView email = (TextView) findViewById(R.id.emailAddressLabel);
+    TextView birthDate = (TextView) findViewById(R.id.birthDateLabel);
+    private static final String TAG = MainActivity.class.getSimpleName();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_info);
-        String user = String.valueOf(ParseUser.getCurrentUser().getObjectId());
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("_User");
-        query.whereEqualTo("objectId",user);
-        query.getFirstInBackground(new GetCallback<ParseObject>() {
-            @Override
-            public void done(ParseObject object, ParseException e) {
-                if (e == null) {
-                    TextView fname = (TextView) findViewById(R.id.firstNameLabel);
-                    TextView lname = (TextView) findViewById(R.id.lastNameLabel);
-                    TextView email = (TextView) findViewById(R.id.emailAddressLabel);
-                    TextView birthDate = (TextView) findViewById(R.id.birthDateLabel);
-                    String first = object.getString("firstName");
-                    fname.setText(first);
-                    lname.setText(object.getString("lastName"));
-                    email.setText(object.getString("emailId"));
-                    birthDate.setText(object.getString("birthDate"));
-                } else {
-                    Log.d("K0sglFv6Ix", "Error: " + e.getMessage());
-                }
-            }
+        setContentView(R.layout.activity_user_details);
 
-        });
+        fname = (TextView) findViewById(R.id.firstNameLabel);
+        lname = (TextView) findViewById(R.id.lastNameLabel);
+        email = (TextView) findViewById(R.id.emailAddressLabel);
+        birthDate = (TextView) findViewById(R.id.birthDateLabel);
+        lname.setText(ParseUser.getCurrentUser().getString("lastName"));
+        email.setText(ParseUser.getCurrentUser().getString("emailId"));
+        birthDate.setText(ParseUser.getCurrentUser().getString("birthDate"));
+        fname.setText(ParseUser.getCurrentUser().getString("firstName"));
     }
+
 }
