@@ -32,56 +32,25 @@ import org.w3c.dom.Text;
 import java.util.ArrayList;
 
 public class UserDetailsActivity extends AppCompatActivity {
+
+    TextView fname = (TextView) findViewById(R.id.firstNameLabel);
+    TextView lname = (TextView) findViewById(R.id.lastNameLabel);
+    TextView email = (TextView) findViewById(R.id.emailAddressLabel);
+    TextView birthDate = (TextView) findViewById(R.id.birthDateLabel);
     private static final String TAG = MainActivity.class.getSimpleName();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_details);
-        String user = String.valueOf(ParseUser.getCurrentUser().getObjectId());
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("_User");
-        query.whereEqualTo("objectId",user);
-        query.getFirstInBackground(new GetCallback<ParseObject>() {
-            @Override
-               public void done(ParseObject object, ParseException e) {
-                  if (e == null) {
-                      TextView fname = (TextView) findViewById(R.id.firstNameLabel);
-                      TextView lname = (TextView) findViewById(R.id.lastNameLabel);
-                      TextView email = (TextView) findViewById(R.id.emailAddressLabel);
-                      TextView birthDate = (TextView) findViewById(R.id.birthDateLabel);
-                      String first = object.getString("firstName");
-                      fname.setText(first);
-                      lname.setText(object.getString("lastName"));
-                      email.setText(object.getString("emailId"));
-                      birthDate.setText(object.getString("birthDate"));
-                  } else {
-                      Log.d("K0sglFv6Ix", "Error: " + e.getMessage());
-                  }
-            }
 
-        });
-
-
-
-      //  String currentUser = user.getUsername();
-        //String emailid = user.getEmail();
-
-        //fname.setText(user.getString("first_name"));
-       // fname.setText(currentUser);
-
-
-        //lname.setText(user.getString("last_name"));
-
-
-        //email.setText( user.getString("email"));
-         //email.setText(emailid);
-
-       // birthDate.setText(user.getString("birthday"));
-
-       // String email = (String) user1.get("email");
-        //Log.d(TAG,"Email" + email);
-        //Toast.makeText(UserDetailsActivity.this, "Email" + email, Toast.LENGTH_SHORT).show();
-
-
+        fname = (TextView) findViewById(R.id.firstNameLabel);
+        lname = (TextView) findViewById(R.id.lastNameLabel);
+        email = (TextView) findViewById(R.id.emailAddressLabel);
+        birthDate = (TextView) findViewById(R.id.birthDateLabel);
+        lname.setText(ParseUser.getCurrentUser().getString("lastName"));
+        email.setText(ParseUser.getCurrentUser().getString("emailId"));
+        birthDate.setText(ParseUser.getCurrentUser().getString("birthDate"));
+        fname.setText(ParseUser.getCurrentUser().getString("firstName"));
 
         DigitsAuthButton digitsAuthButton = (DigitsAuthButton) findViewById(R.id.btn_digits_auth);
         digitsAuthButton.setCallback(new AuthCallback() {
@@ -90,6 +59,10 @@ public class UserDetailsActivity extends AppCompatActivity {
                 ParseUser user = ParseUser.getCurrentUser();
                 user.put("mobileNumber", phoneNumber);
                 user.put("digitsAuth",session.hashCode());
+                user.put("firstName", fname.getText());
+                user.put("lastName", lname.getText());
+                user.put("emailId", email.getText());
+                user.put("birthDate", birthDate.getText());
                 user.saveInBackground();
                 startActivity(new Intent(UserDetailsActivity.this, NewCatchupActivity.class));
 
@@ -100,12 +73,5 @@ public class UserDetailsActivity extends AppCompatActivity {
                 Log.d("digits", error.getMessage());
             }
         });
-
-
-
     }
-
-
-
-
 }
