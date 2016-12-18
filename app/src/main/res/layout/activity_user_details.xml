@@ -52,7 +52,8 @@
             android:inputType="date"
             android:ems="10"
             android:id="@+id/birthDateLabel"
-            android:hint="Birth Date"/>
+            android:hint="BirthDay"
+            android:textSize="20sp"/>
 
         <com.digits.sdk.android.DigitsAuthButton
             android:layout_marginTop="32dp"
