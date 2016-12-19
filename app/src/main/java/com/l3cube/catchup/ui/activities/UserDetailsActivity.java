@@ -49,10 +49,6 @@ public class UserDetailsActivity extends AppCompatActivity {
     int month = c.get(Calendar.YEAR);
     int day = c.get(Calendar.DAY_OF_MONTH);
 
-            //= (TextView) findViewById(R.id.firstNameLabel);
-    //TextView lname = (TextView) findViewById(R.id.lastNameLabel);
-    //TextView email = (TextView) findViewById(R.id.emailAddressLabel);
-    //TextView birthDate = (TextView) findViewById(R.id.birthDateLabel);
     private static final String TAG = MainActivity.class.getSimpleName();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,17 +59,12 @@ public class UserDetailsActivity extends AppCompatActivity {
         lname = (TextView) findViewById(R.id.lastNameLabel);
         email = (TextView) findViewById(R.id.emailAddressLabel);
         birthDate = (TextView) findViewById(R.id.birthDateLabel);
-
-
-
         birthDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showDialog(DATE_PICKER_ID);
             }
         });
-
-
         lname.setText(ParseUser.getCurrentUser().getString("lastName"));
         email.setText(ParseUser.getCurrentUser().getString("emailId"));
         birthDate.setText(ParseUser.getCurrentUser().getString("birthDate"));
@@ -83,16 +74,19 @@ public class UserDetailsActivity extends AppCompatActivity {
         digitsAuthButton.setCallback(new AuthCallback() {
             @Override
             public void success(DigitsSession session, String phoneNumber) {
+                TextView firstName = (TextView) findViewById(R.id.firstNameLabel);
+                TextView lastName = (TextView) findViewById(R.id.lastNameLabel);
+                TextView emailId = (TextView) findViewById(R.id.emailAddressLabel);
+                TextView birthDay = (TextView) findViewById(R.id.birthDateLabel);
                 ParseUser user = ParseUser.getCurrentUser();
                 user.put("mobileNumber", phoneNumber);
                 user.put("digitsAuth",session.hashCode());
-                user.put("firstName", user.getString("first_name"));
-                user.put("lastName", user.getString("last_name"));
-                user.put("emailId", user.getString("emailId"));
-                user.put("birthDate", user.getString("birthDate"));
-                user.put("fbId",user.getString("id"));
+                user.put("firstName", firstName.getText().toString());
+                user.put("lastName", lastName.getText().toString());
+                user.put("emailId", emailId.getText().toString());
+                user.put("birthDate", birthDay.getText().toString());
                 user.saveInBackground();
-                startActivity(new Intent(UserDetailsActivity.this, NewCatchupActivity.class));
+                startActivity(new Intent(UserDetailsActivity.this, MainActivity.class));
 
             }
 
