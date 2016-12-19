@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">CatchUp</string>
     <string name="facebook_app_id">1067558089965660</string>
+    <string name="delete_catchup">Delete Catchup</string>
+    <string name="update_catchup">Update Catchup</string>
 
 </resources>

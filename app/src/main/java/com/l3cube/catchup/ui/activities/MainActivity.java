@@ -1,15 +1,28 @@
 package com.l3cube.catchup.ui.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ImageButton;
+import android.widget.Toast;
 
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.l3cube.catchup.R;
 import com.l3cube.catchup.models.Catchup;
 import com.l3cube.catchup.ui.adapters.CatchupListAdapter;
@@ -23,12 +36,19 @@ import com.parse.ParseUser;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
     private static final String TAG = MainActivity.class.getSimpleName();
     private List<Catchup> mCatchupList = new ArrayList<>();
     private RecyclerView mRecyclerView;
     private CatchupListAdapter mCatchupListAdapter;
     private FloatingActionButton mFloatingActionButton;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +61,13 @@ public class MainActivity extends AppCompatActivity {
             setupVariables();
             populateCatchups();
         }
+
+        mSwipeRefreshLayout.setOnRefreshListener(this );
+
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     private void setupVariables() {
@@ -54,21 +81,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mCatchupListAdapter = new CatchupListAdapter(mCatchupList,MainActivity.this);
+        mCatchupListAdapter = new CatchupListAdapter(mCatchupList, MainActivity.this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.addItemDecoration(new SpacesItemDecoration(16));
         mRecyclerView.setAdapter(mCatchupListAdapter);
-
+        mSwipeRefreshLayout= (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
 
     }
 
     private void navigate() {
         //navigate to Digits Signup if user number not verified
-        if (ParseUser.getCurrentUser().getInt("digitsAuth")==0){
+        if (ParseUser.getCurrentUser().getInt("digitsAuth") == 0) {
             startActivity(new Intent(MainActivity.this, DigitsSignup.class));
-        }else{
+        } else {
             startActivity(new Intent(MainActivity.this, NewCatchupActivity.class));
         }
     }
@@ -99,12 +126,12 @@ public class MainActivity extends AppCompatActivity {
                         Catchup catchup;
                         for (int i = 0; i < catchupParses.size(); i++) {
                             catchup = new Catchup(
-                                  R.drawable.image,
-                                  catchupParses.get(i).getString("title"),
-                                  catchupParses.get(i).getString("inviter"),
-                                  catchupParses.get(i).getString("place"),
-                                  catchupParses.get(i).getString("date").concat(" @ ").concat(catchupParses.get(i).getString("time")),
-                                  catchupParses.get(i).getObjectId()
+                                    R.drawable.image,
+                                    catchupParses.get(i).getString("title"),
+                                    catchupParses.get(i).getString("inviter"),
+                                    catchupParses.get(i).getString("place"),
+                                    catchupParses.get(i).getString("date").concat(" @ ").concat(catchupParses.get(i).getString("time")),
+                                    catchupParses.get(i).getObjectId()
                             );
                             mCatchupList.add(catchup);
                         }
@@ -112,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                 } else {
-                    Log.e(TAG, "done: Error: " + e.getMessage() );
+                    Log.e(TAG, "done: Error: " + e.getMessage());
                 }
             }
         });
@@ -120,8 +147,54 @@ public class MainActivity extends AppCompatActivity {
 
     private void notifyCatchupsAdapter() {
         mCatchupListAdapter.notifyDataSetChanged();
+
+
     }
 
 
 
+
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    public Action getIndexApiAction() {
+        Thing object = new Thing.Builder()
+                .setName("Main Page") // TODO: Define a title for the content shown.
+                // TODO: Make sure this auto-generated URL is correct.
+                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
+                .build();
+        return new Action.Builder(Action.TYPE_VIEW)
+                .setObject(object)
+                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
+                .build();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        AppIndex.AppIndexApi.start(client, getIndexApiAction());
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        AppIndex.AppIndexApi.end(client, getIndexApiAction());
+        client.disconnect();
+    }
+
+    @Override
+    public void onRefresh() {
+
+        addCatchupsFromParse();
+        Toast.makeText(getApplicationContext(),"Refreshed", Toast.LENGTH_SHORT).show();
+        mSwipeRefreshLayout.setRefreshing(false);
+    }
 }
