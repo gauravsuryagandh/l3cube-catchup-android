@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              xmlns:facebook="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:weightSum="1">
+
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="183dp"
+        facebook:srcCompat="@drawable/com_facebook_button_like_background"
+        android:id="@+id/profilePictureLabel"
+        android:layout_weight="0.33"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="31dp"
+        android:layout_weight="0.03">
+
+        <TextView
+            android:text="First Name"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/firstName"
+            android:layout_weight="1"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:text="LastName"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/lastName"
+            android:layout_weight="1"
+            android:textSize="20sp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/firstNameLabel"
+            android:layout_weight="1"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/lastNameLabel"
+            android:layout_weight="1"
+            android:textSize="20sp"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:text="Email Address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/emailAddress"
+        android:layout_weight="0.03"
+        android:textSize="20sp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/emailAddressLabel"
+        android:layout_weight="0.03"
+        android:textSize="20sp"/>
+
+    <TextView
+        android:text="Birth Date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/birthDate"
+        android:layout_weight="0.03"
+        android:textSize="20sp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/birthDateLabel"
+        android:layout_weight="0.03"
+        android:textSize="20sp"/>
+
+    <TextView
+        android:text="Contact Number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/contactNumber"
+        android:layout_weight="0.03"
+        android:textSize="20sp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/contactNumberLabel"
+        android:layout_weight="0.03"
+        android:textSize="20sp"/>
+
+    <Button
+        android:text="Edit Details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/editInfo"
+        android:layout_weight="0.03"/>
+
+</LinearLayout>

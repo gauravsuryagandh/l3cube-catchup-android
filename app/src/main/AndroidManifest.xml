@@ -25,14 +25,17 @@
         </activity>
         <activity android:name=".ui.activities.SignupActivity"/>
         <activity android:name=".ui.activities.CatchupDetailsActivity"/>
-        <activity android:name=".ui.activities.NewCatchupActivity"
+        <activity
+            android:name=".ui.activities.NewCatchupActivity"
             android:windowSoftInputMode="adjustPan"/>
 
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="bb62530170bdb19720a63ee1fcc146fe4ec2b7c5"/>
 
-        <activity android:name=".ui.activities.DigitsSignup">
+        <activity android:name=".ui.activities.UserDetailsActivity">
+        </activity>
+        <activity android:name=".ui.activities.EditInfoActivity">
         </activity>
     </application>
 

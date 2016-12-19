@@ -54,39 +54,21 @@ public class SignupActivity extends AppCompatActivity {
                         Log.e(TAG, "User was null");
                     } else if (user.isNew()) {
                         Log.d(TAG, "User signed up and logged in through Facebook!");
-                        getUserData(user);
-                        Intent intent = new Intent(SignupActivity.this, MainActivity.class);
-                        startActivity(intent);
+                        setUserData(user);
                     } else {
                         Log.d(TAG, "User logged in through Facebook!");
-                        Intent intent = new Intent(SignupActivity.this, MainActivity.class);
-                        startActivity(intent);
+                        if (ParseUser.getCurrentUser().getInt("digitsAuth")==0) {
+                            startActivity(new Intent(SignupActivity.this, UserDetailsActivity.class));
+                        } else {
+                            Intent intent = new Intent(SignupActivity.this, MainActivity.class);
+                            startActivity(intent);
+                        }
                     }
                 } else {
                     Log.e(TAG, "done: Error is " + err.getMessage()  );
                 }
             }
         });
-
-//        ParseUser user = new ParseUser();
-//        user.setUsername("Push");
-//        user.setPassword("pass");
-//        user.signUpInBackground(new SignUpCallback() {
-//            public void done(ParseException e) {
-//                if (e == null) {
-//                    // Show a simple Toast message upon successful registration
-//                    Toast.makeText(getApplicationContext(),
-//                            "Successfully Signed up, please log in.",
-//                            Toast.LENGTH_LONG).show();
-//                    Intent intent = new Intent(SignupActivity.this, MainActivity.class);
-//                    startActivity(intent);
-//                } else {
-//                    Toast.makeText(getApplicationContext(),
-//                            "Sign up Error", Toast.LENGTH_LONG)
-//                            .show();
-//                }
-//            }
-//        });
     }
 
     @Override
@@ -96,35 +78,41 @@ public class SignupActivity extends AppCompatActivity {
 
     }
 
-    private void getUserData(final ParseUser user) {
+    private void setUserData(final ParseUser user) {
         GraphRequest request = GraphRequest.newMeRequest(
                 AccessToken.getCurrentAccessToken(),
                 new GraphRequest.GraphJSONObjectCallback(){
                     @Override
                     public void onCompleted(JSONObject object, GraphResponse response) {
                         try {
-                            //Log.d("fb", response.toString()+" "+object.get("email"));
+                            // Log.d("fb", response.toString()+" "+object.get("email"));
                             user.put("emailId",object.getString("email"));
                             user.put("firstName",object.getString("first_name"));
                             user.put("lastName",object.getString("last_name"));
                             user.put("profilePicture",object.getJSONObject("picture").getJSONObject("data").getString("url"));
                             user.put("fbId",object.getString("id"));
+                            user.put("birthDate",object.getString("birthday"));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        user.saveInBackground(/*new SaveCallback() {
+                        user.saveInBackground(new SaveCallback() {
                             @Override
                             public void done(ParseException e) {
-                                Toast.makeText(SignupActivity.this, "Saved user Data", Toast.LENGTH_SHORT).show();
+                                if (e==null){
+                                    Intent intent = new Intent(SignupActivity.this, UserDetailsActivity.class);
+                                    startActivity(intent);
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
                             }
-                        }*/);
+                        });
                     }
                 }
         );
         Bundle parameters = new Bundle();
         parameters.putString(
                 "fields",
-                "first_name, last_name, email, picture, id"
+                "first_name, last_name, email, picture, id, birthday"
         );
         request.setParameters(parameters);
         request.executeAsync();
