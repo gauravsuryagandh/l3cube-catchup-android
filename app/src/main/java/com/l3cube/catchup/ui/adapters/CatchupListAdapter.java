@@ -1,17 +1,11 @@
 package com.l3cube.catchup.ui.adapters;
 
 import android.content.Context;
-import android.content.Intent;
-import android.nfc.Tag;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.TintContextWrapper;
 import android.util.Log;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,19 +16,13 @@ import android.widget.Toast;
 
 import com.l3cube.catchup.models.Catchup;
 import com.l3cube.catchup.R;
-import com.l3cube.catchup.ui.activities.CatchupDetailsActivity;
-import com.l3cube.catchup.ui.activities.LongCLickListener;
-import com.l3cube.catchup.ui.activities.MainActivity;
-import com.parse.FindCallback;
+import com.parse.DeleteCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 import java.util.List;
-import android.os.Handler;
-
-import static com.facebook.GraphRequest.TAG;
 
 /**
  * Created by push on 31/8/16.
@@ -126,11 +114,32 @@ public class CatchupListAdapter extends RecyclerView.Adapter<CatchupListAdapter.
 
                         switch (item.getItemId()) {
                             case R.id.delete_catchup:
-                                 mCatchupList.remove(mCatchupList.get(position));
                                 notifyDataSetChanged();
                                 ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery("CatchupParse");
+                                parseQuery.whereEqualTo("objectId", mCatchupList.get(position).getObjectId());
+                                Log.d("ObjectId", "onMenuItemClick: " + mCatchupList.get(position).getObjectId());
+                                parseQuery.getFirstInBackground(new GetCallback<ParseObject>() {
+                                    @Override
+                                    public void done(ParseObject object, ParseException e) {
+                                        if (e == null){
+                                            object.deleteInBackground(new DeleteCallback() {
+                                                @Override
+                                                public void done(ParseException e) {
+                                                    if(e == null){
+                                                        Toast.makeText(mContext, "Deleted " + position, Toast.LENGTH_SHORT).show();
+                                                        mCatchupList.remove(mCatchupList.get(position));
+                                                        notifyDataSetChanged();
+                                                    } else {
+                                                        Toast.makeText(mContext, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                    }
+                                                }
+                                            });
+                                        } else {
+                                            Toast.makeText(mContext, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
 
-                                Toast.makeText(mContext, "Deleted" + position, Toast.LENGTH_SHORT).show();
                                 break;
 
 
