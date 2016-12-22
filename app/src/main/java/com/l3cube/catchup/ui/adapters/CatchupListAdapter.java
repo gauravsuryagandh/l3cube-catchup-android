@@ -1,6 +1,7 @@
 package com.l3cube.catchup.ui.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -16,6 +17,8 @@ import android.widget.Toast;
 
 import com.l3cube.catchup.models.Catchup;
 import com.l3cube.catchup.R;
+import com.l3cube.catchup.ui.activities.CatchupDetailsActivity;
+import com.l3cube.catchup.ui.activities.MainActivity;
 import com.parse.DeleteCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -100,6 +103,16 @@ public class CatchupListAdapter extends RecyclerView.Adapter<CatchupListAdapter.
 //                mContext.startActivity(new Intent(mContext, CatchupDetailsActivity.class).putExtra("objectId", mCatchupList.get(position).getObjectId()));
 //            }
 //        });
+
+        holder.placeImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                Toast.makeText(mContext, "Opening CatchUp " + mCatchupList.get(position).getObjectId(), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(mContext, CatchupDetailsActivity.class);
+                intent.putExtra("objectId", mCatchupList.get(position).getObjectId());
+                mContext.startActivity(intent);
+            }
+        });
 
         holder.menuButton.setOnClickListener(new View.OnClickListener() {
             @Override
