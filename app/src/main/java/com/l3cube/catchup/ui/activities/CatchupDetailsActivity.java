@@ -2,11 +2,14 @@ package com.l3cube.catchup.ui.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.PopupMenu;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.l3cube.catchup.R;
 import com.l3cube.catchup.models.Person;
@@ -32,6 +35,7 @@ public class CatchupDetailsActivity extends AppCompatActivity {
     TextView mCatchupPlace;
     List<Person> mContactList;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +43,30 @@ public class CatchupDetailsActivity extends AppCompatActivity {
 
         setupVariables();
         setupData();
+    }
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.catchupdetails_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Take appropriate action for each action item click
+        switch (item.getItemId()) {
+            case R.id.delete_from_details:
+                return true;
+
+            case R.id.det_overflow_menu:
+                View menuItemView = findViewById(R.id.det_overflow_menu);
+                PopupMenu popupMenu = new PopupMenu(this, menuItemView);
+                popupMenu.inflate(R.menu.overflow_menu);
+                popupMenu.show();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void setupVariables() {
@@ -120,4 +148,6 @@ public class CatchupDetailsActivity extends AppCompatActivity {
         expandableListDetail.put("Choose time", basketball);
         return expandableListDetail;
     }
+
+
 }
