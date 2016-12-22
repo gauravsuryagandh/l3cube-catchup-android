@@ -1,5 +1,8 @@
 package com.l3cube.catchup.ui.activities;
 
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.PopupMenu;
@@ -59,28 +62,8 @@ public class CatchupDetailsActivity extends AppCompatActivity {
         // Take appropriate action for each action item click
         switch (item.getItemId()) {
             case R.id.delete_from_details:
-                ParseQuery<ParseObject> query = ParseQuery.getQuery("CatchupParse");
-                query.whereEqualTo("objectId",getIntent().getStringExtra("objectId"));
-                query.getFirstInBackground(new GetCallback<ParseObject>() {
-                    @Override
-                    public void done(ParseObject object, ParseException e) {
-                        if (e == null){
-                            object.deleteInBackground(new DeleteCallback() {
-                                @Override
-                                public void done(ParseException e) {
-                                    if(e == null){
-                                        Toast.makeText(getApplicationContext(),"Deleted", LENGTH_SHORT).show();
-
-                                    } else {
-                                        Toast.makeText(getApplicationContext(), "Error: " + e.getMessage(), LENGTH_SHORT).show();
-                                    }
-                                }
-                            });
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Error: " + e.getMessage(), LENGTH_SHORT).show();
-                        }
-                    }
-                });
+               AlertDialog dialog_box =AskOption();
+                dialog_box.show();
 
                 return true;
 
@@ -95,6 +78,62 @@ public class CatchupDetailsActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+    private AlertDialog AskOption()
+    {
+        AlertDialog myQuittingDialogBox =new AlertDialog.Builder(this)
+                //set message, title, and icon
+                .setTitle("Delete")
+                .setMessage("Are you sure you want to Delete the Catch-Up?")
+//                .setIcon(R.drawable.delete)
+
+                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        ParseQuery<ParseObject> query = ParseQuery.getQuery("CatchupParse");
+                        query.whereEqualTo("objectId",getIntent().getStringExtra("objectId"));
+                        query.getFirstInBackground(new GetCallback<ParseObject>() {
+                            @Override
+                            public void done(ParseObject object, ParseException e) {
+                                if (e == null){
+                                    object.deleteInBackground(new DeleteCallback() {
+                                        @Override
+                                        public void done(ParseException e) {
+                                            if(e == null){
+                                                Toast.makeText(getApplicationContext(),"Deleted", LENGTH_SHORT).show();
+
+                                            } else {
+                                                Toast.makeText(getApplicationContext(), "Error: " + e.getMessage(), LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    });
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "Error: " + e.getMessage(), LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+
+                        Intent intent = new Intent(CatchupDetailsActivity.this, MainActivity.class);
+                        startActivity(intent);
+
+
+                        dialog.dismiss();
+                    }
+
+                })
+
+
+
+                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        dialog.dismiss();
+
+                    }
+                })
+                .create();
+        return myQuittingDialogBox;
+
     }
 
     private void setupVariables() {
