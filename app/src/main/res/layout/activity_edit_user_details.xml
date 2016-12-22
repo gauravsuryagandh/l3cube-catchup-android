@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    xmlns:facebook="http://schemas.android.com/tools"
+    android:background="@android:color/white"
+    android:layout_marginTop="8dp"
+    android:layout_margin="16dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:weightSum="1"
+        android:padding="16dp">
+
+        <ImageView
+
+            android:layout_height="183dp"
+            android:layout_width="183dp"
+            android:layout_marginLeft="70dp"
+            android:layout_marginBottom="20dp"
+            facebook:srcCompat="@drawable/com_facebook_button_like_background"
+            android:id="@+id/profilePictureLabel"
+            android:layout_weight="0.33"/>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="textPersonName"
+                android:ems="10"
+                android:id="@+id/editFirstNameLabel"
+                android:layout_weight="1"
+                android:hint="First Name"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="textPersonName"
+                android:ems="10"
+                android:id="@+id/editLastNameLabel"
+                android:layout_weight="1"
+                android:hint="Last Name"/>
+        </LinearLayout>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:ems="10"
+            android:id="@+id/editEmailLabel"
+            android:hint="Email Address"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="date"
+            android:ems="10"
+            android:id="@+id/editbirthDateLabel"
+            android:hint="BirthDay"
+            android:textSize="20sp"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="phone"
+            android:ems="10"
+            android:id="@+id/editContactLabel"
+            android:hint="Contact Number"/>
+
+        <Button
+            android:text="Save Changes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/saveChangesButton"/>
+
+    </LinearLayout>
+</android.support.v7.widget.CardView>
+
