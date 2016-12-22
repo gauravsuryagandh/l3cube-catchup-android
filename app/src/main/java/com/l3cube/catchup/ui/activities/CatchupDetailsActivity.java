@@ -10,10 +10,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.l3cube.catchup.R;
 import com.l3cube.catchup.models.Person;
 import com.l3cube.catchup.ui.adapters.ExpandableListAdapter;
+import com.parse.DeleteCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -22,6 +24,8 @@ import com.parse.ParseQuery;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import static android.widget.Toast.LENGTH_SHORT;
 
 public class CatchupDetailsActivity extends AppCompatActivity {
 
@@ -55,6 +59,29 @@ public class CatchupDetailsActivity extends AppCompatActivity {
         // Take appropriate action for each action item click
         switch (item.getItemId()) {
             case R.id.delete_from_details:
+                ParseQuery<ParseObject> query = ParseQuery.getQuery("CatchupParse");
+                query.whereEqualTo("objectId",getIntent().getStringExtra("objectId"));
+                query.getFirstInBackground(new GetCallback<ParseObject>() {
+                    @Override
+                    public void done(ParseObject object, ParseException e) {
+                        if (e == null){
+                            object.deleteInBackground(new DeleteCallback() {
+                                @Override
+                                public void done(ParseException e) {
+                                    if(e == null){
+                                        Toast.makeText(getApplicationContext(),"Deleted", LENGTH_SHORT).show();
+
+                                    } else {
+                                        Toast.makeText(getApplicationContext(), "Error: " + e.getMessage(), LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Error: " + e.getMessage(), LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
                 return true;
 
             case R.id.det_overflow_menu:
@@ -63,6 +90,7 @@ public class CatchupDetailsActivity extends AppCompatActivity {
                 popupMenu.inflate(R.menu.overflow_menu);
                 popupMenu.show();
                 return true;
+
 
             default:
                 return super.onOptionsItemSelected(item);
