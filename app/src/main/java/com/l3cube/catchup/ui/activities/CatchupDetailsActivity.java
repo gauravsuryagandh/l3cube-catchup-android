@@ -1,14 +1,17 @@
 package com.l3cube.catchup.ui.activities;
 
+import android.content.Context;
+import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.l3cube.catchup.R;
+import com.l3cube.catchup.models.Catchup;
 import com.l3cube.catchup.models.Person;
 import com.l3cube.catchup.ui.adapters.ExpandableListAdapter;
 import com.parse.GetCallback;
@@ -31,6 +34,16 @@ public class CatchupDetailsActivity extends AppCompatActivity {
     TextView mCatchupDate;
     TextView mCatchupPlace;
     List<Person> mContactList;
+    private FloatingActionButton mFloatingActionButton;
+
+
+    /*
+
+    private List<Catchup> mCatchupList;
+    private Context mContext;
+    private int position;
+
+    */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,15 +52,43 @@ public class CatchupDetailsActivity extends AppCompatActivity {
 
         setupVariables();
         setupData();
+
+        mFloatingActionButton = (FloatingActionButton) findViewById(R.id.fab_update_catchup);
+
+        mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //update();
+            }
+        });
+
     }
 
     private void setupVariables() {
         mExpandableListView = (ExpandableListView) findViewById(R.id.elv_catchup_details);
         mCatchupTitle = (TextView) findViewById(R.id.tv_catchup_details_title);
         mCatchupDate = (TextView) findViewById(R.id.tv_catchup_details_date);
-        mCatchupTime = (TextView) findViewById(R.id.tv_catchup_details_time);
+        mCatchupTime = (TextView) findViewById(R.id.catchup_details_time);
         mCatchupPlace = (TextView) findViewById(R.id.tv_catchup_details_place);
     }
+
+
+    /*from here
+
+    private void update() {
+        Intent intent = new Intent(mContext, EditCatchupActivity.class);
+        intent.putExtra("objectId", mCatchupList.get(position).getObjectId());
+        mContext.startActivity(intent);
+        //startActivity(new Intent(CatchupDetailsActivity.this, EditCatchupActivity.class));
+    }
+
+
+    public CatchupDetailsActivity(List<Catchup> catchupList, Context context) {
+        this.mCatchupList = catchupList;
+        mContext = context;
+    }
+    till here
+   */
 
     private void setupData() {
         ParseQuery<ParseObject> query = ParseQuery.getQuery("CatchupParse");

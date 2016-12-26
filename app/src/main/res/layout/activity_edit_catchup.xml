@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:orientation="vertical">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="196dp"
+            android:background="@drawable/goodluck_cafe"
+            android:id="@+id/rl_catchup_image">
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:text="Goodluck Cafe"
+                android:textColor="@color/tw__solid_white"
+                android:layout_marginLeft="32dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                android:layout_marginBottom="16dp"
+                android:layout_alignParentBottom="true"
+                android:id="@+id/catchup_details_place"/>
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/catchup_details_time"
+                android:layout_above="@id/catchup_details_place"
+                android:layout_alignParentLeft="true"
+                android:text="20:30"
+                android:textColor="@color/tw__solid_white"
+                android:layout_marginLeft="32dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/catchup_details_date"
+                android:layout_toRightOf="@id/catchup_details_time"
+                android:layout_above="@id/catchup_details_place"
+                android:text="16-12-2016"
+                android:textColor="@color/tw__solid_white"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                android:paddingLeft="5dp"/>
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:text="Hello"
+                android:textColor="@color/tw__solid_white"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline"
+                android:layout_marginLeft="32dp"
+                android:layout_marginBottom="2dp"
+                android:layout_above="@id/catchup_details_time"
+                android:id="@+id/catchup_details_title"/>
+
+
+
+
+        </RelativeLayout>
+
+        <ExpandableListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/elv_catchup_details" />
+
+
+    </LinearLayout>
+
+
+</RelativeLayout>

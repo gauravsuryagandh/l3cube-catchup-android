@@ -7,6 +7,6 @@
     <!-- Location Found -->
         <item android:id="@+id/action_bar"
               android:icon="@drawable/ic_action_edit"
-              android:title="@string/title_activity_edit_info"
+              android:title="User Details"
               app:showAsAction="always" />
 </menu>
