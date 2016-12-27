@@ -24,7 +24,7 @@
         android:layout_marginRight="16dp"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/et_new_catchup_date"
+        android:id="@+id/et_new_catchup_title"
         android:hint="Enter a name for the Catchup"
         android:layout_below="@id/tv_new_catchup_title"
         android:layout_alignParentLeft="true"
@@ -39,7 +39,7 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Button"
         android:text="Select Date"
         android:id="@+id/tv_new_catchup_date"
-        android:layout_below="@id/et_new_catchup_date"
+        android:layout_below="@id/et_new_catchup_title"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 

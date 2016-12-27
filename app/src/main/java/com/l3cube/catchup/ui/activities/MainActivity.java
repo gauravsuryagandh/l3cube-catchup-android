@@ -120,7 +120,9 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     }
 
     private void navigate() {
-        startActivity(new Intent(MainActivity.this, NewCatchupActivity.class));
+        Intent intent = new Intent(MainActivity.this, NewCatchupActivity.class);
+        intent.putExtra("operation", "new");
+        startActivity(intent);
     }
 
     private void navigateToSignUp() {
@@ -139,6 +141,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     }
 
     private void addCatchupsFromParse() {
+        mCatchupList.clear();
         ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery("CatchupParse");
         parseQuery.findInBackground(new FindCallback<ParseObject>() {
             @Override

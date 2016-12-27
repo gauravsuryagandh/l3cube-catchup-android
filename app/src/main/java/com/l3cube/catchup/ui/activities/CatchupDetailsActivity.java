@@ -15,9 +15,11 @@ import com.l3cube.catchup.models.Catchup;
 import com.l3cube.catchup.models.Person;
 import com.l3cube.catchup.ui.adapters.ExpandableListAdapter;
 import com.parse.GetCallback;
+import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,14 +55,7 @@ public class CatchupDetailsActivity extends AppCompatActivity {
         setupVariables();
         setupData();
 
-        mFloatingActionButton = (FloatingActionButton) findViewById(R.id.fab_update_catchup);
 
-        mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //update();
-            }
-        });
 
     }
 
@@ -70,6 +65,7 @@ public class CatchupDetailsActivity extends AppCompatActivity {
         mCatchupDate = (TextView) findViewById(R.id.tv_catchup_details_date);
         mCatchupTime = (TextView) findViewById(R.id.catchup_details_time);
         mCatchupPlace = (TextView) findViewById(R.id.tv_catchup_details_place);
+        mFloatingActionButton = (FloatingActionButton) findViewById(R.id.fab_update_catchup);
     }
 
 
@@ -95,7 +91,7 @@ public class CatchupDetailsActivity extends AppCompatActivity {
         query.whereEqualTo("objectId",getIntent().getStringExtra("objectId"));
         query.getFirstInBackground(new GetCallback<ParseObject>() {
             @Override
-            public void done(ParseObject object, ParseException e) {
+            public void done(final ParseObject object, ParseException e) {
                 if(e == null){
                     mCatchupTitle.setText(object.getString("title"));
                     mCatchupTime.setText(object.getString("time"));
@@ -104,6 +100,18 @@ public class CatchupDetailsActivity extends AppCompatActivity {
                     mExpandableListDetail = setELVData((ArrayList<String>) object.get("invited"));
                     mExpandableListTitle = new ArrayList<String>(mExpandableListDetail.keySet());
                     mExpandableListAdapter = new ExpandableListAdapter(CatchupDetailsActivity.this, mExpandableListTitle, mExpandableListDetail);
+                    if (object.getString("inviterId").equals(ParseUser.getCurrentUser().getObjectId())){
+                        mFloatingActionButton.show();
+                        mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent intent = new Intent(CatchupDetailsActivity.this, NewCatchupActivity.class);
+                                intent.putExtra("operation", "update");
+                                intent.putExtra("objectId", object.getObjectId());
+                                startActivity(intent);
+                            }
+                        });
+                    }
                     mExpandableListView.setAdapter(mExpandableListAdapter);
 //                    mExpandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
 //                        @Override
