@@ -21,6 +21,7 @@ import com.l3cube.catchup.models.Catchup;
 import com.l3cube.catchup.R;
 import com.l3cube.catchup.ui.activities.CatchupDetailsActivity;
 import com.l3cube.catchup.ui.activities.MainActivity;
+import com.l3cube.catchup.ui.activities.NewCatchupActivity;
 import com.parse.DeleteCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -132,8 +133,11 @@ public class CatchupListAdapter extends RecyclerView.Adapter<CatchupListAdapter.
                                 AlertDialog dialog = AskOption();
                                 dialog.show();
                                 break;
-
-
+                            case R.id.update_catchup:
+                                Intent intent = new Intent(mContext, NewCatchupActivity.class);
+                                intent.putExtra("operation", "update");
+                                intent.putExtra("objectId", mCatchupList.get(position).getObjectId());
+                                mContext.startActivity(intent);
                         }
                         return false;
                     }

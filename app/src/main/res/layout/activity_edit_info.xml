@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+<android.support.v7.widget.CardView
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    xmlns:facebook="http://schemas.android.com/tools"
+    android:background="@android:color/white"
+    android:layout_marginTop="8dp"
+    android:layout_margin="16dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools"
@@ -11,11 +20,15 @@
 
 
     <ImageView
-        android:layout_width="match_parent"
+
         android:layout_height="183dp"
+        android:layout_width="183dp"
+        android:layout_marginLeft="70dp"
+        android:layout_marginBottom="20dp"
         facebook:srcCompat="@drawable/com_facebook_button_like_background"
         android:id="@+id/profilePictureLabel"
         android:layout_weight="0.33"/>
+
 
     <LinearLayout
         android:orientation="horizontal"
@@ -110,7 +123,8 @@
         android:text="Edit Details"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/editInfo"
+        android:id="@+id/editDetailsButton"
         android:layout_weight="0.03"/>
 
 </LinearLayout>
+</android.support.v7.widget.CardView>
