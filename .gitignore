@@ -1,16 +1,10 @@
 *.iml
 .gradle
 /local.properties
-/.idea/workspace.xml
-/.idea/libraries
 .DS_Store
 /build
 /captures
 
 # Android Studio / IntelliJ IDEA
 *.iws
-.idea/libraries
-.idea/tasks.xml
-.idea/vcs.xml
-.idea/workspace.xml
-.idea/misc.xml
+.idea/

@@ -1,6 +1,5 @@
 package com.l3cube.catchup.ui.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -11,11 +10,9 @@ import android.widget.ExpandableListView;
 import android.widget.TextView;
 
 import com.l3cube.catchup.R;
-import com.l3cube.catchup.models.Catchup;
 import com.l3cube.catchup.models.Person;
 import com.l3cube.catchup.ui.adapters.ExpandableListAdapter;
 import com.parse.GetCallback;
-import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -38,15 +35,6 @@ public class CatchupDetailsActivity extends AppCompatActivity {
     List<Person> mContactList;
     private FloatingActionButton mFloatingActionButton;
 
-
-    /*
-
-    private List<Catchup> mCatchupList;
-    private Context mContext;
-    private int position;
-
-    */
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,9 +42,6 @@ public class CatchupDetailsActivity extends AppCompatActivity {
 
         setupVariables();
         setupData();
-
-
-
     }
 
     private void setupVariables() {
@@ -67,24 +52,6 @@ public class CatchupDetailsActivity extends AppCompatActivity {
         mCatchupPlace = (TextView) findViewById(R.id.tv_catchup_details_place);
         mFloatingActionButton = (FloatingActionButton) findViewById(R.id.fab_update_catchup);
     }
-
-
-    /*from here
-
-    private void update() {
-        Intent intent = new Intent(mContext, EditCatchupActivity.class);
-        intent.putExtra("objectId", mCatchupList.get(position).getObjectId());
-        mContext.startActivity(intent);
-        //startActivity(new Intent(CatchupDetailsActivity.this, EditCatchupActivity.class));
-    }
-
-
-    public CatchupDetailsActivity(List<Catchup> catchupList, Context context) {
-        this.mCatchupList = catchupList;
-        mContext = context;
-    }
-    till here
-   */
 
     private void setupData() {
         ParseQuery<ParseObject> query = ParseQuery.getQuery("CatchupParse");
