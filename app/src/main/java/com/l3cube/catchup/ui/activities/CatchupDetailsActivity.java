@@ -1,8 +1,15 @@
 package com.l3cube.catchup.ui.activities;
 
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.PopupMenu;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
@@ -11,6 +18,7 @@ import android.widget.Toast;
 import com.l3cube.catchup.R;
 import com.l3cube.catchup.models.Person;
 import com.l3cube.catchup.ui.adapters.ExpandableListAdapter;
+import com.parse.DeleteCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -19,6 +27,8 @@ import com.parse.ParseQuery;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import static android.widget.Toast.LENGTH_SHORT;
 
 public class CatchupDetailsActivity extends AppCompatActivity {
 
@@ -32,6 +42,7 @@ public class CatchupDetailsActivity extends AppCompatActivity {
     TextView mCatchupPlace;
     List<Person> mContactList;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +50,90 @@ public class CatchupDetailsActivity extends AppCompatActivity {
 
         setupVariables();
         setupData();
+    }
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.catchupdetails_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Take appropriate action for each action item click
+        switch (item.getItemId()) {
+            case R.id.delete_from_details:
+               AlertDialog dialog_box =AskOption();
+                dialog_box.show();
+
+                return true;
+
+            case R.id.det_overflow_menu:
+                View menuItemView = findViewById(R.id.det_overflow_menu);
+                PopupMenu popupMenu = new PopupMenu(this, menuItemView);
+                popupMenu.inflate(R.menu.overflow_menu);
+                popupMenu.show();
+                return true;
+
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+    private AlertDialog AskOption()
+    {
+        AlertDialog myQuittingDialogBox =new AlertDialog.Builder(this)
+                //set message, title, and icon
+                .setTitle("Delete")
+                .setMessage("Are you sure you want to Delete the Catch-Up?")
+//                .setIcon(R.drawable.delete)
+
+                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        ParseQuery<ParseObject> query = ParseQuery.getQuery("CatchupParse");
+                        query.whereEqualTo("objectId",getIntent().getStringExtra("objectId"));
+                        query.getFirstInBackground(new GetCallback<ParseObject>() {
+                            @Override
+                            public void done(ParseObject object, ParseException e) {
+                                if (e == null){
+                                    object.deleteInBackground(new DeleteCallback() {
+                                        @Override
+                                        public void done(ParseException e) {
+                                            if(e == null){
+                                                Toast.makeText(getApplicationContext(),"Deleted", LENGTH_SHORT).show();
+
+                                            } else {
+                                                Toast.makeText(getApplicationContext(), "Error: " + e.getMessage(), LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    });
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "Error: " + e.getMessage(), LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+
+                        Intent intent = new Intent(CatchupDetailsActivity.this, MainActivity.class);
+                        startActivity(intent);
+
+
+                        dialog.dismiss();
+                    }
+
+                })
+
+
+
+                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        dialog.dismiss();
+
+                    }
+                })
+                .create();
+        return myQuittingDialogBox;
+
     }
 
     private void setupVariables() {
@@ -120,4 +215,6 @@ public class CatchupDetailsActivity extends AppCompatActivity {
         expandableListDetail.put("Choose time", basketball);
         return expandableListDetail;
     }
+
+
 }

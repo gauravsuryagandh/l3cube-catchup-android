@@ -2,6 +2,8 @@ package com.l3cube.catchup.ui.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -127,32 +129,8 @@ public class CatchupListAdapter extends RecyclerView.Adapter<CatchupListAdapter.
 
                         switch (item.getItemId()) {
                             case R.id.delete_catchup:
-                                notifyDataSetChanged();
-                                ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery("CatchupParse");
-                                parseQuery.whereEqualTo("objectId", mCatchupList.get(position).getObjectId());
-                                Log.d("ObjectId", "onMenuItemClick: " + mCatchupList.get(position).getObjectId());
-                                parseQuery.getFirstInBackground(new GetCallback<ParseObject>() {
-                                    @Override
-                                    public void done(ParseObject object, ParseException e) {
-                                        if (e == null){
-                                            object.deleteInBackground(new DeleteCallback() {
-                                                @Override
-                                                public void done(ParseException e) {
-                                                    if(e == null){
-                                                        Toast.makeText(mContext, "Deleted " + position, Toast.LENGTH_SHORT).show();
-                                                        mCatchupList.remove(mCatchupList.get(position));
-                                                        notifyDataSetChanged();
-                                                    } else {
-                                                        Toast.makeText(mContext, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                                    }
-                                                }
-                                            });
-                                        } else {
-                                            Toast.makeText(mContext, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                });
-
+                                AlertDialog dialog = AskOption();
+                                dialog.show();
                                 break;
 
 
@@ -166,6 +144,61 @@ public class CatchupListAdapter extends RecyclerView.Adapter<CatchupListAdapter.
         });
     }
 
+    private AlertDialog AskOption()
+    {
+        AlertDialog myQuittingDialogBox =new AlertDialog.Builder(mContext)
+                //set message, title, and icon
+                .setTitle("Delete")
+                .setMessage("Are you sure you want to Delete the Catchup?")
+                .setIcon(R.drawable.ic_delete_black_36dp)
+
+                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        notifyDataSetChanged();
+                        ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery("CatchupParse");
+                        parseQuery.whereEqualTo("objectId", mCatchupList.get(position).getObjectId());
+                        Log.d("ObjectId", "onMenuItemClick: " + mCatchupList.get(position).getObjectId());
+                        parseQuery.getFirstInBackground(new GetCallback<ParseObject>() {
+                            @Override
+                            public void done(ParseObject object, ParseException e) {
+                                if (e == null){
+                                    object.deleteInBackground(new DeleteCallback() {
+                                        @Override
+                                        public void done(ParseException e) {
+                                            if(e == null){
+                                                Toast.makeText(mContext, "Deleted " + position, Toast.LENGTH_SHORT).show();
+                                                mCatchupList.remove(mCatchupList.get(position));
+                                                notifyDataSetChanged();
+                                            } else {
+                                                Toast.makeText(mContext, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    });
+                                } else {
+                                    Toast.makeText(mContext, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+
+                        dialog.dismiss();
+                    }
+
+                })
+
+
+
+                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        dialog.dismiss();
+
+                    }
+                })
+                .create();
+        return myQuittingDialogBox;
+
+    }
 
 
     @Override
