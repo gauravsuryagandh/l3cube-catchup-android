@@ -1,6 +1,7 @@
 package com.l3cube.catchup.ui.activities;
 
 import android.app.TimePickerDialog;
+import android.support.annotation.StringDef;
 import android.support.v7.app.AppCompatActivity;
 
 
@@ -37,14 +38,13 @@ import com.l3cube.catchup.R;
 import com.l3cube.catchup.models.Person;
 import com.l3cube.catchup.ui.adapters.InvitedListAdapter;
 import com.l3cube.catchup.ui.decorators.SpacesItemDecoration;
-import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -72,21 +72,48 @@ public class NewCatchupActivity extends AppCompatActivity {
     private EditText mPlace;
     private RecyclerView mRecyclerView;
     private InvitedListAdapter mInvitedListAdapter;
+    RecyclerView.LayoutManager layoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_catchup);
 
-        selectDate = (TextView) findViewById(R.id.tv_new_catchup_date);
-        selectTime = (TextView) findViewById(R.id.tv_new_catchup_time);
-        final Calendar c = Calendar.getInstance();
-        year = c.get(Calendar.YEAR);
-        month = c.get(Calendar.MONTH);
-        day = c.get(Calendar.DAY_OF_MONTH);
-        hour = c.get(Calendar.HOUR_OF_DAY);
-        minute = c.get(Calendar.MINUTE);
+        setupVariables();
+        Toast.makeText(getApplicationContext(), getIntent().getStringExtra("operation"), Toast.LENGTH_SHORT).show();
+        if(getIntent().getStringExtra("operation").equals("update")){
+            createCatchup.setText("Update");
+            ParseQuery<ParseObject> query = ParseQuery.getQuery("CatchupParse");
+            query.whereEqualTo("objectId", getIntent().getStringExtra("objectId"));
+            query.getFirstInBackground(new GetCallback<ParseObject>() {
+                @Override
+                public void done(final ParseObject object, ParseException e) {
+                    if(e == null){
+                        Toast.makeText(getApplicationContext(), object.getString("title"), Toast.LENGTH_SHORT).show();
+                        TextView title = (TextView) findViewById(R.id.et_new_catchup_title);
+                        title.setText(object.getString("title"));
+                        selectDate.setText(object.getString("date"));
+                        selectTime.setText(object.getString("time"));
+                        TextView place = (TextView) findViewById(R.id.et_new_catchup_place);
+                        place.setText(object.getString("place"));
+                        List<String> invitedNos = (ArrayList<String>) object.get("invited");
+                        for (int i=0; i<invitedNos.size();i++){
+                            invitedList.add(new Person("", invitedNos.get(i)));
+                            showCurrentInvitedList();
+                            notifyInvitedListAdapter();
+                        }
+                        setupListeners();
+                    }else{
+                        Log.d("CatchupDetails", "Error: " + e.getMessage());
+                    }
+                }
+            });
+        } else {
+            setupListeners();
+        }
+    }
 
+    private void setupListeners() {
         selectDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -101,9 +128,6 @@ public class NewCatchupActivity extends AppCompatActivity {
             }
         });
 
-        mInviteContacts = (Button) findViewById(R.id.btn_invite_contacts);
-        createCatchup = (Button) findViewById(R.id.btn_create_catchup);
-
         View.OnClickListener inviteContactsListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -111,9 +135,6 @@ public class NewCatchupActivity extends AppCompatActivity {
             }
         };
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.rv_invited_contacts_list);
-        mInvitedListAdapter = new InvitedListAdapter(invitedList);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.addItemDecoration(new SpacesItemDecoration(16));
@@ -123,25 +144,75 @@ public class NewCatchupActivity extends AppCompatActivity {
         createCatchup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Create Catchup on Server
-                mTitle =(EditText) findViewById(R.id.et_new_catchup_date);
+                mTitle =(EditText) findViewById(R.id.et_new_catchup_title);
                 mPlace = (EditText) findViewById(R.id.et_new_catchup_place);
                 String title = null,inviter = null,place = null,date = null,time = null;
-                title = mTitle.getText().toString();
-                if (ParseUser.getCurrentUser()!=null) {
-                    inviter = new String(ParseUser.getCurrentUser().getString("firstName")
-                            .concat(" ")
-                            .concat(ParseUser.getCurrentUser().getString("lastName"))
-                    );
+                if (getIntent().getStringExtra("operation").equals("update")) {
+                    ParseQuery<ParseObject> query = ParseQuery.getQuery("CatchupParse");
+                    query.getInBackground(getIntent().getStringExtra("objectId"), new GetCallback<ParseObject>() {
+                        @Override
+                        public void done(final ParseObject object, ParseException e) {
+                            if (e==null){
+                                object.put("title", mTitle.getText().toString());
+                                if (!String.valueOf(mDate).equals("null"))
+                                    object.put("date", mDate.toString());
+                                if (!String.valueOf(mTime).equals("null"))
+                                    object.put("time", mTime.toString());
+                                object.put("place", mPlace.getText().toString());
+                                String[] invitedIds = new String[invitedList.size()];
+                                int i = 0;
+                                for (final Person person: invitedList){
+                                    invitedIds[i++] = person.getPhone();
+                                }
+                                object.put("invited", Arrays.asList(invitedIds));
+                                object.saveInBackground(new SaveCallback() {
+                                    @Override
+                                    public void done(ParseException e) {
+                                        if (e==null){
+                                            Intent intent = new Intent(NewCatchupActivity.this, CatchupDetailsActivity.class);
+                                            intent.putExtra("objectId", object.getObjectId());
+                                            startActivity(intent);
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    });
                 } else {
-                    inviter = "Gaurav Suryagandh";
+                    // Create Catchup on Server
+                    title = mTitle.getText().toString();
+                    if (ParseUser.getCurrentUser()!=null) {
+                        inviter = new String(ParseUser.getCurrentUser().getString("firstName")
+                                .concat(" ")
+                                .concat(ParseUser.getCurrentUser().getString("lastName"))
+                        );
+                    } else {
+                        inviter = "Gaurav Suryagandh";
+                    }
+                    date = String.valueOf(mDate);
+                    time = String.valueOf(mTime);
+                    place = mPlace.getText().toString();
+                    createCatchupOnServer(title,inviter,date,time,place);
                 }
-                date = String.valueOf(mDate);
-                time = String.valueOf(mTime);
-                place = mPlace.getText().toString();
-                createCatchupOnServer(title,inviter,date,time,place);
             }
         });
+    }
+
+    private void setupVariables() {
+
+        selectDate = (TextView) findViewById(R.id.tv_new_catchup_date);
+        selectTime = (TextView) findViewById(R.id.tv_new_catchup_time);
+        final Calendar c = Calendar.getInstance();
+        year = c.get(Calendar.YEAR);
+        month = c.get(Calendar.MONTH);
+        day = c.get(Calendar.DAY_OF_MONTH);
+        hour = c.get(Calendar.HOUR_OF_DAY);
+        minute = c.get(Calendar.MINUTE);
+        mInviteContacts = (Button) findViewById(R.id.btn_invite_contacts);
+        createCatchup = (Button) findViewById(R.id.btn_create_catchup);
+        mRecyclerView = (RecyclerView) findViewById(R.id.rv_invited_contacts_list);
+        mInvitedListAdapter = new InvitedListAdapter(invitedList);
+        layoutManager = new LinearLayoutManager(getApplicationContext());
 
     }
 
@@ -153,6 +224,7 @@ public class NewCatchupActivity extends AppCompatActivity {
 
         catchupParse.put("title",title);
         catchupParse.put("inviter",inviter);
+        catchupParse.put("inviterId", ParseUser.getCurrentUser().getObjectId());
         catchupParse.put("date",date);
         catchupParse.put("time",time);
         catchupParse.put("place",place);
