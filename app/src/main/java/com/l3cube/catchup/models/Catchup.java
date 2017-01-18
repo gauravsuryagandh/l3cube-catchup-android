@@ -1,14 +1,18 @@
 package com.l3cube.catchup.models;
 
+import com.parse.ParseObject;
+import com.parse.ParseUser;
+
 /**
  * Created by push on 31/8/16.
  */
 public class Catchup {
     private String objectId;
     private int placeImage;
-    private String title, inviter, place, time;
+    private String title, place, time;
+    private ParseUser inviter;
 
-    public Catchup(int placeImage, String title, String inviter, String place, String time, String objectId) {
+    public Catchup(int placeImage, String title, ParseUser inviter, String place, String time, String objectId) {
         this.placeImage = placeImage;
         this.title = title;
         this.inviter = inviter;
@@ -41,11 +45,11 @@ public class Catchup {
         this.title = title;
     }
 
-    public String getInviter() {
+    public ParseUser getInviter() {
         return inviter;
     }
 
-    public void setInviter(String inviter) {
+    public void setInviter(ParseUser inviter) {
         this.inviter = inviter;
     }
 

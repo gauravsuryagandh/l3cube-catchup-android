@@ -93,7 +93,7 @@ public class CatchupDetailsActivity extends AppCompatActivity {
                 .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
 
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        ParseQuery<ParseObject> query = ParseQuery.getQuery("CatchupParse");
+                        ParseQuery<ParseObject> query = ParseQuery.getQuery("Catchup");
                         query.whereEqualTo("objectId",getIntent().getStringExtra("objectId"));
                         query.getFirstInBackground(new GetCallback<ParseObject>() {
                             @Override
@@ -149,7 +149,7 @@ public class CatchupDetailsActivity extends AppCompatActivity {
     }
 
     private void setupData() {
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("CatchupParse");
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Catchup");
         query.whereEqualTo("objectId",getIntent().getStringExtra("objectId"));
         query.getFirstInBackground(new GetCallback<ParseObject>() {
             @Override
@@ -162,17 +162,21 @@ public class CatchupDetailsActivity extends AppCompatActivity {
                     mExpandableListDetail = setELVData((ArrayList<String>) object.get("invited"));
                     mExpandableListTitle = new ArrayList<String>(mExpandableListDetail.keySet());
                     mExpandableListAdapter = new ExpandableListAdapter(CatchupDetailsActivity.this, mExpandableListTitle, mExpandableListDetail);
-                    if (object.getString("inviterId").equals(ParseUser.getCurrentUser().getObjectId())){
-                        mFloatingActionButton.show();
-                        mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                Intent intent = new Intent(CatchupDetailsActivity.this, NewCatchupActivity.class);
-                                intent.putExtra("operation", "update");
-                                intent.putExtra("objectId", object.getObjectId());
-                                startActivity(intent);
-                            }
-                        });
+                    try {
+                        if (String.valueOf(object.getParseUser("inviter").fetchIfNeeded().getObjectId()).equals(ParseUser.getCurrentUser().getObjectId())){
+                            mFloatingActionButton.show();
+                            mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    Intent intent = new Intent(CatchupDetailsActivity.this, NewCatchupActivity.class);
+                                    intent.putExtra("operation", "update");
+                                    intent.putExtra("objectId", object.getObjectId());
+                                    startActivity(intent);
+                                }
+                            });
+                        }
+                    } catch (ParseException e1) {
+                        e1.printStackTrace();
                     }
                     mExpandableListView.setAdapter(mExpandableListAdapter);
 //                    mExpandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
