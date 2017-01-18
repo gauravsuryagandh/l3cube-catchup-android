@@ -58,7 +58,7 @@ public class SignupActivity extends AppCompatActivity {
                     } else {
                         Log.d(TAG, "User logged in through Facebook!");
                         if (ParseUser.getCurrentUser().getInt("digitsAuth")==0) {
-                            startActivity(new Intent(SignupActivity.this, UserDetailsActivity.class));
+                            startActivity(new Intent(SignupActivity.this, GetUserDetailsActivity.class));
                         } else {
                             Intent intent = new Intent(SignupActivity.this, MainActivity.class);
                             startActivity(intent);
@@ -99,7 +99,7 @@ public class SignupActivity extends AppCompatActivity {
                             @Override
                             public void done(ParseException e) {
                                 if (e==null){
-                                    Intent intent = new Intent(SignupActivity.this, UserDetailsActivity.class);
+                                    Intent intent = new Intent(SignupActivity.this, GetUserDetailsActivity.class);
                                     startActivity(intent);
                                 } else {
                                     Toast.makeText(getApplicationContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();

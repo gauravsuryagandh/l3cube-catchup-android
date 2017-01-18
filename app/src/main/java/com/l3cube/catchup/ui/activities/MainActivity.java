@@ -10,13 +10,10 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.android.gms.appindexing.Action;
@@ -58,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         if (ParseUser.getCurrentUser() == null) {
             navigateToSignUp();
         } else if (ParseUser.getCurrentUser().getInt("digitsAuth")==0) {
-            startActivity(new Intent(MainActivity.this, UserDetailsActivity.class));
+            startActivity(new Intent(MainActivity.this, GetUserDetailsActivity.class));
         } else {
             setupVariables();
             populateCatchups();
@@ -90,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     }
 
     private void EditDetails() {
-        Intent i = new Intent(MainActivity.this, EditInfoActivity.class);
+        Intent i = new Intent(MainActivity.this, UserDetailsActivity.class);
         startActivity(i);
     }
 

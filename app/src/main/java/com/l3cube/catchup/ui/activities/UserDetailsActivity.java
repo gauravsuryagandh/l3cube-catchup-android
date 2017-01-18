@@ -1,131 +1,132 @@
 package com.l3cube.catchup.ui.activities;
 
-import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.app.TimePickerDialog;
 import android.content.Intent;
-import android.provider.ContactsContract;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.digits.sdk.android.AuthCallback;
-import com.digits.sdk.android.DigitsAuthButton;
-import com.digits.sdk.android.DigitsException;
-import com.digits.sdk.android.DigitsSession;
-import com.facebook.AccessToken;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
 import com.l3cube.catchup.R;
-import com.l3cube.catchup.models.Person;
-import com.parse.GetCallback;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
-import java.util.Calendar;
+import java.io.InputStream;
 
 public class UserDetailsActivity extends AppCompatActivity {
-    static final int DATE_PICKER_ID = 1111;
-
-    TextView fname;
-    TextView lname;
-    TextView email;
-    TextView birthDate;
-    private StringBuilder mDate;
-    final Calendar c = Calendar.getInstance();
-    int year = c.get(Calendar.YEAR);
-    int month = c.get(Calendar.YEAR);
-    int day = c.get(Calendar.DAY_OF_MONTH);
 
     private static final String TAG = MainActivity.class.getSimpleName();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_details);
+        setContentView(R.layout.activity_edit_info);
 
-        fname = (TextView) findViewById(R.id.firstNameLabel);
-        lname = (TextView) findViewById(R.id.lastNameLabel);
-        email = (TextView) findViewById(R.id.emailAddressLabel);
-        birthDate = (TextView) findViewById(R.id.birthDateLabel);
-        birthDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDialog(DATE_PICKER_ID);
-            }
-        });
+
+
+        TextView fname = (TextView) findViewById(R.id.firstNameLabel);
+        TextView lname = (TextView) findViewById(R.id.lastNameLabel);
+        TextView email = (TextView) findViewById(R.id.emailAddressLabel);
+        TextView birthDate = (TextView) findViewById(R.id.birthDateLabel);
+        TextView mPhoneNumber = (TextView) findViewById(R.id.contactNumberLabel);
+        Button mEditDetails = (Button) findViewById(R.id.editDetailsButton);
+        //ImageView mImageView = findViewById(R.id.profilePictureLabel);
+        fname.setText(ParseUser.getCurrentUser().getString("firstName"));
         lname.setText(ParseUser.getCurrentUser().getString("lastName"));
         email.setText(ParseUser.getCurrentUser().getString("emailId"));
         birthDate.setText(ParseUser.getCurrentUser().getString("birthDate"));
-        fname.setText(ParseUser.getCurrentUser().getString("firstName"));
+        mPhoneNumber.setText(ParseUser.getCurrentUser().getString("mobileNumber"));
 
-        DigitsAuthButton digitsAuthButton = (DigitsAuthButton) findViewById(R.id.btn_digits_auth);
-        digitsAuthButton.setCallback(new AuthCallback() {
+
+        //ImageView mprofilePictureView;
+        //mprofilePictureView = (ImageView) findViewById(R.id.profilePictureLabel);
+
+        String mImageUrl = ParseUser.getCurrentUser().getString("profilePicture");
+
+
+        new DownloadImageTask((ImageView) findViewById(R.id.profilePictureLabel))
+                .execute(mImageUrl);
+
+
+        mEditDetails.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void success(DigitsSession session, String phoneNumber) {
-                TextView firstName = (TextView) findViewById(R.id.firstNameLabel);
-                TextView lastName = (TextView) findViewById(R.id.lastNameLabel);
-                TextView emailId = (TextView) findViewById(R.id.emailAddressLabel);
-                TextView birthDay = (TextView) findViewById(R.id.birthDateLabel);
-                ParseUser user = ParseUser.getCurrentUser();
-                user.put("mobileNumber", phoneNumber);
-                user.put("digitsAuth",session.hashCode());
-                user.put("firstName", firstName.getText().toString());
-                user.put("lastName", lastName.getText().toString());
-                user.put("emailId", emailId.getText().toString());
-                user.put("birthDate", birthDay.getText().toString());
-                user.saveInBackground();
-                startActivity(new Intent(UserDetailsActivity.this, MainActivity.class));
-
-            }
-
-            @Override
-            public void failure(DigitsException error) {
-                Log.d("digits", error.getMessage());
+            public void onClick(View v) {
+                startActivity(new Intent(UserDetailsActivity.this, EditUserDetailsActivity.class));
             }
         });
+
+        //Log.d(TAG, "This is image Url" + mImageUrl);
+
+
+        //Picasso.with(context).load(ParseUser.getCurrentUser().getString("profilePicture")).into(mprofilePictureView);
+       /* URL newurl = null;
+        try {
+            newurl = new URL(ParseUser.getCurrentUser().getString("profilePicture"));
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        Bitmap mIcon = null;
+        try {
+            mIcon = BitmapFactory.decodeStream(newurl.openConnection() .getInputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        mprofilePictureView.setImageBitmap(mIcon);
+
+        //profilePictureView.setProfileId(ParseUser.getCurrentUser().getString("id"));
+        */
+       //type 2
+
+        //String Url = ParseUser.getCurrentUser().getString("profilePicture");
+        //profilePictureView.setImageBitmap(getBitmapFromURL(Url));
+
     }
 
-    protected Dialog onCreateDialog(int id) {
-        switch (id) {
-            case DATE_PICKER_ID:
-
-                // open datepicker dialog.
-                // set date picker for current date
-                // add pickerListener listner to date picker
-                return new DatePickerDialog(this, pickerListener, year, month,day);
+    /*public static Bitmap getBitmapFromURL(String src) {
+        try {
+            Log.e("src",src);
+            URL url = new URL(src);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Bitmap myBitmap = BitmapFactory.decodeStream(input);
+            Log.e("Bitmap","returned");
+            return myBitmap;
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e("Exception",e.getMessage());
+            return null;
         }
-        return null;
+    }*/
+
+}
+
+    class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+    ImageView bmImage;
+
+    public DownloadImageTask(ImageView bmImage) {
+        this.bmImage = bmImage;
     }
 
-    private DatePickerDialog.OnDateSetListener pickerListener = new DatePickerDialog.OnDateSetListener() {
-
-        // when dialog box is closed, below method will be called.
-        @Override
-        public void onDateSet(DatePicker view, int selectedYear,
-                              int selectedMonth, int selectedDay) {
-
-            year  = selectedYear;
-            month = selectedMonth;
-            day   = selectedDay;
-
-            mDate = new StringBuilder()
-                    .append(day).append("-").append(month + 1).append("-")
-                    .append(year).append(" ");
-            // Show selected date
-            birthDate.setText(mDate);
-
+    protected Bitmap doInBackground(String... urls) {
+        String urldisplay = urls[0];
+        Bitmap mIcon11 = null;
+        try {
+            InputStream in = new java.net.URL(urldisplay).openStream();
+            mIcon11 = BitmapFactory.decodeStream(in);
+        } catch (Exception e) {
+            Log.e("Error", e.getMessage());
+            e.printStackTrace();
         }
-    };
+        return mIcon11;
+    }
+
+    protected void onPostExecute(Bitmap result) {
+        bmImage.setImageBitmap(result);
+    }
 }

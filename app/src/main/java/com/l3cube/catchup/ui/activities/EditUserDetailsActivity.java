@@ -62,7 +62,7 @@ public class EditUserDetailsActivity extends AppCompatActivity {
                 user.put("birthDate", mBirthDate.getText().toString());
 
                 user.saveInBackground();
-                startActivity(new Intent(EditUserDetailsActivity.this, EditInfoActivity.class));
+                startActivity(new Intent(EditUserDetailsActivity.this, UserDetailsActivity.class));
 
             }
         });

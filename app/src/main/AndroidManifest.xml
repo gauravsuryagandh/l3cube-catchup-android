@@ -33,7 +33,7 @@
             android:name="io.fabric.ApiKey"
             android:value="bb62530170bdb19720a63ee1fcc146fe4ec2b7c5"/>
 
-        <activity android:name=".ui.activities.UserDetailsActivity">
+        <activity android:name=".ui.activities.GetUserDetailsActivity">
         </activity>
         <activity android:name=".ui.activities.DigitsSignup">
         </activity>
@@ -45,6 +45,8 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version"/>
         <activity android:name=".ui.activities.EditUserDetailsActivity">
+        </activity>
+        <activity android:name=".ui.activities.UserDetailsActivity">
         </activity>
     </application>
 
