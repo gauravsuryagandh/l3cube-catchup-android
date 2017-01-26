@@ -92,27 +92,27 @@ public class SignupActivity extends AppCompatActivity {
                             user.put("profilePicture",object.getJSONObject("picture").getJSONObject("data").getString("url"));
                             user.put("fbId",object.getString("id"));
                             user.put("birthDate",object.getString("birthday"));
+                            user.saveInBackground(new SaveCallback() {
+                                @Override
+                                public void done(ParseException e) {
+                                    if (e==null){
+                                        Intent intent = new Intent(SignupActivity.this, GetUserDetailsActivity.class);
+                                        startActivity(intent);
+                                    } else {
+                                        Toast.makeText(getApplicationContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        user.saveInBackground(new SaveCallback() {
-                            @Override
-                            public void done(ParseException e) {
-                                if (e==null){
-                                    Intent intent = new Intent(SignupActivity.this, GetUserDetailsActivity.class);
-                                    startActivity(intent);
-                                } else {
-                                    Toast.makeText(getApplicationContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
                     }
                 }
         );
         Bundle parameters = new Bundle();
         parameters.putString(
                 "fields",
-                "first_name, last_name, email, picture, id, birthday"
+                "first_name, last_name, email, picture.width(480), id, birthday"
         );
         request.setParameters(parameters);
         request.executeAsync();
