@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     private void addCatchupsFromParse() {
         mCatchupList.clear();
-        ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery("CatchupParse");
+        ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery("Catchup");
         parseQuery.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> catchupParses, ParseException e) {
@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                             catchup = new Catchup(
                                     R.drawable.image,
                                     catchupParses.get(i).getString("title"),
-                                    catchupParses.get(i).getString("inviter"),
+                                    catchupParses.get(i).getParseUser("inviter"),
                                     catchupParses.get(i).getString("place"),
                                     catchupParses.get(i).getString("date").concat(" @ ").concat(catchupParses.get(i).getString("time")),
                                     catchupParses.get(i).getObjectId()

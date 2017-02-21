@@ -27,6 +27,7 @@ import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class CatchupListAdapter extends RecyclerView.Adapter<CatchupListAdapter.
     private List<Catchup> mCatchupList;
     private Context mContext;
     private int position;
-    ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery("CatchupParse");
+    ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery("Catchup");
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
@@ -93,7 +94,15 @@ public class CatchupListAdapter extends RecyclerView.Adapter<CatchupListAdapter.
                 holder.placeImage.setImageResource(R.drawable.image);
         }
         holder.title.setText(catchup.getTitle());
-        holder.inviter.setText(catchup.getInviter());
+        String inviterName = null;
+        try {
+            inviterName = new String(catchup.getInviter().fetchIfNeeded().getString("firstName"))
+                    .concat(" ")
+                    .concat(catchup.getInviter().fetchIfNeeded().getString("lastName"));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        holder.inviter.setText(inviterName);
         holder.place.setText(catchup.getPlace());
         holder.time.setText(catchup.getTime());
 
@@ -160,7 +169,7 @@ public class CatchupListAdapter extends RecyclerView.Adapter<CatchupListAdapter.
 
                     public void onClick(DialogInterface dialog, int whichButton) {
                         notifyDataSetChanged();
-                        ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery("CatchupParse");
+                        ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery("Catchup");
                         parseQuery.whereEqualTo("objectId", mCatchupList.get(position).getObjectId());
                         Log.d("ObjectId", "onMenuItemClick: " + mCatchupList.get(position).getObjectId());
                         parseQuery.getFirstInBackground(new GetCallback<ParseObject>() {
