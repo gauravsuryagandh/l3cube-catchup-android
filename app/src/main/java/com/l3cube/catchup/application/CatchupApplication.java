@@ -23,7 +23,7 @@ public class CatchupApplication extends Application {
 
     // Note: Your consumer key and secret should be obfuscated in your source code before shipping.
 
-    private static final String serverUrl = "http://catchup.us-east-1.elasticbeanstalk.com/parse";
+    private static final String serverUrl = "https://parseapi.back4app.com/";
     @Override
     public void onCreate() {
         super.onCreate();
@@ -36,8 +36,8 @@ public class CatchupApplication extends Application {
         Parse.enableLocalDatastore(CatchupApplication.this);
 
         Parse.Configuration configuration = new Parse.Configuration.Builder(CatchupApplication.this)
-                .applicationId("a5ffb6374b9b25d0d43d247b153ff03d")
-                .clientKey("catchup_client_key")
+                .applicationId("lt3KuyWfVfQgjAIIRAvPCXnvb4w5d1Vq6G20myPB")
+                .clientKey("ggBr6eMC8PzHTfi8BN0Dhhd6bCr2MYnVDApJHWr3")
                 .server(serverUrl)
                 .build();
         Parse.initialize(configuration);
