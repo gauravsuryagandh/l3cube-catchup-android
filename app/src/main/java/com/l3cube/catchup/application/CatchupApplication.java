@@ -23,7 +23,7 @@ public class CatchupApplication extends Application {
 
     // Note: Your consumer key and secret should be obfuscated in your source code before shipping.
 
-    private static final String serverUrl = "http://catchup.us-east-1.elasticbeanstalk.com/parse";
+    private static final String serverUrl = "http://192.168.1.15:8080/parse";
     @Override
     public void onCreate() {
         super.onCreate();

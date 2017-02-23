@@ -1,7 +1,6 @@
 package com.l3cube.catchup.ui.activities;
 
 import android.app.TimePickerDialog;
-import android.support.annotation.StringDef;
 import android.support.v7.app.AppCompatActivity;
 
 
@@ -65,7 +64,7 @@ public class NewCatchupActivity extends AppCompatActivity {
     private static final String TAG = NewCatchupActivity.class.getSimpleName();
     private Button mInviteContacts;
     private List<Person> invitedList = new ArrayList<Person>(); // this list will store the name,number of invited ppl
-    private Button createCatchup;
+    private Button createCatchup, createTimePoll, createPlacePoll;
     private TextView selectDate;
     private TextView selectTime;
     private EditText mTitle;
@@ -196,6 +195,15 @@ public class NewCatchupActivity extends AppCompatActivity {
                 }
             }
         });
+
+        createTimePoll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int type = 1;
+                Intent intent = new Intent(NewCatchupActivity.this, VotingActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void setupVariables() {
@@ -213,6 +221,8 @@ public class NewCatchupActivity extends AppCompatActivity {
         mRecyclerView = (RecyclerView) findViewById(R.id.rv_invited_contacts_list);
         mInvitedListAdapter = new InvitedListAdapter(invitedList);
         layoutManager = new LinearLayoutManager(getApplicationContext());
+        createPlacePoll = (Button) findViewById(R.id.btn_place_poll);
+        createTimePoll = (Button) findViewById(R.id.btn_time_poll);
 
     }
 

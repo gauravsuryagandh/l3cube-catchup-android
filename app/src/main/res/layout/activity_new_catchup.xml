@@ -123,4 +123,24 @@
         android:layout_below="@id/btn_invite_contacts"
         android:layout_height="wrap_content" />
 
+    <Button
+        android:text="create poll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="46dp"
+        android:layout_marginEnd="46dp"
+        android:id="@+id/btn_time_poll"
+        android:layout_alignTop="@+id/tv_new_catchup_date"
+        android:layout_alignRight="@+id/et_new_catchup_title"
+        android:layout_alignEnd="@+id/et_new_catchup_title" />
+
+    <Button
+        android:text="Create Poll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_place_poll"
+        android:layout_below="@+id/btn_time_poll"
+        android:layout_alignLeft="@+id/btn_time_poll"
+        android:layout_alignStart="@+id/btn_time_poll" />
+
 </RelativeLayout>
