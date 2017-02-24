@@ -21,7 +21,7 @@ public class EditUserDetailsActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private TextView mFirstName, mLastName, mEmailAddress, mBirthDate, mContactNumber;
-    private Button mSaveChanges;
+    private Button mSaveChanges, mCheckPlaces;
     ParseUser user = ParseUser.getCurrentUser();
 
     @Override
@@ -35,7 +35,7 @@ public class EditUserDetailsActivity extends AppCompatActivity {
         mBirthDate = (TextView) findViewById(R.id.editbirthDateLabel);
         mContactNumber = (TextView) findViewById(R.id.editContactLabel);
         mSaveChanges = (Button) findViewById(R.id.saveChangesButton);
-
+        mCheckPlaces = (Button) findViewById(R.id.checkPlacesButton);
         //changed this
 
         mFirstName.setText(ParseUser.getCurrentUser().getString("firstName"));
@@ -68,6 +68,12 @@ public class EditUserDetailsActivity extends AppCompatActivity {
         });
 
 
+        mCheckPlaces.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(EditUserDetailsActivity.this, PlacesActivity.class));
+            }
+        });
 
     }
 }

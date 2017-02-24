@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.l3cube.catchup">
+          package="com.l3cube.catchup">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
 
     <application
         android:name=".application.CatchupApplication"
@@ -14,38 +14,45 @@
         android:theme="@style/AppTheme">
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id" />
+            android:value="@string/facebook_app_id"/>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBiZmP4NbL3gPe6JLh8dAet-EJzneKgNSo"/>
 
         <activity android:name=".ui.activities.MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+
         </activity>
-        <activity android:name=".ui.activities.SignupActivity" />
-        <activity android:name=".ui.activities.CatchupDetailsActivity" />
+        <activity android:name=".ui.activities.SignupActivity"/>
+        <activity android:name=".ui.activities.CatchupDetailsActivity"/>
         <activity
             android:name=".ui.activities.NewCatchupActivity"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan"/>
 
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="bb62530170bdb19720a63ee1fcc146fe4ec2b7c5" />
+            android:value="bb62530170bdb19720a63ee1fcc146fe4ec2b7c5"/>
 
-        <activity android:name=".ui.activities.GetUserDetailsActivity"></activity>
-        <activity android:name=".ui.activities.DigitsSignup"></activity>
+        <activity android:name=".ui.activities.GetUserDetailsActivity"/>
+        <activity android:name=".ui.activities.DigitsSignup"/>
         <!--
  ATTENTION: This was auto-generated to add Google Play services to your project for
      App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
         -->
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
+            android:value="@integer/google_play_services_version"/>
 
-        <activity android:name=".ui.activities.EditUserDetailsActivity"></activity>
-        <activity android:name=".ui.activities.UserDetailsActivity"></activity>
-        <activity android:name=".ui.activities.VotingActivity"></activity>
+        <activity android:name=".ui.activities.EditUserDetailsActivity"/>
+        <activity android:name=".ui.activities.UserDetailsActivity"/>
+        <activity android:name=".ui.activities.VotingActivity"/>
+        <activity android:name=".ui.activities.PlacesActivity">
+        </activity>
     </application>
 
 </manifest>
