@@ -34,6 +34,11 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.l3cube.catchup.R;
 import com.l3cube.catchup.models.Person;
 import com.l3cube.catchup.ui.adapters.InvitedListAdapter;
@@ -70,10 +75,12 @@ public class NewCatchupActivity extends AppCompatActivity {
     private TextView selectDate;
     private TextView selectTime;
     private EditText mTitle;
-    private EditText mPlace;
+//    private EditText mPlace;
+    private Button mPlace;
     private RecyclerView mRecyclerView;
     private InvitedListAdapter mInvitedListAdapter;
     RecyclerView.LayoutManager layoutManager;
+    private final int PLACE_PICKER_REQUEST = 4223;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,8 +102,8 @@ public class NewCatchupActivity extends AppCompatActivity {
                         title.setText(object.getString("title"));
                         selectDate.setText(object.getString("date"));
                         selectTime.setText(object.getString("time"));
-                        TextView place = (TextView) findViewById(R.id.et_new_catchup_place);
-                        place.setText(object.getString("place"));
+//                        TextView place = (TextView) findViewById(R.id.et_new_catchup_place);
+//                        place.setText(object.getString("place"));
                         List<String> invitedNos = (ArrayList<String>) object.get("invited");
                         for (int i=0; i<invitedNos.size();i++){
                             invitedList.add(new Person("", invitedNos.get(i)));
@@ -141,12 +148,26 @@ public class NewCatchupActivity extends AppCompatActivity {
         mRecyclerView.addItemDecoration(new SpacesItemDecoration(16));
         mRecyclerView.setAdapter(mInvitedListAdapter);
 
+        mPlace.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
+                            .build(NewCatchupActivity.this);
+                    startActivityForResult(intent, PLACE_PICKER_REQUEST);
+                } catch (GooglePlayServicesRepairableException e){
+
+                } catch (GooglePlayServicesNotAvailableException e){
+
+                }
+            }
+        });
         mInviteContacts.setOnClickListener(inviteContactsListener);
         createCatchup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mTitle =(EditText) findViewById(R.id.et_new_catchup_title);
-                mPlace = (EditText) findViewById(R.id.et_new_catchup_place);
+//                mPlace = (EditText) findViewById(R.id.et_new_catchup_place);
                 String title = null,/*inviter = null,*/place = null,date = null,time = null;
                 if (getIntent().getStringExtra("operation").equals("update")) {
                     ParseQuery<ParseObject> query = ParseQuery.getQuery("Catchup");
@@ -159,7 +180,7 @@ public class NewCatchupActivity extends AppCompatActivity {
                                     object.put("date", mDate.toString());
                                 if (!String.valueOf(mTime).equals("null"))
                                     object.put("time", mTime.toString());
-                                object.put("place", mPlace.getText().toString());
+//                                object.put("place", mPlace.getText().toString());
                                 String[] invitedIds = new String[invitedList.size()];
                                 int i = 0;
                                 for (final Person person: invitedList){
@@ -192,7 +213,7 @@ public class NewCatchupActivity extends AppCompatActivity {
 //                    }
                     date = String.valueOf(mDate);
                     time = String.valueOf(mTime);
-                    place = mPlace.getText().toString();
+//                    place = mPlace.getText().toString();
                     createCatchupOnServer(title,date,time,place);
                 }
             }
@@ -214,6 +235,7 @@ public class NewCatchupActivity extends AppCompatActivity {
         mRecyclerView = (RecyclerView) findViewById(R.id.rv_invited_contacts_list);
         mInvitedListAdapter = new InvitedListAdapter(invitedList);
         layoutManager = new LinearLayoutManager(getApplicationContext());
+        mPlace = (Button) findViewById(R.id.btn_new_catchup_place);
 
     }
 
@@ -351,6 +373,12 @@ public class NewCatchupActivity extends AppCompatActivity {
             Person personToBeAdded = extractPersonFromData(data);
             if (personToBeAdded != null) {
                 addPersonToInvitedList(personToBeAdded);
+            }
+        } else if (requestCode == PLACE_PICKER_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                Place place = PlacePicker.getPlace(data, this);
+                String toastMsg = String.format("Place: %s", place.getName());
+                Toast.makeText(this, toastMsg, Toast.LENGTH_LONG).show();
             }
         }
     }
