@@ -1,7 +1,6 @@
 package com.l3cube.catchup.ui.activities;
 
 import android.app.TimePickerDialog;
-import android.support.annotation.StringDef;
 import android.support.v7.app.AppCompatActivity;
 
 
@@ -50,7 +49,6 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -81,6 +79,7 @@ public class NewCatchupActivity extends AppCompatActivity {
     private InvitedListAdapter mInvitedListAdapter;
     RecyclerView.LayoutManager layoutManager;
     private final int PLACE_PICKER_REQUEST = 4223;
+    Place pickedPlace = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,8 +101,8 @@ public class NewCatchupActivity extends AppCompatActivity {
                         title.setText(object.getString("title"));
                         selectDate.setText(object.getString("date"));
                         selectTime.setText(object.getString("time"));
-//                        TextView place = (TextView) findViewById(R.id.et_new_catchup_place);
-//                        place.setText(object.getString("place"));
+//                        TextView pickedPlace = (TextView) findViewById(R.id.et_new_catchup_place);
+//                        pickedPlace.setText(object.getString("pickedPlace"));
                         List<String> invitedNos = (ArrayList<String>) object.get("invited");
                         for (int i=0; i<invitedNos.size();i++){
                             invitedList.add(new Person("", invitedNos.get(i)));
@@ -180,7 +179,7 @@ public class NewCatchupActivity extends AppCompatActivity {
                                     object.put("date", mDate.toString());
                                 if (!String.valueOf(mTime).equals("null"))
                                     object.put("time", mTime.toString());
-//                                object.put("place", mPlace.getText().toString());
+//                                object.put("pickedPlace", mPlace.getText().toString());
                                 String[] invitedIds = new String[invitedList.size()];
                                 int i = 0;
                                 for (final Person person: invitedList){
@@ -213,8 +212,8 @@ public class NewCatchupActivity extends AppCompatActivity {
 //                    }
                     date = String.valueOf(mDate);
                     time = String.valueOf(mTime);
-//                    place = mPlace.getText().toString();
-                    createCatchupOnServer(title,date,time,place);
+//                    pickedPlace = mPlace.getText().toString();
+                    createCatchupOnServer(title,date,time);
                 }
             }
         });
@@ -240,7 +239,7 @@ public class NewCatchupActivity extends AppCompatActivity {
 
     }
 
-    private void createCatchupOnServer(String title, String date, String time, String place){
+    private void createCatchupOnServer(String title, String date, String time){
         final ParseObject newCatchup = new ParseObject("Catchup");
         List<ParseObject> invited = new ArrayList<ParseObject>();
         ParseQuery<ParseObject> query = ParseQuery.getQuery("_User");
@@ -250,7 +249,7 @@ public class NewCatchupActivity extends AppCompatActivity {
         newCatchup.put("inviter", ParseUser.getCurrentUser());
         newCatchup.put("date", date);
         newCatchup.put("time", time);
-        newCatchup.put("place", place);
+        newCatchup.put("place", pickedPlace.getName());
         for ( final Person person: invitedList){
             ParseObject invitedPerson = null;
             String cleanedPhone = person.getPhone().replaceAll("\\s","");
@@ -296,7 +295,7 @@ public class NewCatchupActivity extends AppCompatActivity {
         });
     }
 
-//    private void createCatchupOnServer(String title, String inviter, String date, String time, String place) {
+//    private void createCatchupOnServer(String title, String inviter, String date, String time, String pickedPlace) {
 //        String[] invitedIds = new String[invitedList.size()];
 //        int i =0;
 ////        ParseQuery<ParseObject> query = ParseQuery.getQuery("User");
@@ -307,7 +306,7 @@ public class NewCatchupActivity extends AppCompatActivity {
 //        catchupParse.put("inviterId", ParseUser.getCurrentUser().getObjectId());
 //        catchupParse.put("date",date);
 //        catchupParse.put("time",time);
-//        catchupParse.put("place",place);
+//        catchupParse.put("pickedPlace",pickedPlace);
 //
 //        for (final Person person: invitedList){
 //            invitedIds[i++] = person.getPhone();
@@ -408,9 +407,9 @@ public class NewCatchupActivity extends AppCompatActivity {
             }
         } else if (requestCode == PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
-                Place place = PlacePicker.getPlace(data, this);
-                mEnterPlace.setText(place.getName());
-                String toastMsg = String.format("Place: %s", place.getName());
+                pickedPlace = PlacePicker.getPlace(data, this);
+                mEnterPlace.setText(pickedPlace.getName());
+                String toastMsg = String.format("Place: %s", pickedPlace.getName());
                 Toast.makeText(this, toastMsg, Toast.LENGTH_LONG).show();
             }
         }

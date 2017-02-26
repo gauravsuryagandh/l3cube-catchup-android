@@ -158,7 +158,7 @@ public class CatchupDetailsActivity extends AppCompatActivity {
                     mCatchupTitle.setText(object.getString("title"));
                     mCatchupTime.setText(object.getString("time"));
                     mCatchupDate.setText(object.getString("date"));
-                    mCatchupPlace.setText(object.getString("place"));
+                    mCatchupPlace.setText(object.getString("pickedPlace"));
                     mExpandableListDetail = setELVData((ArrayList<ParseObject>) object.get("invited"));
                     mExpandableListTitle = new ArrayList<String>(mExpandableListDetail.keySet());
                     mExpandableListAdapter = new ExpandableListAdapter(CatchupDetailsActivity.this, mExpandableListTitle, mExpandableListDetail);
@@ -231,7 +231,7 @@ public class CatchupDetailsActivity extends AppCompatActivity {
 //        basketball.add("Russia");
 
         expandableListDetail.put("Invited Contacts", invited);
-//        expandableListDetail.put("Choose place", football);
+//        expandableListDetail.put("Choose pickedPlace", football);
 //        expandableListDetail.put("Choose time", basketball);
         return expandableListDetail;
     }
