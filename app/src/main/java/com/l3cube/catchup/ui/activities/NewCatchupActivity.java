@@ -75,7 +75,7 @@ public class NewCatchupActivity extends AppCompatActivity {
     private TextView selectDate;
     private TextView selectTime;
     private EditText mTitle;
-//    private EditText mPlace;
+    private EditText mEnterPlace;
     private Button mPlace;
     private RecyclerView mRecyclerView;
     private InvitedListAdapter mInvitedListAdapter;
@@ -236,6 +236,7 @@ public class NewCatchupActivity extends AppCompatActivity {
         mInvitedListAdapter = new InvitedListAdapter(invitedList);
         layoutManager = new LinearLayoutManager(getApplicationContext());
         mPlace = (Button) findViewById(R.id.btn_new_catchup_place);
+        mEnterPlace = (EditText) findViewById(R.id.tv_enter_a_place);
 
     }
 
@@ -377,6 +378,7 @@ public class NewCatchupActivity extends AppCompatActivity {
         } else if (requestCode == PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
                 Place place = PlacePicker.getPlace(data, this);
+                mEnterPlace.setText(place.getName());
                 String toastMsg = String.format("Place: %s", place.getName());
                 Toast.makeText(this, toastMsg, Toast.LENGTH_LONG).show();
             }
