@@ -242,13 +242,44 @@ public class NewCatchupActivity extends AppCompatActivity {
 
     private void createCatchupOnServer(String title, String date, String time, String place){
         final ParseObject newCatchup = new ParseObject("Catchup");
+        List<ParseObject> invited = new ArrayList<ParseObject>();
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("_User");
+        ParseQuery<ParseObject> queryPerson = ParseQuery.getQuery("Person");
 
         newCatchup.put("title", title);
         newCatchup.put("inviter", ParseUser.getCurrentUser());
         newCatchup.put("date", date);
         newCatchup.put("time", time);
         newCatchup.put("place", place);
-        newCatchup.put("invited", new ArrayList<String>());
+        for ( final Person person: invitedList){
+            ParseObject invitedPerson = null;
+            String cleanedPhone = person.getPhone().replaceAll("\\s","");
+            cleanedPhone = cleanedPhone.substring(cleanedPhone.length()-10);
+            query.whereEqualTo("mobileNumber", "+91".concat(cleanedPhone));
+            try {
+                invitedPerson = query.getFirst();
+            } catch (ParseException e) {
+                e.printStackTrace();
+                queryPerson.whereEqualTo("mobileNumber", "+91".concat(cleanedPhone));
+                try {
+                    invitedPerson = queryPerson.getFirst();
+                } catch (ParseException e1) {
+                    e1.printStackTrace();
+                    ParseObject temp = new ParseObject("Person");
+                    temp.put("firstName", person.getName().split(" ")[0]);
+                    temp.put("lastName", person.getName().split(" ")[1]);
+                    temp.put("mobileNumber", "+91".concat(cleanedPhone));
+                    try {
+                        temp.save();
+                        invitedPerson = temp;
+                    } catch (ParseException e2) {
+                        e2.printStackTrace();
+                    }
+                }
+            }
+            invited.add(invitedPerson);
+        }
+        newCatchup.put("invited", invited);
         newCatchup.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {

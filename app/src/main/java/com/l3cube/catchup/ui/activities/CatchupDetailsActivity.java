@@ -37,7 +37,7 @@ public class CatchupDetailsActivity extends AppCompatActivity {
     ExpandableListView mExpandableListView;
     ExpandableListAdapter mExpandableListAdapter;
     List<String> mExpandableListTitle;
-    HashMap<String, List<String>> mExpandableListDetail;
+    HashMap<String, ArrayList<ParseObject>> mExpandableListDetail;
     TextView mCatchupTitle;
     TextView mCatchupTime;
     TextView mCatchupDate;
@@ -159,7 +159,7 @@ public class CatchupDetailsActivity extends AppCompatActivity {
                     mCatchupTime.setText(object.getString("time"));
                     mCatchupDate.setText(object.getString("date"));
                     mCatchupPlace.setText(object.getString("place"));
-                    mExpandableListDetail = setELVData((ArrayList<String>) object.get("invited"));
+                    mExpandableListDetail = setELVData((ArrayList<ParseObject>) object.get("invited"));
                     mExpandableListTitle = new ArrayList<String>(mExpandableListDetail.keySet());
                     mExpandableListAdapter = new ExpandableListAdapter(CatchupDetailsActivity.this, mExpandableListTitle, mExpandableListDetail);
                     try {
@@ -213,26 +213,26 @@ public class CatchupDetailsActivity extends AppCompatActivity {
         });
     }
 
-    private HashMap<String, List<String>> setELVData(ArrayList<String> invited) {
-        HashMap<String, List<String>> expandableListDetail = new HashMap<String, List<String>>();
+    private HashMap<String, ArrayList<ParseObject>> setELVData(ArrayList<ParseObject> invited) {
+        HashMap<String, ArrayList<ParseObject>> expandableListDetail = new HashMap<>();
 
-        List<String> football = new ArrayList<String>();
-        football.add("Brazil");
-        football.add("Spain");
-        football.add("Germany");
-        football.add("Netherlands");
-        football.add("Italy");
-
-        List<String> basketball = new ArrayList<String>();
-        basketball.add("United States");
-        basketball.add("Spain");
-        basketball.add("Argentina");
-        basketball.add("France");
-        basketball.add("Russia");
+//        ArrayList<ParseObject> football = new ArrayList<>();
+//        football.add("Brazil");
+//        football.add("Spain");
+//        football.add("Germany");
+//        football.add("Netherlands");
+//        football.add("Italy");
+//
+//        ArrayList<ParseObject> basketball = new ArrayList<>();
+//        basketball.add("United States");
+//        basketball.add("Spain");
+//        basketball.add("Argentina");
+//        basketball.add("France");
+//        basketball.add("Russia");
 
         expandableListDetail.put("Invited Contacts", invited);
-        expandableListDetail.put("Choose place", football);
-        expandableListDetail.put("Choose time", basketball);
+//        expandableListDetail.put("Choose place", football);
+//        expandableListDetail.put("Choose time", basketball);
         return expandableListDetail;
     }
 
