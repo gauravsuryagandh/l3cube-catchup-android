@@ -9,6 +9,8 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
 import com.l3cube.catchup.R;
+import com.parse.ParseException;
+import com.parse.ParseObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,10 +20,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
 
     private Context context;
     private List<String> expandableListTitle;
-    private HashMap<String, List<String>> expandableListDetail;
+    private HashMap<String, ArrayList<ParseObject>> expandableListDetail;
 
     public ExpandableListAdapter(Context context, List<String> expandableListTitle,
-                                 HashMap<String, List<String>> expandableListDetail) {
+                                 HashMap<String, ArrayList<ParseObject>> expandableListDetail) {
         this.context = context;
         this.expandableListTitle = expandableListTitle;
         this.expandableListDetail = expandableListDetail;
@@ -79,15 +81,25 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
 
     @Override
     public View getChildView(int listPosition, final int expandedListPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-        final String expandedListText = (String) getChild(listPosition, expandedListPosition);
+        final ParseObject expandedListObject = (ParseObject) getChild(listPosition, expandedListPosition);
+        try {
+            expandedListObject.fetchIfNeeded();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        final String expandedListName = (String) expandedListObject.get("firstName") + " "+ expandedListObject.get("lastName");
+        final String expandedListNumber = (String) expandedListObject.get("mobileNumber");
         if (convertView == null) {
             LayoutInflater layoutInflater = (LayoutInflater) this.context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = layoutInflater.inflate(R.layout.item_row_contact, null);
+            convertView = layoutInflater.inflate(R.layout.item_row_invited_contact, null);
         }
-        TextView expandedListTextView = (TextView) convertView
-                .findViewById(R.id.tv_contact_list_row_number);
-        expandedListTextView.setText(expandedListText);
+        TextView expandedListTextView1 = (TextView) convertView
+                .findViewById(R.id.tv_invited_contact_list_row_name);
+        expandedListTextView1.setText(expandedListName);
+        TextView expandedListTextView2 = (TextView) convertView
+                .findViewById(R.id.tv_invited_contact_list_row_number);
+        expandedListTextView2.setText(expandedListNumber);
         return convertView;
     }
 
