@@ -114,6 +114,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         mSwipeRefreshLayout= (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
         mSwipeRefreshLayout.setOnRefreshListener(this );
 
+
     }
 
     private void navigate() {
