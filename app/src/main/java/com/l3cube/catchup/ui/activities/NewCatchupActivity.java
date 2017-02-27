@@ -38,6 +38,7 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.l3cube.catchup.R;
 import com.l3cube.catchup.models.Person;
 import com.l3cube.catchup.ui.adapters.InvitedListAdapter;
@@ -185,6 +186,10 @@ public class NewCatchupActivity extends AppCompatActivity {
                                 for (final Person person: invitedList){
                                     invitedIds[i++] = person.getPhone();
                                 }
+                                String tkn = FirebaseInstanceId.getInstance().getToken();
+                                Toast.makeText(NewCatchupActivity.this, "Current token ["+tkn+"]",
+                                        Toast.LENGTH_LONG).show();
+                                Log.d("App", "Token ["+tkn+"]");
                                 object.put("invited", Arrays.asList(invitedIds));
                                 object.saveInBackground(new SaveCallback() {
                                     @Override
