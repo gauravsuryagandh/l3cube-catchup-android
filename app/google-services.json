@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "797163850689",
+    "firebase_url": "https://catchup-77c2d.firebaseio.com",
+    "project_id": "catchup-77c2d",
+    "storage_bucket": "catchup-77c2d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:797163850689:android:bbb283b569d11d45",
+        "android_client_info": {
+          "package_name": "com.l3cube.catchup"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "797163850689-v650kbfj38opgvbe97mrcojoufbqgu41.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3vgntCvarmVR-edG8sWiKkC1GwalmzEI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -27,6 +27,7 @@ import com.l3cube.catchup.ui.decorators.SpacesItemDecoration;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
@@ -59,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         } else {
             setupVariables();
             populateCatchups();
+
         }
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -113,6 +115,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         mRecyclerView.setAdapter(mCatchupListAdapter);
         mSwipeRefreshLayout= (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
         mSwipeRefreshLayout.setOnRefreshListener(this );
+
 
     }
 
