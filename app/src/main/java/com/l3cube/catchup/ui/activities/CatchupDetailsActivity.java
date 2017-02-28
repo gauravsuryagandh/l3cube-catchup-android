@@ -7,12 +7,14 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.PopupMenu;
+import android.text.Layout;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ExpandableListView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +31,7 @@ import com.parse.ParseUser;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import com.uber.sdk.android.rides.RideRequestButton;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
@@ -44,7 +47,8 @@ public class CatchupDetailsActivity extends AppCompatActivity {
     TextView mCatchupPlace;
     List<Person> mContactList;
     private FloatingActionButton mFloatingActionButton;
-
+    RideRequestButton requestButton;
+    LinearLayout layout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,6 +150,8 @@ public class CatchupDetailsActivity extends AppCompatActivity {
         mCatchupTime = (TextView) findViewById(R.id.catchup_details_time);
         mCatchupPlace = (TextView) findViewById(R.id.tv_catchup_details_place);
         mFloatingActionButton = (FloatingActionButton) findViewById(R.id.fab_update_catchup);
+        requestButton = new RideRequestButton(getApplicationContext());
+        layout = (LinearLayout) findViewById(R.id.ll_catchup_details);
     }
 
     private void setupData() {
@@ -211,6 +217,7 @@ public class CatchupDetailsActivity extends AppCompatActivity {
                 }
             }
         });
+        layout.addView(requestButton);
     }
 
     private HashMap<String, ArrayList<ParseObject>> setELVData(ArrayList<ParseObject> invited) {
