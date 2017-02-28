@@ -181,7 +181,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                                     R.drawable.image,
                                     catchupParses.get(i).getString("title"),
                                     catchupParses.get(i).getParseUser("inviter"),
-                                    catchupParses.get(i).getString("place"),
+                                    catchupParses.get(i).getString("placeName"),
                                     catchupParses.get(i).getString("date").concat(" @ ").concat(catchupParses.get(i).getString("time")),
                                     catchupParses.get(i).getObjectId()
                             );

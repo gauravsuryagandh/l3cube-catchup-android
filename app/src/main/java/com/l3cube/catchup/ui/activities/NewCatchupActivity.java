@@ -312,6 +312,8 @@ public class NewCatchupActivity extends AppCompatActivity {
 
         }
         newCatchup.put("invited", invited);
+        newCatchup.put("going", new ArrayList<ParseObject>());
+        newCatchup.put("notGoing", new ArrayList<ParseObject>());
 
 
 
