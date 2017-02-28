@@ -101,8 +101,8 @@ public class NewCatchupActivity extends AppCompatActivity {
                         title.setText(object.getString("title"));
                         selectDate.setText(object.getString("date"));
                         selectTime.setText(object.getString("time"));
-//                        TextView pickedPlace = (TextView) findViewById(R.id.et_new_catchup_place);
-//                        pickedPlace.setText(object.getString("pickedPlace"));
+                        TextView pickedPlace = (TextView) findViewById(R.id.tv_catchup_details_place);
+                        pickedPlace.setText(object.getString("placeName"));
                         List<String> invitedNos = (ArrayList<String>) object.get("invited");
                         for (int i=0; i<invitedNos.size();i++){
                             invitedList.add(new Person("", invitedNos.get(i)));
@@ -179,7 +179,10 @@ public class NewCatchupActivity extends AppCompatActivity {
                                     object.put("date", mDate.toString());
                                 if (!String.valueOf(mTime).equals("null"))
                                     object.put("time", mTime.toString());
-//                                object.put("pickedPlace", mPlace.getText().toString());
+                                object.put("placeName", pickedPlace.getName());
+                                object.put("placeLat", pickedPlace.getLatLng().latitude);
+                                object.put("placeLong", pickedPlace.getLatLng().longitude);
+                                object.put("placeAdd", pickedPlace.getAddress());
                                 String[] invitedIds = new String[invitedList.size()];
                                 int i = 0;
                                 for (final Person person: invitedList){
@@ -249,7 +252,10 @@ public class NewCatchupActivity extends AppCompatActivity {
         newCatchup.put("inviter", ParseUser.getCurrentUser());
         newCatchup.put("date", date);
         newCatchup.put("time", time);
-        newCatchup.put("place", pickedPlace.getName());
+        newCatchup.put("placeName", pickedPlace.getName());
+        newCatchup.put("placeLat", pickedPlace.getLatLng().latitude);
+        newCatchup.put("placeLong", pickedPlace.getLatLng().longitude);
+        newCatchup.put("placeAdd", pickedPlace.getAddress());
         for ( final Person person: invitedList){
             ParseObject invitedPerson = null;
             String cleanedPhone = person.getPhone().replaceAll("\\s","");

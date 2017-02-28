@@ -147,7 +147,33 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                     Log.i(TAG, "done: Found Objects = " + catchupParses.size());
                     if (catchupParses.size() > 0) {
                         Catchup catchup;
+                        ParseUser inviter;
+                        List<ParseObject> invited;
+                        Boolean userInvited;
                         for (int i = 0; i < catchupParses.size(); i++) {
+                            userInvited = false;
+                            invited = (ArrayList<ParseObject>) catchupParses.get(i).get("invited");
+                            inviter = (ParseUser) catchupParses.get(i).get("inviter");
+                            try {
+                                if (inviter.fetchIfNeeded().getObjectId().equals(ParseUser.getCurrentUser().getObjectId()))
+                                    userInvited = true;
+                                else {
+                                    for (ParseObject invitedPerson : invited){
+                                        try {
+                                            if(invitedPerson.fetchIfNeeded().getObjectId().equals(ParseUser.getCurrentUser().getObjectId())){
+                                                userInvited = true;
+                                                break;
+                                            }
+                                        } catch (ParseException e2) {
+                                            e2.printStackTrace();
+                                        }
+                                    }
+                                }
+                            } catch (ParseException e1) {
+                                e1.printStackTrace();
+                            }
+                            if (!userInvited)
+                                continue;
                             catchup = new Catchup(
                                     R.drawable.image,
                                     catchupParses.get(i).getString("title"),
