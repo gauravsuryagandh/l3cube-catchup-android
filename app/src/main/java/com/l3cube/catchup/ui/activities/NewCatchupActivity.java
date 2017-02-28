@@ -45,7 +45,9 @@ import com.l3cube.catchup.ui.adapters.InvitedListAdapter;
 import com.l3cube.catchup.ui.decorators.SpacesItemDecoration;
 import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseInstallation;
 import com.parse.ParseObject;
+import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
@@ -167,15 +169,25 @@ public class NewCatchupActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 mTitle =(EditText) findViewById(R.id.et_new_catchup_title);
+
 //                mPlace = (EditText) findViewById(R.id.et_new_catchup_place);
                 String title = null,/*inviter = null,*/place = null,date = null,time = null;
+                final ParseQuery<ParseObject> userQuery = ParseQuery.getQuery("User");
+
+
+
+
+
                 if (getIntent().getStringExtra("operation").equals("update")) {
-                    ParseQuery<ParseObject> query = ParseQuery.getQuery("Catchup");
+                    final ParseQuery<ParseObject> query = ParseQuery.getQuery("Catchup");
+
+
                     query.getInBackground(getIntent().getStringExtra("objectId"), new GetCallback<ParseObject>() {
                         @Override
                         public void done(final ParseObject object, ParseException e) {
                             if (e==null){
                                 object.put("title", mTitle.getText().toString());
+
                                 if (!String.valueOf(mDate).equals("null"))
                                     object.put("date", mDate.toString());
                                 if (!String.valueOf(mTime).equals("null"))
@@ -186,19 +198,19 @@ public class NewCatchupActivity extends AppCompatActivity {
                                 for (final Person person: invitedList){
                                     invitedIds[i++] = person.getPhone();
                                 }
-                                String tkn = FirebaseInstanceId.getInstance().getToken();
-                                Toast.makeText(NewCatchupActivity.this, "Current token ["+tkn+"]",
-                                        Toast.LENGTH_LONG).show();
-                                Log.d("App", "Token ["+tkn+"]");
+
                                 object.put("invited", Arrays.asList(invitedIds));
                                 object.saveInBackground(new SaveCallback() {
                                     @Override
                                     public void done(ParseException e) {
                                         if (e==null){
+
                                             Intent intent = new Intent(NewCatchupActivity.this, CatchupDetailsActivity.class);
                                             intent.putExtra("objectId", object.getObjectId());
                                             startActivity(intent);
                                         }
+
+
                                     }
                                 });
                             }
@@ -223,6 +235,8 @@ public class NewCatchupActivity extends AppCompatActivity {
             }
         });
     }
+
+
 
     private void setupVariables() {
 
@@ -250,11 +264,13 @@ public class NewCatchupActivity extends AppCompatActivity {
         ParseQuery<ParseObject> query = ParseQuery.getQuery("_User");
         ParseQuery<ParseObject> queryPerson = ParseQuery.getQuery("Person");
 
+
         newCatchup.put("title", title);
         newCatchup.put("inviter", ParseUser.getCurrentUser());
         newCatchup.put("date", date);
         newCatchup.put("time", time);
         newCatchup.put("place", pickedPlace.getName());
+
         for ( final Person person: invitedList){
             ParseObject invitedPerson = null;
             String cleanedPhone = person.getPhone().replaceAll("\\s","");
@@ -262,6 +278,10 @@ public class NewCatchupActivity extends AppCompatActivity {
             query.whereEqualTo("mobileNumber", "+91".concat(cleanedPhone));
             try {
                 invitedPerson = query.getFirst();
+                String userId = invitedPerson.getObjectId().toString();
+                String inviter = ParseUser.getCurrentUser().getString("firstName");
+
+                sendnotification(userId ,title,inviter);
             } catch (ParseException e) {
                 e.printStackTrace();
                 queryPerson.whereEqualTo("mobileNumber", "+91".concat(cleanedPhone));
@@ -276,20 +296,27 @@ public class NewCatchupActivity extends AppCompatActivity {
                     try {
                         temp.save();
                         invitedPerson = temp;
+
                     } catch (ParseException e2) {
                         e2.printStackTrace();
                     }
                 }
             }
             invited.add(invitedPerson);
+
+
         }
         newCatchup.put("invited", invited);
+
+
+
         newCatchup.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
                 if (e==null){
                     Log.i(TAG, "done: Created CatchupParse");
                     Toast.makeText(NewCatchupActivity.this, "Created Catchup Successfully", Toast.LENGTH_SHORT).show();
+
                     Intent intent = new Intent(NewCatchupActivity.this, CatchupDetailsActivity.class);
                     intent.putExtra("objectId", newCatchup.getObjectId());
                     startActivity(intent);
@@ -298,6 +325,21 @@ public class NewCatchupActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void sendnotification(String objectId, String title, String inviter)
+    {
+
+        ParsePush parsePush = new ParsePush();
+        parsePush.setMessage("You are invited to " + title.toUpperCase() +" by " + inviter);
+
+
+        ParseQuery<ParseUser> query = ParseUser.getQuery();
+        ParseQuery <ParseInstallation> installquery = ParseInstallation.getQuery();
+
+        installquery.whereEqualTo("userId",objectId);
+        parsePush.setQuery(installquery);
+        parsePush.sendInBackground();
     }
 
 //    private void createCatchupOnServer(String title, String inviter, String date, String time, String pickedPlace) {
