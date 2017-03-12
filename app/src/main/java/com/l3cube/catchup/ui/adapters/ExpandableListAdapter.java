@@ -6,13 +6,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.l3cube.catchup.R;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -95,8 +98,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
         switch (childType) {
             case CHILD_TYPE_1:
                 int userGoing = 0;
-                ArrayList<ParseObject> going = this.expandableListDetail.get("RSVPed Yes");
-                ArrayList<ParseObject> notGoing = this.expandableListDetail.get("RSVPed No");
+                final ArrayList<ParseObject> going = this.expandableListDetail.get("RSVPed Yes");
+                final ArrayList<ParseObject> notGoing = this.expandableListDetail.get("RSVPed No");
                 final String expandedListName = expandedListObject.get("firstName") + " "+ expandedListObject.get("lastName");
                 final String expandedListNumber = (String) expandedListObject.get("mobileNumber");
                 TextView expandedListTextView = (TextView) convertView.findViewById(R.id.tv_contact_list_row_name);
@@ -123,6 +126,43 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
                     try {
                         if(expandedListObject.fetchIfNeeded().getObjectId().equals(ParseUser.getCurrentUser().getObjectId())){
                             expandedListTextView.setVisibility(View.GONE);
+                            final ParseObject catchupObject = this.expandableListDetail.get("Object").get(0);
+                            Button expandedListButton = (Button) convertView.findViewById(R.id.btn_contact_list_row_RSVP_ng);
+                            expandedListButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    notGoing.add(ParseUser.getCurrentUser());
+                                    catchupObject.put("notGoing", notGoing);
+                                    catchupObject.saveInBackground(new SaveCallback() {
+                                        @Override
+                                        public void done(ParseException e) {
+                                            if (e==null){
+                                                Toast.makeText(context, "updated: not going", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    });
+                                }
+                            });
+                            expandedListButton = (Button) convertView.findViewById(R.id.btn_contact_list_row_RSVP_g);
+                            final TextView finalExpandedListTextView = expandedListTextView;
+                            final RelativeLayout expandedListRelativeLayout = (RelativeLayout) convertView.findViewById(R.id.rl_contact_row_RSVP_btn);
+                            expandedListButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    going.add(ParseUser.getCurrentUser());
+                                    catchupObject.put("going", going);
+                                    catchupObject.saveInBackground(new SaveCallback() {
+                                        @Override
+                                        public void done(ParseException e) {
+                                            if (e==null){
+                                                Toast.makeText(context, "updated: going", Toast.LENGTH_SHORT).show();
+                                                finalExpandedListTextView.setVisibility(View.VISIBLE);
+                                                expandedListRelativeLayout.setVisibility(View.GONE);
+                                            }
+                                        }
+                                    });
+                                }
+                            });
                         } else {
                             RelativeLayout expandedListLayout = (RelativeLayout) convertView.findViewById(R.id.rl_contact_row_RSVP_btn);
                             expandedListLayout.setVisibility(View.GONE);
