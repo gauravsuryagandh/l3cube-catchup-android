@@ -29,6 +29,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import com.uber.sdk.android.rides.RideRequestButton;
@@ -69,7 +70,7 @@ public class CatchupDetailsActivity extends AppCompatActivity {
         // Take appropriate action for each action item click
         switch (item.getItemId()) {
             case R.id.delete_from_details:
-               AlertDialog dialog_box =AskOption();
+                AlertDialog dialog_box =AskOption();
                 dialog_box.show();
 
                 return true;
@@ -164,9 +165,12 @@ public class CatchupDetailsActivity extends AppCompatActivity {
                     mCatchupTitle.setText(object.getString("title"));
                     mCatchupTime.setText(object.getString("time"));
                     mCatchupDate.setText(object.getString("date"));
-                    mCatchupPlace.setText(object.getString("pickedPlace"));
-                    mExpandableListDetail = setELVData((ArrayList<ParseObject>) object.get("invited"));
+                    mCatchupPlace.setText(object.getString("placeName"));
+                    mExpandableListDetail = setELVData((ArrayList<ParseObject>) object.get("invited"), (ArrayList<ParseObject>) object.get("going"), (ArrayList<ParseObject>) object.get("notGoing"), object);
                     mExpandableListTitle = new ArrayList<String>(mExpandableListDetail.keySet());
+                    mExpandableListTitle.remove(mExpandableListTitle.size()-1);
+                    mExpandableListTitle.remove(mExpandableListTitle.size()-1);
+                    mExpandableListTitle.remove(mExpandableListTitle.size()-1);
                     mExpandableListAdapter = new ExpandableListAdapter(CatchupDetailsActivity.this, mExpandableListTitle, mExpandableListDetail);
                     try {
                         if (String.valueOf(object.getParseUser("inviter").fetchIfNeeded().getObjectId()).equals(ParseUser.getCurrentUser().getObjectId())){
@@ -220,7 +224,7 @@ public class CatchupDetailsActivity extends AppCompatActivity {
         layout.addView(requestButton);
     }
 
-    private HashMap<String, ArrayList<ParseObject>> setELVData(ArrayList<ParseObject> invited) {
+    private HashMap<String, ArrayList<ParseObject>> setELVData(ArrayList<ParseObject> invited, ArrayList<ParseObject> going, ArrayList<ParseObject> notGoing, ParseObject object) {
         HashMap<String, ArrayList<ParseObject>> expandableListDetail = new HashMap<>();
 
 //        ArrayList<ParseObject> football = new ArrayList<>();
@@ -238,10 +242,18 @@ public class CatchupDetailsActivity extends AppCompatActivity {
 //        basketball.add("Russia");
 
         expandableListDetail.put("Invited Contacts", invited);
+        expandableListDetail.put("RSVPed Yes", going);
+        expandableListDetail.put("RSVPed No", notGoing);
+        ArrayList<ParseObject> catchup = new ArrayList<ParseObject>();
+        try {
+            catchup.add(object.fetchIfNeeded());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Toast.makeText(this, "val:"+catchup.size(), Toast.LENGTH_SHORT).show();
+        expandableListDetail.put("Object", catchup);
 //        expandableListDetail.put("Choose pickedPlace", football);
 //        expandableListDetail.put("Choose time", basketball);
         return expandableListDetail;
     }
-
-
 }

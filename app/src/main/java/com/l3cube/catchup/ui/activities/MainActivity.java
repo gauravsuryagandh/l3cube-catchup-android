@@ -143,6 +143,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private void addCatchupsFromParse() {
         mCatchupList.clear();
         ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery("Catchup");
+        parseQuery.addDescendingOrder("createdAt");
         parseQuery.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> catchupParses, ParseException e) {

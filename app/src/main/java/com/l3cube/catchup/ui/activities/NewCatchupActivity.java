@@ -104,11 +104,15 @@ public class NewCatchupActivity extends AppCompatActivity {
                         title.setText(object.getString("title"));
                         selectDate.setText(object.getString("date"));
                         selectTime.setText(object.getString("time"));
-                        TextView pickedPlace = (TextView) findViewById(R.id.tv_catchup_details_place);
+                        TextView pickedPlace = (TextView) findViewById(R.id.tv_enter_a_place);
                         pickedPlace.setText(object.getString("placeName"));
-                        List<String> invitedNos = (ArrayList<String>) object.get("invited");
-                        for (int i=0; i<invitedNos.size();i++){
-                            invitedList.add(new Person("", invitedNos.get(i)));
+                        List<ParseObject> invited = (ArrayList<ParseObject>) object.get("invited");
+                        for (int i=0; i<invited.size();i++){
+                            try {
+                                invitedList.add(new Person(invited.get(i).fetchIfNeeded().getString("firstName") + " " + invited.get(i).fetchIfNeeded().getString("lastName"), invited.get(i).getString("mobileNumber")));
+                            } catch (ParseException e1) {
+                                e1.printStackTrace();
+                            }
                             showCurrentInvitedList();
                             notifyInvitedListAdapter();
                         }
