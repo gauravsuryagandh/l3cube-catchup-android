@@ -24,14 +24,14 @@ import com.l3cube.catchup.R;
 import com.l3cube.catchup.models.Catchup;
 import com.l3cube.catchup.ui.adapters.CatchupListAdapter;
 import com.l3cube.catchup.ui.decorators.SpacesItemDecoration;
-import com.parse.FindCallback;
+import com.parse.FunctionCallback;
+import com.parse.ParseCloud;
 import com.parse.ParseException;
 import com.parse.ParseObject;
-import com.parse.ParsePush;
-import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
@@ -142,57 +142,25 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     private void addCatchupsFromParse() {
         mCatchupList.clear();
-        ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery("Catchup");
-        parseQuery.addDescendingOrder("createdAt");
-        parseQuery.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> catchupParses, ParseException e) {
-                if (e == null) {
-                    Log.i(TAG, "done: Found Objects = " + catchupParses.size());
-                    if (catchupParses.size() > 0) {
-                        Catchup catchup;
-                        ParseUser inviter;
-                        List<ParseObject> invited;
-                        Boolean userInvited;
-                        for (int i = 0; i < catchupParses.size(); i++) {
-                            userInvited = false;
-                            invited = (ArrayList<ParseObject>) catchupParses.get(i).get("invited");
-                            inviter = (ParseUser) catchupParses.get(i).get("inviter");
-                            try {
-                                if (inviter.fetchIfNeeded().getObjectId().equals(ParseUser.getCurrentUser().getObjectId()))
-                                    userInvited = true;
-                                else {
-                                    for (ParseObject invitedPerson : invited){
-                                        try {
-                                            if(invitedPerson.fetchIfNeeded().getObjectId().equals(ParseUser.getCurrentUser().getObjectId())){
-                                                userInvited = true;
-                                                break;
-                                            }
-                                        } catch (ParseException e2) {
-                                            e2.printStackTrace();
-                                        }
-                                    }
-                                }
-                            } catch (ParseException e1) {
-                                e1.printStackTrace();
-                            }
-                            if (!userInvited)
-                                continue;
-                            catchup = new Catchup(
-                                    R.drawable.image,
-                                    catchupParses.get(i).getString("title"),
-                                    catchupParses.get(i).getParseUser("inviter"),
-                                    catchupParses.get(i).getString("placeName"),
-                                    catchupParses.get(i).getString("date").concat(" @ ").concat(catchupParses.get(i).getString("time")),
-                                    catchupParses.get(i).getObjectId()
-                            );
-                            mCatchupList.add(catchup);
-                        }
-                        notifyCatchupsAdapter();
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("userId", ParseUser.getCurrentUser().getObjectId());
+        ParseCloud.callFunctionInBackground("catchups_list", params, new FunctionCallback<ArrayList<ParseObject>>() {
+            public void done(ArrayList<ParseObject> catchups, ParseException e){
+                if (e==null){
+                    Toast.makeText(getApplicationContext(), String.valueOf(catchups.size()).concat(" CatchUps found."), Toast.LENGTH_SHORT).show();
+                    Catchup newFromServer;
+                    for (ParseObject catchup: catchups){
+                        newFromServer = new Catchup(
+                                R.drawable.image,
+                                catchup.getString("title"),
+                                catchup.getParseUser("inviter"),
+                                catchup.getString("placeName"),
+                                catchup.getString("date").concat(" @ ").concat(catchup.getString("time")),
+                                catchup.getObjectId()
+                        );
+                        mCatchupList.add(newFromServer);
                     }
-
-                } else {
-                    Log.e(TAG, "done: Error: " + e.getMessage());
+                    notifyCatchupsAdapter();
                 }
             }
         });
@@ -200,8 +168,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     private void notifyCatchupsAdapter() {
         mCatchupListAdapter.notifyDataSetChanged();
-
-
     }
 
 
