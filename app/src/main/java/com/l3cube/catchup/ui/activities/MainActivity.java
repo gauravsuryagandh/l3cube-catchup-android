@@ -27,6 +27,7 @@ import com.l3cube.catchup.ui.decorators.SpacesItemDecoration;
 import com.parse.FunctionCallback;
 import com.parse.ParseCloud;
 import com.parse.ParseException;
+import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
@@ -97,6 +98,14 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
 
     private void setupVariables() {
+
+        ParseInstallation installation = ParseInstallation.getCurrentInstallation();
+        String userId = ParseUser.getCurrentUser().getObjectId().toString();
+        installation.put("GCMSenderId","797163850689");
+
+        installation.put("userId",userId);
+        installation.saveInBackground();
+
         mRecyclerView = (RecyclerView) findViewById(R.id.rv_catchup_list);
         mFloatingActionButton = (FloatingActionButton) findViewById(R.id.fab_catchup_list);
 

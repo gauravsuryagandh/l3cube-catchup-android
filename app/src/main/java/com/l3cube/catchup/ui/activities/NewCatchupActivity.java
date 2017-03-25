@@ -2,8 +2,6 @@ package com.l3cube.catchup.ui.activities;
 
 import android.app.TimePickerDialog;
 import android.support.v7.app.AppCompatActivity;
-
-
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.Manifest;
@@ -32,13 +30,11 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
-
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.location.places.ui.PlacePicker;
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.l3cube.catchup.R;
 import com.l3cube.catchup.models.Person;
 import com.l3cube.catchup.ui.adapters.InvitedListAdapter;
@@ -51,11 +47,8 @@ import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-
 import java.util.Calendar;
 
 public class NewCatchupActivity extends AppCompatActivity {
@@ -90,7 +83,7 @@ public class NewCatchupActivity extends AppCompatActivity {
         setContentView(R.layout.activity_new_catchup);
 
         setupVariables();
-        Toast.makeText(getApplicationContext(), getIntent().getStringExtra("operation"), Toast.LENGTH_SHORT).show();
+
         if(getIntent().getStringExtra("operation").equals("update")){
             createCatchup.setText("Update");
             ParseQuery<ParseObject> query = ParseQuery.getQuery("Catchup");
@@ -99,13 +92,11 @@ public class NewCatchupActivity extends AppCompatActivity {
                 @Override
                 public void done(final ParseObject object, ParseException e) {
                     if(e == null){
-                        Toast.makeText(getApplicationContext(), object.getString("title"), Toast.LENGTH_SHORT).show();
                         TextView title = (TextView) findViewById(R.id.et_new_catchup_title);
                         title.setText(object.getString("title"));
                         selectDate.setText(object.getString("date"));
                         selectTime.setText(object.getString("time"));
-                        TextView pickedPlace = (TextView) findViewById(R.id.tv_enter_a_place);
-                        pickedPlace.setText(object.getString("placeName"));
+                        mEnterPlace.setText(object.getString("placeName"));
                         List<ParseObject> invited = (ArrayList<ParseObject>) object.get("invited");
                         for (int i=0; i<invited.size();i++){
                             try {
@@ -170,54 +161,78 @@ public class NewCatchupActivity extends AppCompatActivity {
         });
         mInviteContacts.setOnClickListener(inviteContactsListener);
         createCatchup.setOnClickListener(new View.OnClickListener() {
+            public String title = null ;
+
             @Override
             public void onClick(View view) {
                 mTitle =(EditText) findViewById(R.id.et_new_catchup_title);
 
-//                mPlace = (EditText) findViewById(R.id.et_new_catchup_place);
-                String title = null,/*inviter = null,*/place = null,date = null,time = null;
-                final ParseQuery<ParseObject> userQuery = ParseQuery.getQuery("User");
-
-
-
-
-
+                String date = null,time = null;
                 if (getIntent().getStringExtra("operation").equals("update")) {
                     final ParseQuery<ParseObject> query = ParseQuery.getQuery("Catchup");
-
-
                     query.getInBackground(getIntent().getStringExtra("objectId"), new GetCallback<ParseObject>() {
                         @Override
                         public void done(final ParseObject object, ParseException e) {
                             if (e==null){
                                 object.put("title", mTitle.getText().toString());
-
                                 if (!String.valueOf(mDate).equals("null"))
                                     object.put("date", mDate.toString());
                                 if (!String.valueOf(mTime).equals("null"))
                                     object.put("time", mTime.toString());
-                                object.put("placeName", pickedPlace.getName());
-                                object.put("placeLat", pickedPlace.getLatLng().latitude);
-                                object.put("placeLong", pickedPlace.getLatLng().longitude);
-                                object.put("placeAdd", pickedPlace.getAddress());
-                                String[] invitedIds = new String[invitedList.size()];
-                                int i = 0;
-                                for (final Person person: invitedList){
-                                    invitedIds[i++] = person.getPhone();
+                                object.put("placeName", mEnterPlace.getText().toString());
+                                if (pickedPlace!=null) {
+                                    object.put("placeLat", pickedPlace.getLatLng().latitude);
+                                    object.put("placeLong", pickedPlace.getLatLng().longitude);
+                                    object.put("placeAdd", pickedPlace.getAddress());
+                                } else {
+                                    object.put("placeLat", 0.0);
+                                    object.put("placeLong", 0.0);
+                                    object.put("placeAdd", "NA");
                                 }
+                                ParseQuery<ParseObject> queryPerson = ParseQuery.getQuery("Person");
+                                List<ParseObject> invited = new ArrayList<ParseObject>();
+                                for ( final Person person: invitedList) {
+                                    ParseObject invitedPerson = null;
+                                    String cleanedPhone = person.getPhone().replaceAll("\\s", "");
+                                    cleanedPhone = cleanedPhone.substring(cleanedPhone.length() - 10);
+                                    query.whereEqualTo("mobileNumber", "+91".concat(cleanedPhone));
+                                    try {
+                                        invitedPerson = query.getFirst();
+                                        String userId = invitedPerson.getObjectId().toString();
+                                        String inviter = ParseUser.getCurrentUser().getString("firstName");
 
-                                object.put("invited", Arrays.asList(invitedIds));
+                                        sendnotification(userId, title, inviter);
+                                    } catch (ParseException e2) {
+                                        e2.printStackTrace();
+                                        queryPerson.whereEqualTo("mobileNumber", "+91".concat(cleanedPhone));
+                                        try {
+                                            invitedPerson = queryPerson.getFirst();
+                                        } catch (ParseException e1) {
+                                            e1.printStackTrace();
+                                            ParseObject temp = new ParseObject("Person");
+                                            temp.put("firstName", person.getName().split(" ")[0]);
+                                            temp.put("lastName", person.getName().split(" ")[1]);
+                                            temp.put("mobileNumber", "+91".concat(cleanedPhone));
+                                            try {
+                                                temp.save();
+                                                invitedPerson = temp;
+
+                                            } catch (ParseException e3) {
+                                                e3.printStackTrace();
+                                            }
+                                        }
+                                    }
+                                    invited.add(invitedPerson);
+                                }
+                                object.put("invited", invited);
                                 object.saveInBackground(new SaveCallback() {
                                     @Override
                                     public void done(ParseException e) {
                                         if (e==null){
-
                                             Intent intent = new Intent(NewCatchupActivity.this, CatchupDetailsActivity.class);
                                             intent.putExtra("objectId", object.getObjectId());
                                             startActivity(intent);
                                         }
-
-
                                     }
                                 });
                             }
@@ -226,17 +241,8 @@ public class NewCatchupActivity extends AppCompatActivity {
                 } else {
                     // Create Catchup on Server
                     title = mTitle.getText().toString();
-//                    if (ParseUser.getCurrentUser()!=null) {
-//                        inviter = new String(ParseUser.getCurrentUser().getString("firstName")
-//                                .concat(" ")
-//                                .concat(ParseUser.getCurrentUser().getString("lastName"))
-//                        );
-//                    } else {
-//                        inviter = "Gaurav Suryagandh";
-//                    }
                     date = String.valueOf(mDate);
                     time = String.valueOf(mTime);
-//                    pickedPlace = mPlace.getText().toString();
                     createCatchupOnServer(title,date,time);
                 }
             }
@@ -271,15 +277,20 @@ public class NewCatchupActivity extends AppCompatActivity {
         ParseQuery<ParseObject> query = ParseQuery.getQuery("_User");
         ParseQuery<ParseObject> queryPerson = ParseQuery.getQuery("Person");
 
-
         newCatchup.put("title", title);
         newCatchup.put("inviter", ParseUser.getCurrentUser());
         newCatchup.put("date", date);
         newCatchup.put("time", time);
-        newCatchup.put("placeName", pickedPlace.getName());
-        newCatchup.put("placeLat", pickedPlace.getLatLng().latitude);
-        newCatchup.put("placeLong", pickedPlace.getLatLng().longitude);
-        newCatchup.put("placeAdd", pickedPlace.getAddress());
+        newCatchup.put("placeName", mEnterPlace.getText().toString());
+        if (pickedPlace!=null) {
+            newCatchup.put("placeLat", pickedPlace.getLatLng().latitude);
+            newCatchup.put("placeLong", pickedPlace.getLatLng().longitude);
+            newCatchup.put("placeAdd", pickedPlace.getAddress());
+        } else {
+            newCatchup.put("placeLat", 0.0);
+            newCatchup.put("placeLong", 0.0);
+            newCatchup.put("placeAdd", "NA");
+        }
         for ( final Person person: invitedList){
             ParseObject invitedPerson = null;
             String cleanedPhone = person.getPhone().replaceAll("\\s","");
@@ -312,14 +323,10 @@ public class NewCatchupActivity extends AppCompatActivity {
                 }
             }
             invited.add(invitedPerson);
-
-
         }
         newCatchup.put("invited", invited);
         newCatchup.put("going", new ArrayList<ParseObject>());
         newCatchup.put("notGoing", new ArrayList<ParseObject>());
-
-
 
         newCatchup.saveInBackground(new SaveCallback() {
             @Override
@@ -343,49 +350,12 @@ public class NewCatchupActivity extends AppCompatActivity {
 
         ParsePush parsePush = new ParsePush();
         parsePush.setMessage("You are invited to " + title.toUpperCase() +" by " + inviter);
-
-
-        ParseQuery<ParseUser> query = ParseUser.getQuery();
         ParseQuery <ParseInstallation> installquery = ParseInstallation.getQuery();
 
         installquery.whereEqualTo("userId",objectId);
         parsePush.setQuery(installquery);
         parsePush.sendInBackground();
     }
-
-//    private void createCatchupOnServer(String title, String inviter, String date, String time, String pickedPlace) {
-//        String[] invitedIds = new String[invitedList.size()];
-//        int i =0;
-////        ParseQuery<ParseObject> query = ParseQuery.getQuery("User");
-//        final ParseObject catchupParse = new ParseObject("CatchupParse");
-//
-//        catchupParse.put("title",title);
-//        catchupParse.put("inviter",inviter);
-//        catchupParse.put("inviterId", ParseUser.getCurrentUser().getObjectId());
-//        catchupParse.put("date",date);
-//        catchupParse.put("time",time);
-//        catchupParse.put("pickedPlace",pickedPlace);
-//
-//        for (final Person person: invitedList){
-//            invitedIds[i++] = person.getPhone();
-//        }
-//
-//        catchupParse.put("invited", Arrays.asList(invitedIds));
-//        catchupParse.saveInBackground(new SaveCallback() {
-//            @Override
-//            public void done(ParseException e) {
-//                if (e == null) {
-//                    Log.i(TAG, "done: Created CatchupParse");
-//                    Toast.makeText(NewCatchupActivity.this, "Created Catchup Successfully", Toast.LENGTH_SHORT).show();
-//                    Intent intent = new Intent(NewCatchupActivity.this, CatchupDetailsActivity.class);
-//                    intent.putExtra("objectId", catchupParse.getObjectId());
-//                    startActivity(intent);
-//                } else {
-//                    Log.e(TAG, "done: Error: " + e.getMessage() );
-//                }
-//            }
-//        });
-//    }
 
     private void startInviteContactsFlow() {
 
@@ -397,23 +367,13 @@ public class NewCatchupActivity extends AppCompatActivity {
             // Should we show an explanation?
             if (ActivityCompat.shouldShowRequestPermissionRationale(thisActivity,
                     Manifest.permission.READ_CONTACTS)) {
-                //Toast.makeText(NewCatchupActivity.this, "Should show request rationale", Toast.LENGTH_SHORT).show();
-
-                // Show an expanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
 
             } else {
-                //Toast.makeText(NewCatchupActivity.this, "Directly ask for permissions", Toast.LENGTH_SHORT).show();
                 // No explanation needed, we can request the permission.
 
                 ActivityCompat.requestPermissions(NewCatchupActivity.this,
                         new String[]{Manifest.permission.READ_CONTACTS},
                         MY_PERMISSIONS_REQUEST_READ_CONTACTS);
-
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
             }
         } else {
             Toast.makeText(NewCatchupActivity.this, "Already granted permissions", Toast.LENGTH_SHORT).show();
@@ -611,6 +571,4 @@ public class NewCatchupActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
-
 }

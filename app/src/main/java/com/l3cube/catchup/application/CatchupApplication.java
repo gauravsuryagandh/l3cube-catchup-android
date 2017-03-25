@@ -58,13 +58,6 @@ public class CatchupApplication extends Application {
         Parse.initialize(configuration);
         ParseFacebookUtils.initialize(CatchupApplication.this);
 
-        ParseInstallation installation = ParseInstallation.getCurrentInstallation();
-        String userId = ParseUser.getCurrentUser().getObjectId().toString();
-        installation.put("GCMSenderId","797163850689");
-
-        installation.put("userId",userId);
-        installation.saveInBackground();
-
         SessionConfiguration sessionConfiguration = new SessionConfiguration.Builder()
                 .setClientId("LiXZJlZ-SCsyG5WSiwc-4f6kkean5Ryv")
                 .setServerToken("gpxUluDH9ZIWY3PuV7Ujhp9BHTf3cGPW1fkUPFRS")
