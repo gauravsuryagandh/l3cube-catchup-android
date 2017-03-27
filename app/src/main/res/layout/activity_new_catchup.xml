@@ -20,42 +20,65 @@
         android:layout_alignParentStart="true" />
 
     <EditText
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
+        android:id="@+id/et_new_catchup_title"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/et_new_catchup_title"
-        android:hint="Enter a name for the Catchup"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_below="@id/tv_new_catchup_title"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:hint="Enter a name for the Catchup" />
 
     <TextView
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.AppCompat.Button"
-        android:text="Select Date"
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
         android:id="@+id/tv_new_catchup_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@id/et_new_catchup_title"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
+        android:text="Date" />
 
     <TextView
+        android:id="@+id/et_new_catchup_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/tv_new_catchup_date"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginTop="16dp"
+        android:hint="Select Date"
+        android:textAppearance="@style/TextAppearance.AppCompat.Button"
+        android:textSize="18sp" />
+
+
+    <TextView
+        android:id="@+id/tv_new_catchup_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.AppCompat.Button"
-        android:text="Select Time"
-        android:id="@+id/tv_new_catchup_time"
-        android:layout_below="@id/tv_new_catchup_date"
+        android:layout_below="@id/et_new_catchup_date"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Time"
+        android:textAppearance="@style/TextAppearance.AppCompat.Button" />
+
+    <TextView
+        android:id="@+id/et_new_catchup_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/tv_new_catchup_time"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="16dp"
+        android:hint="Select Time"
+        android:textAppearance="@style/TextAppearance.AppCompat.Button"
+        android:textSize="18sp" />
 
     <!--<TextView-->
         <!--android:layout_marginLeft="16dp"-->
@@ -93,7 +116,7 @@
         android:text="Select place from Google Maps"
         android:textColor="@android:color/white"
         android:textAppearance="?android:attr/textAppearanceButton"
-        android:layout_below="@id/tv_new_catchup_time"/>
+        android:layout_below="@id/et_new_catchup_time"/>
 
 
     <EditText
