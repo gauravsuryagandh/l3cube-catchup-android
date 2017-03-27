@@ -267,8 +267,8 @@ public class NewCatchupActivity extends AppCompatActivity {
 
     private void setupVariables() {
 
-        selectDate = (TextView) findViewById(R.id.tv_new_catchup_date);
-        selectTime = (TextView) findViewById(R.id.tv_new_catchup_time);
+        selectDate = (TextView) findViewById(R.id.et_new_catchup_date);
+        selectTime = (TextView) findViewById(R.id.et_new_catchup_time);
         final Calendar c = Calendar.getInstance();
         year = c.get(Calendar.YEAR);
         month = c.get(Calendar.MONTH);
@@ -534,15 +534,86 @@ public class NewCatchupActivity extends AppCompatActivity {
             year  = selectedYear;
             month = selectedMonth;
             day   = selectedDay;
+            String dday = null;
+            String mmonth = month(month);
+
+            if(day == 1 || day == 21 || day == 31)
+            {
+                dday = day + "st";
+            }
+
+            else if(day == 2 || day == 22)
+            {
+                dday = day + "nd";
+            }
+
+            else if(day == 3 || day == 23)
+            {
+                dday = day + "rd";
+            }
+
+            else
+            {
+                dday = day + "th";
+            }
+
 
             mDate = new StringBuilder()
-                    .append(day).append("-").append(month + 1).append("-")
+                    .append(dday).append("  ").append(mmonth).append("  ")
                     .append(year).append(" ");
             // Show selected date
             selectDate.setText(mDate);
 
+
         }
     };
+
+
+    public String month(int month)
+    {
+        String mmonth=null;
+        switch (month)
+        {
+            case 0:
+                mmonth = "January";
+                return mmonth;
+            case 1:
+                mmonth = "February";
+                return mmonth;
+            case 2:
+                mmonth = "March";
+                return mmonth;
+            case 3:
+                mmonth = "April";
+                return mmonth;
+            case 4:
+                mmonth = "May";
+                return mmonth;
+            case 5:
+                mmonth = "June";
+                return mmonth;
+            case 6:
+                mmonth = "July";
+                return mmonth;
+            case 7:
+                mmonth = "August";
+                return mmonth;
+            case 8:
+                mmonth = "September";
+                return mmonth;
+            case 9:
+                mmonth = "October";
+                return mmonth;
+            case 10:
+                mmonth = "November";
+                return mmonth;
+            default:
+                mmonth = "December";
+                return mmonth;
+        }
+
+    }
+
 
     private TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDialog.OnTimeSetListener() {
 
@@ -553,8 +624,18 @@ public class NewCatchupActivity extends AppCompatActivity {
             hour   = hourOfDay;
             minute = minutes;
 
-            mTime = new StringBuilder().append(utilTime(hour))
-                    .append(":").append(utilTime(minute));
+            if (hour < 12)
+            {
+                mTime = new StringBuilder().append(utilTime(hour))
+                        .append(":").append(utilTime(minute)).append(" AM");
+            }
+
+            else if(hour>12)
+            {
+                hour = hour-12;
+                mTime = new StringBuilder().append(utilTime(hour))
+                        .append(":").append(utilTime(minute)).append(" PM");
+            }
             // set current time into output textview
             selectTime.setText(mTime);
         }
