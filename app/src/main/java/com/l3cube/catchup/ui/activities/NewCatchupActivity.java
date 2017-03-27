@@ -275,8 +275,8 @@ public class NewCatchupActivity extends AppCompatActivity {
 
     private void setupVariables() {
 
-        selectDate = (TextView) findViewById(R.id.et_new_catchup_date);
-        selectTime = (TextView) findViewById(R.id.et_new_catchup_time);
+        selectDate = (TextView) findViewById(R.id.tv_new_catchup_date);
+        selectTime = (TextView) findViewById(R.id.tv_new_catchup_time);
         final Calendar c = Calendar.getInstance();
         year = c.get(Calendar.YEAR);
         month = c.get(Calendar.MONTH);
