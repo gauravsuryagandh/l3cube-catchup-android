@@ -294,7 +294,11 @@ public class NewCatchupActivity extends AppCompatActivity {
         for ( final Person person: invitedList){
             ParseObject invitedPerson = null;
             String cleanedPhone = person.getPhone().replaceAll("\\s","");
-            cleanedPhone = cleanedPhone.substring(cleanedPhone.length()-10);
+            if (cleanedPhone.length() > 10) {
+                cleanedPhone = cleanedPhone.substring(cleanedPhone.length() - 11);
+            } else {
+                cleanedPhone = cleanedPhone.substring(cleanedPhone.length() - 10);
+            }
             query.whereEqualTo("mobileNumber", "+91".concat(cleanedPhone));
             try {
                 invitedPerson = query.getFirst();
@@ -311,7 +315,7 @@ public class NewCatchupActivity extends AppCompatActivity {
                     e1.printStackTrace();
                     ParseObject temp = new ParseObject("Person");
                     temp.put("firstName", person.getName().split(" ")[0]);
-                    if (person.getName().split(" ").length > 0) {
+                    if (person.getName().split(" ").length > 1) {
                         temp.put("lastName", person.getName().split(" ")[1]);
                     }
                     temp.put("mobileNumber", "+91".concat(cleanedPhone));

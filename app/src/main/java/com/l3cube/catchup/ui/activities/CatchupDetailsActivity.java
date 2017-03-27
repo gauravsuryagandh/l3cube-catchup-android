@@ -151,7 +151,7 @@ public class CatchupDetailsActivity extends AppCompatActivity {
         mCatchupTime = (TextView) findViewById(R.id.catchup_details_time);
         mCatchupPlace = (TextView) findViewById(R.id.tv_catchup_details_place);
         mFloatingActionButton = (FloatingActionButton) findViewById(R.id.fab_update_catchup);
-        requestButton = new RideRequestButton(getApplicationContext());
+        requestButton = new RideRequestButton(CatchupDetailsActivity.this);
         layout = (LinearLayout) findViewById(R.id.ll_catchup_details);
     }
 
