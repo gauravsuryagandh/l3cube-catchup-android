@@ -7,19 +7,12 @@ import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.parse.Parse;
 import com.parse.ParseFacebookUtils;
-import com.parse.ParseInstallation;
-import com.parse.ParseUser;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterCore;
-
-import java.util.LinkedList;
-
 import io.fabric.sdk.android.Fabric;
 import com.uber.sdk.android.core.UberSdk;
 import com.uber.sdk.core.auth.Scope;
 import com.uber.sdk.rides.client.SessionConfiguration;
-
-import java.sql.Array;
 import java.util.Arrays;
 
 /**
@@ -55,9 +48,10 @@ public class CatchupApplication extends Application {
                 .clientKey("ggBr6eMC8PzHTfi8BN0Dhhd6bCr2MYnVDApJHWr3")
                 .server(serverUrl)
                 .build();
+
+
         Parse.initialize(configuration);
         ParseFacebookUtils.initialize(CatchupApplication.this);
-
         SessionConfiguration sessionConfiguration = new SessionConfiguration.Builder()
                 .setClientId("LiXZJlZ-SCsyG5WSiwc-4f6kkean5Ryv")
                 .setServerToken("gpxUluDH9ZIWY3PuV7Ujhp9BHTf3cGPW1fkUPFRS")
@@ -65,5 +59,9 @@ public class CatchupApplication extends Application {
                 .setEnvironment(SessionConfiguration.Environment.SANDBOX)
                 .build();
         UberSdk.initialize(sessionConfiguration);
+
+
+
+
     }
 }

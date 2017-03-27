@@ -53,9 +53,18 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.activities.SignupActivity"/>
-        <activity android:name=".ui.activities.CatchupDetailsActivity"/>
+        <activity android:name=".ui.activities.CatchupDetailsActivity"
+
+            android:parentActivityName= ".ui.activities.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.activities.MainActivity" />
+        </activity>
+
+
         <activity
             android:name=".ui.activities.NewCatchupActivity"
+
             android:windowSoftInputMode="adjustPan"/>
 
         <meta-data

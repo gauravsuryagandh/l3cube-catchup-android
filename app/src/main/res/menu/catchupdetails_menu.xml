@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context = ".CatchupDetailsActivity" >
 
+
     <item
         android:title="Delete Catchup"
         android:id="@+id/delete_from_details"

@@ -172,6 +172,7 @@ public class NewCatchupActivity extends AppCompatActivity {
             }
         });
         mInviteContacts.setOnClickListener(inviteContactsListener);
+
         createCatchup.setOnClickListener(new View.OnClickListener() {
             public String title = null ;
 
@@ -259,6 +260,7 @@ public class NewCatchupActivity extends AppCompatActivity {
                 }
             }
         });
+
     }
 
 
@@ -361,7 +363,8 @@ public class NewCatchupActivity extends AppCompatActivity {
     {
 
         ParsePush parsePush = new ParsePush();
-        parsePush.setMessage("You are invited to " + title.toUpperCase() +" by " + inviter);
+        String message = "You are invited to " + title.toUpperCase() +" by " + inviter;
+        parsePush.setMessage(message);
         ParseQuery <ParseInstallation> installquery = ParseInstallation.getQuery();
 
         installquery.whereEqualTo("userId",objectId);
@@ -509,7 +512,10 @@ public class NewCatchupActivity extends AppCompatActivity {
                 // open datepicker dialog.
                 // set date picker for current date
                 // add pickerListener listner to date picker
-                return new DatePickerDialog(this, pickerListener, year, month,day);
+                DatePickerDialog datePickerDialog = new DatePickerDialog(this, pickerListener, year, month,day);
+                datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis()-1000);
+                return datePickerDialog;
+
             case TIME_DIALOG_ID:
 
                 // set time picker as current time

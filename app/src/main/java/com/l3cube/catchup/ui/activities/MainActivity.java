@@ -2,6 +2,7 @@ package com.l3cube.catchup.ui.activities;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -14,6 +15,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.appindexing.Action;
@@ -41,8 +44,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private RecyclerView mRecyclerView;
     private CatchupListAdapter mCatchupListAdapter;
     private FloatingActionButton mFloatingActionButton;
+    RelativeLayout mLayout;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -54,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mLayout = (RelativeLayout) findViewById(R.id.relativeLayout);
 
         if (ParseUser.getCurrentUser() == null) {
             navigateToSignUp();
@@ -61,16 +65,33 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             startActivity(new Intent(MainActivity.this, GetUserDetailsActivity.class));
         } else {
             setupVariables();
+
             populateCatchups();
+
 
         }
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
+
+
+
+
+
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+
+        ParseInstallation installation = ParseInstallation.getCurrentInstallation();
+        String userId = ParseUser.getCurrentUser().getObjectId().toString();
+        installation.put("GCMSenderId","797163850689");
+
+        installation.put("userId",userId);
+        installation.saveInBackground();
     }
 
 
-    //from here
+
+
+
+        //from here
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -125,6 +146,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         mRecyclerView.setAdapter(mCatchupListAdapter);
         mSwipeRefreshLayout= (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
         mSwipeRefreshLayout.setOnRefreshListener(this );
+//        spinner = (ProgressBar)findViewById(R.id.progressBar1);
 
 
     }
@@ -146,7 +168,9 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         //notifyCatchupsAdapter();
 
         // Adding from Parse
+
         addCatchupsFromParse();
+
 
     }
 
@@ -171,6 +195,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                         mCatchupList.add(newFromServer);
                     }
                     notifyCatchupsAdapter();
+                    findViewById(R.id.loadingPanel).setVisibility(View.GONE);
                 }
             }
         });

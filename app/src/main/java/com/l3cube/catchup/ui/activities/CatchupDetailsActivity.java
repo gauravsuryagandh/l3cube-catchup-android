@@ -1,6 +1,8 @@
 package com.l3cube.catchup.ui.activities;
 
+import android.app.ActionBar;
 import android.content.DialogInterface;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
@@ -55,9 +57,12 @@ public class CatchupDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_catchup_details);
-
+//       ActionBar actionBar = getActionBar();
+//        actionBar.setDisplayHomeAsUpEnabled(true);
         setupVariables();
         setupData();
+
+
     }
 
     @Override
@@ -88,7 +93,9 @@ public class CatchupDetailsActivity extends AppCompatActivity {
                 popupMenu.inflate(R.menu.overflow_menu);
                 popupMenu.show();
                 return true;
-
+//            case R.id.home:
+//                NavUtils.navigateUpFromSameTask(this);
+//                return true;
 
             default:
                 return super.onOptionsItemSelected(item);
