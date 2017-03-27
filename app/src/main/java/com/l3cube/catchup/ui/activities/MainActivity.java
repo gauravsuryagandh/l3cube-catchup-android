@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private CatchupListAdapter mCatchupListAdapter;
     private FloatingActionButton mFloatingActionButton;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
