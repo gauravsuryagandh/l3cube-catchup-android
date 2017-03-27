@@ -179,84 +179,92 @@ public class NewCatchupActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 mTitle =(EditText) findViewById(R.id.et_new_catchup_title);
+                if (mTitle.getText().toString().trim().equals("")) {
+                    Toast.makeText(getApplicationContext(), "Title should not be empty", Toast.LENGTH_SHORT).show();
 
-                String date = null,time = null;
-                if (getIntent().getStringExtra("operation").equals("update")) {
-                    final ParseQuery<ParseObject> query = ParseQuery.getQuery("Catchup");
-                    query.getInBackground(getIntent().getStringExtra("objectId"), new GetCallback<ParseObject>() {
-                        @Override
-                        public void done(final ParseObject object, ParseException e) {
-                            if (e==null){
-                                object.put("title", mTitle.getText().toString());
-                                if (!String.valueOf(mDate).equals("null"))
-                                    object.put("date", mDate.toString());
-                                if (!String.valueOf(mTime).equals("null"))
-                                    object.put("time", mTime.toString());
-                                object.put("placeName", mEnterPlace.getText().toString());
-                                if (pickedPlace!=null) {
-                                    object.put("placeLat", pickedPlace.getLatLng().latitude);
-                                    object.put("placeLong", pickedPlace.getLatLng().longitude);
-                                    object.put("placeAdd", pickedPlace.getAddress());
-                                } else {
-                                    object.put("placeLat", 0.0);
-                                    object.put("placeLong", 0.0);
-                                    object.put("placeAdd", "NA");
-                                }
-                                ParseQuery<ParseObject> queryPerson = ParseQuery.getQuery("Person");
-                                List<ParseObject> invited = new ArrayList<ParseObject>();
-                                for ( final Person person: invitedList) {
-                                    ParseObject invitedPerson = null;
-                                    String cleanedPhone = person.getPhone().replaceAll("\\s", "");
-                                    cleanedPhone = cleanedPhone.substring(cleanedPhone.length() - 10);
-                                    query.whereEqualTo("mobileNumber", "+91".concat(cleanedPhone));
-                                    try {
-                                        invitedPerson = query.getFirst();
-                                        String userId = invitedPerson.getObjectId().toString();
-                                        String inviter = ParseUser.getCurrentUser().getString("firstName");
-
-                                        sendnotification(userId, title, inviter);
-                                    } catch (ParseException e2) {
-                                        e2.printStackTrace();
-                                        queryPerson.whereEqualTo("mobileNumber", "+91".concat(cleanedPhone));
+                } else if (selectDate.getText().toString().equals("Select Date")) {
+                    Toast.makeText(getApplicationContext(), "Select a Date ", Toast.LENGTH_SHORT).show();
+                } else if (selectTime.getText().toString().trim().equals("Select Time")) {
+                    Toast.makeText(getApplicationContext(), "Select a Time", Toast.LENGTH_SHORT).show();
+                } else {
+                    String date = null,time = null;
+                    if (getIntent().getStringExtra("operation").equals("update")) {
+                        final ParseQuery<ParseObject> query = ParseQuery.getQuery("Catchup");
+                        query.getInBackground(getIntent().getStringExtra("objectId"), new GetCallback<ParseObject>() {
+                            @Override
+                            public void done(final ParseObject object, ParseException e) {
+                                if (e==null){
+                                    object.put("title", mTitle.getText().toString());
+                                    if (!String.valueOf(mDate).equals("null"))
+                                        object.put("date", mDate.toString());
+                                    if (!String.valueOf(mTime).equals("null"))
+                                        object.put("time", mTime.toString());
+                                    object.put("placeName", mEnterPlace.getText().toString());
+                                    if (pickedPlace!=null) {
+                                        object.put("placeLat", pickedPlace.getLatLng().latitude);
+                                        object.put("placeLong", pickedPlace.getLatLng().longitude);
+                                        object.put("placeAdd", pickedPlace.getAddress());
+                                    } else {
+                                        object.put("placeLat", 0.0);
+                                        object.put("placeLong", 0.0);
+                                        object.put("placeAdd", "NA");
+                                    }
+                                    ParseQuery<ParseObject> queryPerson = ParseQuery.getQuery("Person");
+                                    List<ParseObject> invited = new ArrayList<ParseObject>();
+                                    for ( final Person person: invitedList) {
+                                        ParseObject invitedPerson = null;
+                                        String cleanedPhone = person.getPhone().replaceAll("\\s", "");
+                                        cleanedPhone = cleanedPhone.substring(cleanedPhone.length() - 10);
+                                        query.whereEqualTo("mobileNumber", "+91".concat(cleanedPhone));
                                         try {
-                                            invitedPerson = queryPerson.getFirst();
-                                        } catch (ParseException e1) {
-                                            e1.printStackTrace();
-                                            ParseObject temp = new ParseObject("Person");
-                                            temp.put("firstName", person.getName().split(" ")[0]);
-                                            temp.put("lastName", person.getName().split(" ")[1]);
-                                            temp.put("mobileNumber", "+91".concat(cleanedPhone));
-                                            try {
-                                                temp.save();
-                                                invitedPerson = temp;
+                                            invitedPerson = query.getFirst();
+                                            String userId = invitedPerson.getObjectId().toString();
+                                            String inviter = ParseUser.getCurrentUser().getString("firstName");
 
-                                            } catch (ParseException e3) {
-                                                e3.printStackTrace();
+                                            sendnotification(userId, title, inviter);
+                                        } catch (ParseException e2) {
+                                            e2.printStackTrace();
+                                            queryPerson.whereEqualTo("mobileNumber", "+91".concat(cleanedPhone));
+                                            try {
+                                                invitedPerson = queryPerson.getFirst();
+                                            } catch (ParseException e1) {
+                                                e1.printStackTrace();
+                                                ParseObject temp = new ParseObject("Person");
+                                                temp.put("firstName", person.getName().split(" ")[0]);
+                                                temp.put("lastName", person.getName().split(" ")[1]);
+                                                temp.put("mobileNumber", "+91".concat(cleanedPhone));
+                                                try {
+                                                    temp.save();
+                                                    invitedPerson = temp;
+
+                                                } catch (ParseException e3) {
+                                                    e3.printStackTrace();
+                                                }
                                             }
                                         }
+                                        invited.add(invitedPerson);
                                     }
-                                    invited.add(invitedPerson);
-                                }
-                                object.put("invited", invited);
-                                object.saveInBackground(new SaveCallback() {
-                                    @Override
-                                    public void done(ParseException e) {
-                                        if (e==null){
-                                            Intent intent = new Intent(NewCatchupActivity.this, CatchupDetailsActivity.class);
-                                            intent.putExtra("objectId", object.getObjectId());
-                                            startActivity(intent);
+                                    object.put("invited", invited);
+                                    object.saveInBackground(new SaveCallback() {
+                                        @Override
+                                        public void done(ParseException e) {
+                                            if (e==null){
+                                                Intent intent = new Intent(NewCatchupActivity.this, CatchupDetailsActivity.class);
+                                                intent.putExtra("objectId", object.getObjectId());
+                                                startActivity(intent);
+                                            }
                                         }
-                                    }
-                                });
+                                    });
+                                }
                             }
-                        }
-                    });
-                } else {
-                    // Create Catchup on Server
-                    title = mTitle.getText().toString();
-                    date = String.valueOf(mDate);
-                    time = String.valueOf(mTime);
-                    createCatchupOnServer(title,date,time);
+                        });
+                    } else {
+                        // Create Catchup on Server
+                        title = mTitle.getText().toString();
+                        date = String.valueOf(mDate);
+                        time = String.valueOf(mTime);
+                        createCatchupOnServer(title,date,time);
+                    }
                 }
             }
         });
