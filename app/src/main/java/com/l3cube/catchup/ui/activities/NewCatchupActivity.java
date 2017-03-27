@@ -311,7 +311,9 @@ public class NewCatchupActivity extends AppCompatActivity {
                     e1.printStackTrace();
                     ParseObject temp = new ParseObject("Person");
                     temp.put("firstName", person.getName().split(" ")[0]);
-                    //temp.put("lastName", person.getName().split(" ")[1]);
+                    if (person.getName().split(" ").length > 0) {
+                        temp.put("lastName", person.getName().split(" ")[1]);
+                    }
                     temp.put("mobileNumber", "+91".concat(cleanedPhone));
                     try {
                         temp.save();
