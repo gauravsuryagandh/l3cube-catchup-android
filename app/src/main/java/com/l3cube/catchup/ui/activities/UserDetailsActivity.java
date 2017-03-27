@@ -127,7 +127,7 @@ public class UserDetailsActivity extends AppCompatActivity {
             InputStream in = new java.net.URL(urldisplay).openStream();
             mIcon11 = BitmapFactory.decodeStream(in);
         } catch (Exception e) {
-            Log.e("Error", e.getMessage());
+            Log.e("Error","Error occured",e);
             e.printStackTrace();
         }
         return mIcon11;

@@ -64,7 +64,8 @@
         <activity android:name=".ui.activities.CatchupDetailsActivity" />
         <activity
             android:name=".ui.activities.NewCatchupActivity"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <meta-data
             android:name="io.fabric.ApiKey"
