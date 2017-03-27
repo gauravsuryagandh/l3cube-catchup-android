@@ -55,15 +55,12 @@ public class CatchupApplication extends Application {
                 .clientKey("ggBr6eMC8PzHTfi8BN0Dhhd6bCr2MYnVDApJHWr3")
                 .server(serverUrl)
                 .build();
+
+
         Parse.initialize(configuration);
         ParseFacebookUtils.initialize(CatchupApplication.this);
 
-        ParseInstallation installation = ParseInstallation.getCurrentInstallation();
-        String userId = ParseUser.getCurrentUser().getObjectId().toString();
-        installation.put("GCMSenderId","797163850689");
 
-        installation.put("userId",userId);
-        installation.saveInBackground();
 
         SessionConfiguration sessionConfiguration = new SessionConfiguration.Builder()
                 .setClientId("LiXZJlZ-SCsyG5WSiwc-4f6kkean5Ryv")
@@ -72,5 +69,9 @@ public class CatchupApplication extends Application {
                 .setEnvironment(SessionConfiguration.Environment.SANDBOX)
                 .build();
         UberSdk.initialize(sessionConfiguration);
+
+
+
+
     }
 }

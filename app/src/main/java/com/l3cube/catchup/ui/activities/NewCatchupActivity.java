@@ -169,63 +169,70 @@ public class NewCatchupActivity extends AppCompatActivity {
             }
         });
         mInviteContacts.setOnClickListener(inviteContactsListener);
+
         createCatchup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mTitle =(EditText) findViewById(R.id.et_new_catchup_title);
+                mTitle = (EditText) findViewById(R.id.et_new_catchup_title);
+                if (mTitle.getText().toString().trim().equals("")) {
+                    Toast.makeText(getApplicationContext(), "Title should not be empty", Toast.LENGTH_SHORT).show();
+
+                } else if (selectDate.getText().toString().equals("Select Date")) {
+                    Toast.makeText(getApplicationContext(), "Select a Date ", Toast.LENGTH_SHORT).show();
+                } else if (selectTime.getText().toString().trim().equals("Select Time")) {
+                    Toast.makeText(getApplicationContext(), "Select a Time", Toast.LENGTH_SHORT).show();
+                } else {
+
 
 //                mPlace = (EditText) findViewById(R.id.et_new_catchup_place);
-                String title = null,/*inviter = null,*/place = null,date = null,time = null;
-                final ParseQuery<ParseObject> userQuery = ParseQuery.getQuery("User");
+                    String title = null,/*inviter = null,*/place = null, date = null, time = null;
+                    final ParseQuery<ParseObject> userQuery = ParseQuery.getQuery("User");
 
 
+                    if (getIntent().getStringExtra("operation").equals("update")) {
+                        final ParseQuery<ParseObject> query = ParseQuery.getQuery("Catchup");
 
 
+                        query.getInBackground(getIntent().getStringExtra("objectId"), new GetCallback<ParseObject>() {
+                            @Override
+                            public void done(final ParseObject object, ParseException e) {
+                                if (e == null) {
+                                    object.put("title", mTitle.getText().toString());
 
-                if (getIntent().getStringExtra("operation").equals("update")) {
-                    final ParseQuery<ParseObject> query = ParseQuery.getQuery("Catchup");
-
-
-                    query.getInBackground(getIntent().getStringExtra("objectId"), new GetCallback<ParseObject>() {
-                        @Override
-                        public void done(final ParseObject object, ParseException e) {
-                            if (e==null){
-                                object.put("title", mTitle.getText().toString());
-
-                                if (!String.valueOf(mDate).equals("null"))
-                                    object.put("date", mDate.toString());
-                                if (!String.valueOf(mTime).equals("null"))
-                                    object.put("time", mTime.toString());
-                                object.put("placeName", pickedPlace.getName());
-                                object.put("placeLat", pickedPlace.getLatLng().latitude);
-                                object.put("placeLong", pickedPlace.getLatLng().longitude);
-                                object.put("placeAdd", pickedPlace.getAddress());
-                                String[] invitedIds = new String[invitedList.size()];
-                                int i = 0;
-                                for (final Person person: invitedList){
-                                    invitedIds[i++] = person.getPhone();
-                                }
-
-                                object.put("invited", Arrays.asList(invitedIds));
-                                object.saveInBackground(new SaveCallback() {
-                                    @Override
-                                    public void done(ParseException e) {
-                                        if (e==null){
-
-                                            Intent intent = new Intent(NewCatchupActivity.this, CatchupDetailsActivity.class);
-                                            intent.putExtra("objectId", object.getObjectId());
-                                            startActivity(intent);
-                                        }
-
-
+                                    if (!String.valueOf(mDate).equals("null"))
+                                        object.put("date", mDate.toString());
+                                    if (!String.valueOf(mTime).equals("null"))
+                                        object.put("time", mTime.toString());
+                                    object.put("placeName", pickedPlace.getName());
+                                    object.put("placeLat", pickedPlace.getLatLng().latitude);
+                                    object.put("placeLong", pickedPlace.getLatLng().longitude);
+                                    object.put("placeAdd", pickedPlace.getAddress());
+                                    String[] invitedIds = new String[invitedList.size()];
+                                    int i = 0;
+                                    for (final Person person : invitedList) {
+                                        invitedIds[i++] = person.getPhone();
                                     }
-                                });
+
+                                    object.put("invited", Arrays.asList(invitedIds));
+                                    object.saveInBackground(new SaveCallback() {
+                                        @Override
+                                        public void done(ParseException e) {
+                                            if (e == null) {
+
+                                                Intent intent = new Intent(NewCatchupActivity.this, CatchupDetailsActivity.class);
+                                                intent.putExtra("objectId", object.getObjectId());
+                                                startActivity(intent);
+                                            }
+
+
+                                        }
+                                    });
+                                }
                             }
-                        }
-                    });
-                } else {
-                    // Create Catchup on Server
-                    title = mTitle.getText().toString();
+                        });
+                    } else {
+                        // Create Catchup on Server
+                        title = mTitle.getText().toString();
 //                    if (ParseUser.getCurrentUser()!=null) {
 //                        inviter = new String(ParseUser.getCurrentUser().getString("firstName")
 //                                .concat(" ")
@@ -234,13 +241,15 @@ public class NewCatchupActivity extends AppCompatActivity {
 //                    } else {
 //                        inviter = "Gaurav Suryagandh";
 //                    }
-                    date = String.valueOf(mDate);
-                    time = String.valueOf(mTime);
+                        date = String.valueOf(mDate);
+                        time = String.valueOf(mTime);
 //                    pickedPlace = mPlace.getText().toString();
-                    createCatchupOnServer(title,date,time);
+                        createCatchupOnServer(title, date, time);
+                    }
                 }
             }
         });
+
     }
 
 
@@ -342,7 +351,8 @@ public class NewCatchupActivity extends AppCompatActivity {
     {
 
         ParsePush parsePush = new ParsePush();
-        parsePush.setMessage("You are invited to " + title.toUpperCase() +" by " + inviter);
+        String message = "You are invited to " + title.toUpperCase() +" by " + inviter;
+        parsePush.setMessage(message);
 
 
         ParseQuery<ParseUser> query = ParseUser.getQuery();
@@ -537,7 +547,10 @@ public class NewCatchupActivity extends AppCompatActivity {
                 // open datepicker dialog.
                 // set date picker for current date
                 // add pickerListener listner to date picker
-                return new DatePickerDialog(this, pickerListener, year, month,day);
+                DatePickerDialog datePickerDialog = new DatePickerDialog(this, pickerListener, year, month,day);
+                datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis()-1000);
+                return datePickerDialog;
+
             case TIME_DIALOG_ID:
 
                 // set time picker as current time

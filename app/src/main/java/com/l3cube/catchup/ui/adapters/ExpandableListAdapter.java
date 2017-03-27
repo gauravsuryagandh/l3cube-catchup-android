@@ -256,4 +256,12 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
 
         return CHILD_TYPE_4;
     }
+
+    public void sendRsvpNotif(){
+
+        String curr_user_id = ParseUser.getCurrentUser().getObjectId();
+
+
+
+    }
 }
