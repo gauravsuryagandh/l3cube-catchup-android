@@ -80,6 +80,13 @@ public class GetUserDetailsActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(GetUserDetailsActivity.this, SignupActivity.class));
+    }
+
+
     protected Dialog onCreateDialog(int id) {
         switch (id) {
             case DATE_PICKER_ID:

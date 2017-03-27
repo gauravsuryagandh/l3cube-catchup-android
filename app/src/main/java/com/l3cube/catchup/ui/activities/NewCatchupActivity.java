@@ -118,6 +118,18 @@ public class NewCatchupActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if(getIntent().getStringExtra("operation").equals("update")) {
+            Intent intent = new Intent(NewCatchupActivity.this, CatchupDetailsActivity.class);
+            intent.putExtra("objectId", getIntent().getStringExtra("objectId"));
+            startActivity(intent);
+        } else
+            startActivity(new Intent(NewCatchupActivity.this, MainActivity.class));
+    }
+
+
     private void setupListeners() {
         selectDate.setOnClickListener(new View.OnClickListener() {
             @Override

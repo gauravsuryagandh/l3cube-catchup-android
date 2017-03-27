@@ -59,6 +59,13 @@ public class CatchupDetailsActivity extends AppCompatActivity {
         setupVariables();
         setupData();
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(CatchupDetailsActivity.this, MainActivity.class));
+    }
+
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.catchupdetails_menu, menu);
