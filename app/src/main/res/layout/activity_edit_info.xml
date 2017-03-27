@@ -16,7 +16,10 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:weightSum="1">
+              android:weightSum="1"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    >
 
 
     <ImageView
@@ -25,7 +28,8 @@
         android:layout_width="183dp"
         android:layout_marginLeft="70dp"
         android:layout_marginBottom="20dp"
-        facebook:srcCompat="@drawable/com_facebook_button_like_background"
+        tools:src="@mipmap/ic_launcher"
+        android:src="@mipmap/ic_launcher"
         android:id="@+id/profilePictureLabel"
         android:layout_weight="0.33"/>
 
@@ -42,15 +46,15 @@
             android:layout_height="match_parent"
             android:id="@+id/firstName"
             android:layout_weight="1"
-            android:textSize="20sp"/>
+            style="@style/MediumText"/>
 
         <TextView
+            style="@style/MediumText"
             android:text="LastName"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/lastName"
-            android:layout_weight="1"
-            android:textSize="20sp"/>
+            android:layout_weight="1" />
     </LinearLayout>
 
     <LinearLayout
@@ -63,14 +67,14 @@
             android:layout_height="match_parent"
             android:id="@+id/firstNameLabel"
             android:layout_weight="1"
-            android:textSize="20sp"/>
+            style="@style/MediumText"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/lastNameLabel"
             android:layout_weight="1"
-            android:textSize="20sp"/>
+            style="@style/MediumText"/>
 
     </LinearLayout>
 
@@ -80,14 +84,14 @@
         android:layout_height="wrap_content"
         android:id="@+id/emailAddress"
         android:layout_weight="0.03"
-        android:textSize="20sp"/>
+        style="@style/MediumText"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/emailAddressLabel"
         android:layout_weight="0.03"
-        android:textSize="20sp"/>
+        style="@style/MediumText"/>
 
     <TextView
         android:text="Birth Date"
@@ -95,14 +99,14 @@
         android:layout_height="wrap_content"
         android:id="@+id/birthDate"
         android:layout_weight="0.03"
-        android:textSize="20sp"/>
+        style="@style/MediumText"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/birthDateLabel"
         android:layout_weight="0.03"
-        android:textSize="20sp"/>
+        style="@style/MediumText"/>
 
     <TextView
         android:text="Contact Number"
@@ -110,14 +114,14 @@
         android:layout_height="wrap_content"
         android:id="@+id/contactNumber"
         android:layout_weight="0.03"
-        android:textSize="20sp"/>
+        style="@style/MediumText"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/contactNumberLabel"
         android:layout_weight="0.03"
-        android:textSize="20sp"/>
+        style="@style/MediumText"/>
 
     <Button
         android:text="Edit Details"
