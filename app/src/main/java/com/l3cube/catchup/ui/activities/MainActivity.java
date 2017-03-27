@@ -106,6 +106,9 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             case R.id.action_bar:
                 EditDetails();
                 return true;
+            case R.id.view_discount:
+                ViewDiscounts();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -113,6 +116,11 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     private void EditDetails() {
         Intent i = new Intent(MainActivity.this, UserDetailsActivity.class);
+        startActivity(i);
+    }
+
+    private void ViewDiscounts() {
+        Intent i = new Intent(MainActivity.this, DiscountActivity.class);
         startActivity(i);
     }
 

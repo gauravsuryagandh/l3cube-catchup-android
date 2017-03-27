@@ -9,7 +9,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.PopupMenu;
-import android.text.Layout;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -31,7 +30,6 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import com.uber.sdk.android.rides.RideRequestButton;
@@ -162,8 +160,8 @@ public class CatchupDetailsActivity extends AppCompatActivity {
         mExpandableListView = (ExpandableListView) findViewById(R.id.elv_catchup_details);
         mCatchupTitle = (TextView) findViewById(R.id.tv_catchup_details_title);
         mCatchupDate = (TextView) findViewById(R.id.tv_catchup_details_date);
-        mCatchupTime = (TextView) findViewById(R.id.catchup_details_time);
-        mCatchupPlace = (TextView) findViewById(R.id.tv_catchup_details_place);
+        mCatchupTime = (TextView) findViewById(R.id.discount_offered2);
+        mCatchupPlace = (TextView) findViewById(R.id.validitytill2);
         mFloatingActionButton = (FloatingActionButton) findViewById(R.id.fab_update_catchup);
         requestButton = new RideRequestButton(getApplicationContext());
         layout = (LinearLayout) findViewById(R.id.ll_catchup_details);

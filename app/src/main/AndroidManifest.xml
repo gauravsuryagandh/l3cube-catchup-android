@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.l3cube.catchup">
+    package="com.l3cube.catchup">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -11,10 +11,11 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
-    <permission android:name="com.l3cube.catchup.permission.C2D_MESSAGE"
+    <permission
+        android:name="com.l3cube.catchup.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
-    <uses-permission android:name="com.l3cube.catchup.permission.C2D_MESSAGE" />
 
+    <uses-permission android:name="com.l3cube.catchup.permission.C2D_MESSAGE" />
 
     <application
         android:name=".application.CatchupApplication"
@@ -25,19 +26,26 @@
         android:theme="@style/AppTheme">
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id"/>
-        <meta-data android:name="com.parse.push.gcm_sender_id"
+            android:value="@string/facebook_app_id" />
+        <meta-data
+            android:name="com.parse.push.gcm_sender_id"
             android:value="id:797163850689" />
 
         <service android:name="com.parse.PushService" />
-        <receiver android:name="com.parse.GcmBroadcastReceiver" android:permission="com.google.android.c2dm.permission.SEND">
+
+        <receiver
+            android:name="com.parse.GcmBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
                 <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+
                 <category android:name="com.l3cube.catchup" />
             </intent-filter>
         </receiver>
-        <receiver android:name="com.parse.ParsePushBroadcastReceiver" android:exported="false">
+        <receiver
+            android:name="com.parse.ParsePushBroadcastReceiver"
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.parse.push.intent.RECEIVE" />
                 <action android:name="com.parse.push.intent.OPEN" />
@@ -47,66 +55,49 @@
 
         <activity android:name=".ui.activities.MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.activities.SignupActivity"/>
-        <activity android:name=".ui.activities.CatchupDetailsActivity"
-
-            android:parentActivityName= ".ui.activities.MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activities.MainActivity" />
-        </activity>
-
-
+        <activity android:name=".ui.activities.SignupActivity" />
+        <activity android:name=".ui.activities.CatchupDetailsActivity" />
         <activity
             android:name=".ui.activities.NewCatchupActivity"
-
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
 
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="bb62530170bdb19720a63ee1fcc146fe4ec2b7c5"/>
+            android:value="bb62530170bdb19720a63ee1fcc146fe4ec2b7c5" />
 
-        <activity android:name=".ui.activities.GetUserDetailsActivity">
-        </activity>
-        <activity android:name=".ui.activities.DigitsSignup">
-        </activity>
+        <activity android:name=".ui.activities.GetUserDetailsActivity"></activity>
+        <activity android:name=".ui.activities.DigitsSignup"></activity>
         <!--
  ATTENTION: This was auto-generated to add Google Play services to your project for
      App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
         -->
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version"/>
+            android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDAdOare0Z4YaD14v-zF4clz3MIR1FhPqU"/>
-        <activity android:name=".ui.activities.EditUserDetailsActivity">
-        </activity>
-        <activity android:name=".ui.activities.UserDetailsActivity">
-        </activity>
-        
+            android:value="AIzaSyDAdOare0Z4YaD14v-zF4clz3MIR1FhPqU" />
+
+        <activity android:name=".ui.activities.EditUserDetailsActivity"></activity>
+        <activity android:name=".ui.activities.UserDetailsActivity"></activity>
+
         <service android:name=".ui.activities.mFirebaseInstanceIdService">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT">
-
-                </action>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"></action>
             </intent-filter>
-
         </service>
-
         <service android:name=".ui.activities.mFirebaseMessagingService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT">
-
-                </action>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"></action>
             </intent-filter>
-
         </service>
+
+        <activity android:name=".ui.activities.DiscountActivity"></activity>
     </application>
 
 </manifest>
