@@ -68,7 +68,7 @@ public class NewCatchupActivity extends AppCompatActivity {
     private Button createCatchup;
     private TextView selectDate;
     private TextView selectTime;
-    private EditText mTitle;
+    private TextView mTitle;
     private EditText mEnterPlace;
     private Button mPlace;
     private RecyclerView mRecyclerView;
@@ -174,7 +174,7 @@ public class NewCatchupActivity extends AppCompatActivity {
         mInviteContacts.setOnClickListener(inviteContactsListener);
 
         createCatchup.setOnClickListener(new View.OnClickListener() {
-            public String title = null ;
+            public String title = mTitle.getText().toString() ;
 
             @Override
             public void onClick(View view) {
@@ -189,7 +189,7 @@ public class NewCatchupActivity extends AppCompatActivity {
                 } else {
                     String date = null,time = null;
                     if (getIntent().getStringExtra("operation").equals("update")) {
-                        final ParseQuery<ParseObject> query = ParseQuery.getQuery("Catchup");
+                        ParseQuery<ParseObject> query = ParseQuery.getQuery("Catchup");
                         query.getInBackground(getIntent().getStringExtra("objectId"), new GetCallback<ParseObject>() {
                             @Override
                             public void done(final ParseObject object, ParseException e) {
@@ -215,24 +215,28 @@ public class NewCatchupActivity extends AppCompatActivity {
                                         ParseObject invitedPerson = null;
                                         String cleanedPhone = person.getPhone().replaceAll("\\s", "");
                                         cleanedPhone = cleanedPhone.substring(cleanedPhone.length() - 10);
-                                        query.whereEqualTo("mobileNumber", "+91".concat(cleanedPhone));
+                                        ParseQuery<ParseObject> userQuery = ParseQuery.getQuery("_User");
+                                        String mobileNumber = "+91".concat(cleanedPhone);
+                                        userQuery.whereEqualTo("mobileNumber", mobileNumber);
                                         try {
-                                            invitedPerson = query.getFirst();
+                                            invitedPerson = userQuery.getFirst();
                                             String userId = invitedPerson.getObjectId().toString();
                                             String inviter = ParseUser.getCurrentUser().getString("firstName");
 
                                             sendnotification(userId, title, inviter);
                                         } catch (ParseException e2) {
                                             e2.printStackTrace();
-                                            queryPerson.whereEqualTo("mobileNumber", "+91".concat(cleanedPhone));
+                                            queryPerson.whereEqualTo("mobileNumber", mobileNumber);
                                             try {
                                                 invitedPerson = queryPerson.getFirst();
                                             } catch (ParseException e1) {
                                                 e1.printStackTrace();
                                                 ParseObject temp = new ParseObject("Person");
                                                 temp.put("firstName", person.getName().split(" ")[0]);
-                                                temp.put("lastName", person.getName().split(" ")[1]);
-                                                temp.put("mobileNumber", "+91".concat(cleanedPhone));
+                                                if (person.getName().split(" ").length > 1) {
+                                                    temp.put("lastName", person.getName().split(" ")[1]);
+                                                }
+                                                temp.put("mobileNumber", mobileNumber);
                                                 try {
                                                     temp.save();
                                                     invitedPerson = temp;
@@ -290,6 +294,7 @@ public class NewCatchupActivity extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(getApplicationContext());
         mPlace = (Button) findViewById(R.id.btn_new_catchup_place);
         mEnterPlace = (EditText) findViewById(R.id.tv_enter_a_place);
+        mTitle = (TextView) findViewById(R.id.tv_new_catchup_title);
 
     }
 
@@ -316,11 +321,7 @@ public class NewCatchupActivity extends AppCompatActivity {
         for ( final Person person: invitedList){
             ParseObject invitedPerson = null;
             String cleanedPhone = person.getPhone().replaceAll("\\s","");
-            if (cleanedPhone.length() > 10) {
-                cleanedPhone = cleanedPhone.substring(cleanedPhone.length() - 11);
-            } else {
-                cleanedPhone = cleanedPhone.substring(cleanedPhone.length() - 10);
-            }
+            cleanedPhone = cleanedPhone.substring(cleanedPhone.length() - 10);
             query.whereEqualTo("mobileNumber", "+91".concat(cleanedPhone));
             try {
                 invitedPerson = query.getFirst();
