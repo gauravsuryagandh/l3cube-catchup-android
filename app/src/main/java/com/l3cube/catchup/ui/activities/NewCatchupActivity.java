@@ -295,7 +295,7 @@ public class NewCatchupActivity extends AppCompatActivity {
             ParseObject invitedPerson = null;
             String cleanedPhone = person.getPhone().replaceAll("\\s","");
             if (cleanedPhone.length() > 10) {
-                cleanedPhone = cleanedPhone.substring(cleanedPhone.length() - 11);
+                cleanedPhone = cleanedPhone.substring(cleanedPhone.length() - 10);
             } else {
                 cleanedPhone = cleanedPhone.substring(cleanedPhone.length() - 10);
             }
@@ -433,7 +433,7 @@ public class NewCatchupActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 pickedPlace = PlacePicker.getPlace(data, this);
                 mEnterPlace.setText(pickedPlace.getName());
-                String toastMsg = String.format("Place: %s", pickedPlace.getName());
+                String toastMsg = String.format("CatchupPlace: %s", pickedPlace.getName());
                 Toast.makeText(this, toastMsg, Toast.LENGTH_LONG).show();
             }
         }

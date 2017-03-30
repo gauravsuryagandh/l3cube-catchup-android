@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.l3cube.catchup.models.Catchup;
 import com.l3cube.catchup.R;
+import com.l3cube.catchup.ui.CatchupDetailsAlternateActivity;
 import com.l3cube.catchup.ui.activities.CatchupDetailsActivity;
 import com.l3cube.catchup.ui.activities.MainActivity;
 import com.l3cube.catchup.ui.activities.NewCatchupActivity;
@@ -91,7 +92,7 @@ public class CatchupListAdapter extends RecyclerView.Adapter<CatchupListAdapter.
                 holder.placeImage.setImageResource(R.drawable.pict);
                 break;
             default:
-                holder.placeImage.setImageResource(R.drawable.image);
+                holder.placeImage.setImageResource(R.drawable.catchup_back_2);
         }
         holder.title.setText(catchup.getTitle());
         String inviterName = null;
@@ -120,7 +121,9 @@ public class CatchupListAdapter extends RecyclerView.Adapter<CatchupListAdapter.
             @Override
             public void onClick(View view) {
 //                Toast.makeText(mContext, "Opening CatchUp " + mCatchupList.get(position).getObjectId(), Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(mContext, CatchupDetailsActivity.class);
+                Intent intent = new Intent(mContext, CatchupDetailsAlternateActivity.class);
+                intent.putExtra("title",catchup.getTitle());
+                intent.putExtra("inviterId",catchup.getInviter().getObjectId());
                 intent.putExtra("objectId", mCatchupList.get(position).getObjectId());
                 mContext.startActivity(intent);
             }

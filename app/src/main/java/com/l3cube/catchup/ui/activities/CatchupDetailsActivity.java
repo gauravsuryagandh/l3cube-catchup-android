@@ -54,7 +54,7 @@ public class CatchupDetailsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_catchup_details);
+        setContentView(R.layout.activity_catchup_details_alternate);
 
         setupVariables();
         setupData();

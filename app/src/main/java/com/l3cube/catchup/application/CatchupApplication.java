@@ -5,9 +5,11 @@ import android.app.Application;
 import com.digits.sdk.android.Digits;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
+import com.l3cube.catchup.models.ParseCatchup;
 import com.parse.Parse;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseInstallation;
+import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterCore;
@@ -55,6 +57,9 @@ public class CatchupApplication extends Application {
                 .clientKey("ggBr6eMC8PzHTfi8BN0Dhhd6bCr2MYnVDApJHWr3")
                 .server(serverUrl)
                 .build();
+
+
+        ParseObject.registerSubclass(ParseCatchup.class);
         Parse.initialize(configuration);
         ParseFacebookUtils.initialize(CatchupApplication.this);
 
