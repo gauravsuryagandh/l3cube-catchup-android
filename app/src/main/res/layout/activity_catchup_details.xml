@@ -21,7 +21,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/tv_catchup_details_place"
+            android:id="@+id/validitytill2"
             android:layout_alignParentLeft="true"
             android:text="Goodluck Cafe"
             android:textColor="@color/tw__solid_white"
@@ -32,8 +32,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/catchup_details_time"
-            android:layout_above="@id/tv_catchup_details_place"
+            android:id="@+id/discount_offered2"
+            android:layout_above="@id/validitytill2"
             android:layout_alignParentLeft="true"
             android:text="20:30"
             android:textColor="@color/tw__solid_white"
@@ -44,8 +44,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/tv_catchup_details_date"
-            android:layout_toRightOf="@id/catchup_details_time"
-            android:layout_above="@id/tv_catchup_details_place"
+            android:layout_toRightOf="@id/discount_offered2"
+            android:layout_above="@id/validitytill2"
             android:text="16-12-2016"
             android:textColor="@color/tw__solid_white"
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
@@ -61,7 +61,7 @@
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline"
             android:layout_marginLeft="32dp"
             android:layout_marginBottom="2dp"
-            android:layout_above="@id/catchup_details_time"/>
+            android:layout_above="@id/discount_offered2"/>
 
     </RelativeLayout>
 

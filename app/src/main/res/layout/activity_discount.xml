@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/ll_discount1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <RelativeLayout
+            android:id="@+id/rl_discount_image1"
+            android:layout_width="match_parent"
+            android:layout_height="196dp"
+            android:background="@drawable/bbq">
+
+            <TextView
+                android:id="@+id/validitytill1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="32dp"
+                android:text="Valid till - 1st May 2017"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                android:textColor="@color/tw__solid_white" />
+
+            <TextView
+                android:id="@+id/discount_offered1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="15% off on a birthday party!"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                android:textColor="@color/tw__solid_white"
+                android:layout_above="@+id/validitytill1"
+                android:layout_alignLeft="@+id/validitytill1"
+                android:layout_alignStart="@+id/validitytill1" />
+
+            <TextView
+                android:id="@+id/place1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/discount_offered1"
+                android:layout_alignParentLeft="true"
+                android:layout_marginBottom="2dp"
+                android:layout_marginLeft="32dp"
+                android:text="Barbeque Nation"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline"
+                android:textColor="@color/tw__solid_white" />
+
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/btn_discount1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Check out!"
+            android:clickable="true"
+            android:autoLink="web"
+            android:cursorVisible="true"
+            android:linksClickable="true"
+            android:layout_marginBottom="20dp"
+            android:background="@color/colorAccent"
+            android:onClick="goTobbq"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/ll_discount2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@+id/ll_discount1"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <RelativeLayout
+            android:id="@+id/rl_discount_image2"
+            android:layout_width="match_parent"
+            android:layout_height="196dp"
+            android:background="@drawable/goodluckcafe">
+
+            <TextView
+                android:id="@+id/validitytill2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="32dp"
+                android:text="Valid till - 15th May 2017"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                android:textColor="@color/tw__solid_white" />
+
+            <TextView
+                android:id="@+id/discount_offered2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/validitytill2"
+                android:layout_alignLeft="@+id/validitytill2"
+                android:layout_alignStart="@+id/validitytill2"
+                android:text="20% off!!"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                android:textColor="@color/tw__solid_white" />
+
+            <TextView
+                android:id="@+id/place2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/discount_offered2"
+                android:layout_alignParentLeft="true"
+                android:layout_marginBottom="2dp"
+                android:layout_marginLeft="32dp"
+                android:text="Cafe Goodluck"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline"
+                android:textColor="@color/tw__solid_white" />
+
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/btn_discount2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Check out!"
+            android:clickable="true"
+            android:autoLink="web"
+            android:background="@color/colorAccent"
+            android:cursorVisible="true"
+            android:linksClickable="true"
+            android:layout_marginBottom="20dp"
+            android:onClick="goToGoodluck"/>
+
+    </LinearLayout>
+
+
+</RelativeLayout>

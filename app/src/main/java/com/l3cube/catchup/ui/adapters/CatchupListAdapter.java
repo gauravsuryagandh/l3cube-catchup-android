@@ -65,6 +65,8 @@ public class CatchupListAdapter extends RecyclerView.Adapter<CatchupListAdapter.
     public CatchupListAdapter(List<Catchup> catchupList, Context context) {
         this.mCatchupList = catchupList;
         mContext = context;
+
+
     }
 
     @Override

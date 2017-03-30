@@ -86,6 +86,13 @@ public class UserDetailsActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(UserDetailsActivity.this, MainActivity.class));
+    }
+
+
     /*public static Bitmap getBitmapFromURL(String src) {
         try {
             Log.e("src",src);
