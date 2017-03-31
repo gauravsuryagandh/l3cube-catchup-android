@@ -72,6 +72,7 @@
             android:value="bb62530170bdb19720a63ee1fcc146fe4ec2b7c5" />
 
         <activity android:name=".ui.activities.GetUserDetailsActivity"></activity>
+        <activity android:name=".ui.activities.DiscountActivity"></activity>
         <activity android:name=".ui.activities.DigitsSignup"></activity>
         <!--
  ATTENTION: This was auto-generated to add Google Play services to your project for
