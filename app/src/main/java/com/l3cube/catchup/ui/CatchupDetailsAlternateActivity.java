@@ -20,6 +20,7 @@ import com.l3cube.catchup.ui.adapters.PlacesAdapter;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
@@ -34,12 +35,13 @@ import java.util.List;
 public class CatchupDetailsAlternateActivity extends AppCompatActivity {
     private static final int PLACE_PICKER_REQUEST = 2;
     private static final String TAG = CatchupDetailsAlternateActivity.class.getSimpleName();
-    RecyclerView rvInvitees;
+    private RecyclerView rvInvitees;
     private RecyclerView rvPlaces;
 
     private String title;
     private ParseCatchup currentCatchup;
     private List<CatchupPlace> placesInCatchup;
+    private ArrayList<ParseObject> invitedList;
 
 
     @Override
@@ -61,8 +63,9 @@ public class CatchupDetailsAlternateActivity extends AppCompatActivity {
         rvInvitees = (RecyclerView) findViewById(R.id.rv_invitees);
         rvInvitees.canScrollVertically(0);
 
+        invitedList = new ArrayList<ParseObject>();
         rvInvitees.setLayoutManager(new LinearLayoutManager(CatchupDetailsAlternateActivity.this,LinearLayoutManager.HORIZONTAL,false));
-        rvInvitees.setAdapter(new InviteeAdapter(CatchupDetailsAlternateActivity.this));
+        rvInvitees.setAdapter(new InviteeAdapter(invitedList, CatchupDetailsAlternateActivity.this));
 
         rvPlaces = (RecyclerView) findViewById(R.id.rv_places);
 
@@ -83,6 +86,7 @@ public class CatchupDetailsAlternateActivity extends AppCompatActivity {
                         currentCatchup = catchup;
 
                         JSONArray placesArray = catchup.getJSONArray("placesJSONArray");
+                        invitedList.addAll((ArrayList<ParseObject>) catchup.get("invited"));
 
                         for (int i = 0; i < placesArray.length(); i++) {
                             try {
@@ -96,6 +100,7 @@ public class CatchupDetailsAlternateActivity extends AppCompatActivity {
                             }
                         }
 
+                        rvInvitees.getAdapter().notifyDataSetChanged();
                         rvPlaces.getAdapter().notifyDataSetChanged();
                         Log.i(TAG, "done: Found Catchup : " + catchup.getString("title"));
                     }

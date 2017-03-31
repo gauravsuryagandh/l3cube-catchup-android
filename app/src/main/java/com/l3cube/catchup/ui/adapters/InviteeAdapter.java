@@ -10,6 +10,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.l3cube.catchup.R;
+import com.l3cube.catchup.ui.activities.DownloadImageTask;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseUser;
+
+import java.util.ArrayList;
 
 /**
  * Created by adityashirole on 30-03-2017.
@@ -18,8 +24,10 @@ import com.l3cube.catchup.R;
 public class InviteeAdapter extends RecyclerView.Adapter<InviteeAdapter.ViewHolder> {
 
     Context mContext;
+    ArrayList<ParseObject> invitedList;
 
-    public InviteeAdapter(Context mContext) {
+    public InviteeAdapter(ArrayList<ParseObject> invitedList, Context mContext) {
+        this.invitedList = invitedList;
         this.mContext = mContext;
     }
 
@@ -31,12 +39,34 @@ public class InviteeAdapter extends RecyclerView.Adapter<InviteeAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+        ParseObject person = invitedList.get(position);
+        String name;
 
+        try {
+            person.fetchIfNeeded();
+            if (!person.getString("lastName").equals(null))
+                name = person.getString("firstName")
+                        .concat(" ")
+                        .concat(person.getString("lastName"));
+            else
+                name = person.getString("firstName");
+            if (person.getClassName()=="_User") {
+                holder.name.setText(name);
+                if (!person.getString("profilePicture").equals(null)){
+                    String mImageUrl = person.getString("profilePicture");
+                    new DownloadImageTask(holder.avatar).execute(mImageUrl);
+                }
+            } else {
+                holder.name.setText(name);
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public int getItemCount() {
-        return 5;
+        return invitedList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -47,7 +77,9 @@ public class InviteeAdapter extends RecyclerView.Adapter<InviteeAdapter.ViewHold
         public ViewHolder(View v) {
             super(v);
             root = (CardView) v.findViewById(R.id.root);
-
+            avatar = (ImageView) v.findViewById(R.id.avatar);
+            name = (TextView) v.findViewById(R.id.name);
+            rsvp = (TextView) v.findViewById(R.id.rsvp);
         }
     }
 }
