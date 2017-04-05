@@ -16,6 +16,11 @@ public class DiscountActivity extends AppCompatActivity {
         setContentView(R.layout.activity_discount);
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(DiscountActivity.this, MainActivity.class));
+    }
 
     public void goToMauli (View view) {
         goToUrl ( "https://www.zomato.com/pune/mauli-veg-restaurant-satara-road");

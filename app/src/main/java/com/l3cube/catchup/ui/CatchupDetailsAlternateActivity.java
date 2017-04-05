@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.location.places.Place;
@@ -15,6 +16,8 @@ import com.google.android.gms.location.places.ui.PlacePicker;
 import com.l3cube.catchup.R;
 import com.l3cube.catchup.models.CatchupPlace;
 import com.l3cube.catchup.models.ParseCatchup;
+import com.l3cube.catchup.ui.activities.CatchupDetailsActivity;
+import com.l3cube.catchup.ui.activities.MainActivity;
 import com.l3cube.catchup.ui.adapters.InviteeAdapter;
 import com.l3cube.catchup.ui.adapters.PlacesAdapter;
 import com.parse.FindCallback;
@@ -24,6 +27,7 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+import com.uber.sdk.android.rides.RideRequestButton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -41,7 +45,10 @@ public class CatchupDetailsAlternateActivity extends AppCompatActivity {
     private String title;
     private ParseCatchup currentCatchup;
     private List<CatchupPlace> placesInCatchup;
-    private ArrayList<ParseObject> invitedList;
+    private ArrayList<ParseObject> notGoingList;
+    private ArrayList<ParseObject> goingList;
+    RideRequestButton requestButton;
+    LinearLayout layout;
 
 
     @Override
@@ -63,9 +70,11 @@ public class CatchupDetailsAlternateActivity extends AppCompatActivity {
         rvInvitees = (RecyclerView) findViewById(R.id.rv_invitees);
         rvInvitees.canScrollVertically(0);
 
-        invitedList = new ArrayList<ParseObject>();
+//        invitedList = new ArrayList<ParseObject>();
+        goingList = new ArrayList<ParseObject>();
+        notGoingList = new ArrayList<ParseObject>();
         rvInvitees.setLayoutManager(new LinearLayoutManager(CatchupDetailsAlternateActivity.this,LinearLayoutManager.HORIZONTAL,false));
-        rvInvitees.setAdapter(new InviteeAdapter(invitedList, CatchupDetailsAlternateActivity.this));
+        rvInvitees.setAdapter(new InviteeAdapter(goingList, notGoingList, currentCatchup, CatchupDetailsAlternateActivity.this));
 
         rvPlaces = (RecyclerView) findViewById(R.id.rv_places);
 
@@ -75,6 +84,8 @@ public class CatchupDetailsAlternateActivity extends AppCompatActivity {
         rvPlaces.setLayoutManager(new LinearLayoutManager(CatchupDetailsAlternateActivity.this,LinearLayoutManager.HORIZONTAL,false));
         rvPlaces.setAdapter(new PlacesAdapter(placesInCatchup,CatchupDetailsAlternateActivity.this,CatchupDetailsAlternateActivity.this));
 
+        requestButton = new RideRequestButton(CatchupDetailsAlternateActivity.this);
+        layout = (LinearLayout) findViewById(R.id.cl_catchup_details);
 
         ParseQuery<ParseCatchup> query = ParseQuery.getQuery(ParseCatchup.class);
 
@@ -86,7 +97,8 @@ public class CatchupDetailsAlternateActivity extends AppCompatActivity {
                         currentCatchup = catchup;
 
                         JSONArray placesArray = catchup.getJSONArray("placesJSONArray");
-                        invitedList.addAll((ArrayList<ParseObject>) catchup.get("invited"));
+                        goingList.addAll((ArrayList<ParseObject>) catchup.get("going"));
+                        notGoingList.addAll((ArrayList<ParseObject>) catchup.get("notGoing"));
 
                         for (int i = 0; i < placesArray.length(); i++) {
                             try {
@@ -102,6 +114,7 @@ public class CatchupDetailsAlternateActivity extends AppCompatActivity {
 
                         rvInvitees.getAdapter().notifyDataSetChanged();
                         rvPlaces.getAdapter().notifyDataSetChanged();
+                        layout.addView(requestButton);
                         Log.i(TAG, "done: Found Catchup : " + catchup.getString("title"));
                     }
                 } else {
@@ -109,6 +122,12 @@ public class CatchupDetailsAlternateActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(CatchupDetailsAlternateActivity.this, MainActivity.class));
     }
 
     @Override

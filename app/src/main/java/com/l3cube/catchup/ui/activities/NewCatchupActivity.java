@@ -37,6 +37,7 @@ import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.l3cube.catchup.R;
 import com.l3cube.catchup.models.Person;
+import com.l3cube.catchup.ui.CatchupDetailsAlternateActivity;
 import com.l3cube.catchup.ui.adapters.InvitedListAdapter;
 import com.l3cube.catchup.ui.decorators.SpacesItemDecoration;
 import com.parse.GetCallback;
@@ -122,7 +123,7 @@ public class NewCatchupActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         if(getIntent().getStringExtra("operation").equals("update")) {
-            Intent intent = new Intent(NewCatchupActivity.this, CatchupDetailsActivity.class);
+            Intent intent = new Intent(NewCatchupActivity.this, CatchupDetailsAlternateActivity.class);
             intent.putExtra("objectId", getIntent().getStringExtra("objectId"));
             startActivity(intent);
         } else
@@ -253,7 +254,7 @@ public class NewCatchupActivity extends AppCompatActivity {
                                         @Override
                                         public void done(ParseException e) {
                                             if (e==null){
-                                                Intent intent = new Intent(NewCatchupActivity.this, CatchupDetailsActivity.class);
+                                                Intent intent = new Intent(NewCatchupActivity.this, CatchupDetailsAlternateActivity.class);
                                                 intent.putExtra("objectId", object.getObjectId());
                                                 startActivity(intent);
                                             }
@@ -364,7 +365,7 @@ public class NewCatchupActivity extends AppCompatActivity {
                     Log.i(TAG, "done: Created CatchupParse");
                     Toast.makeText(NewCatchupActivity.this, "Created Catchup Successfully", Toast.LENGTH_SHORT).show();
 
-                    Intent intent = new Intent(NewCatchupActivity.this, CatchupDetailsActivity.class);
+                    Intent intent = new Intent(NewCatchupActivity.this, CatchupDetailsAlternateActivity.class);
                     intent.putExtra("objectId", newCatchup.getObjectId());
                     startActivity(intent);
                 } else {

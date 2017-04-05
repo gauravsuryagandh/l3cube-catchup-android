@@ -9,27 +9,26 @@ import android.widget.ImageView;
 import java.io.InputStream;
 
 public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-ImageView bmImage;
+    ImageView bmImage;
 
-public DownloadImageTask(ImageView bmImage) {
-    this.bmImage = bmImage;
-}
-
-protected Bitmap doInBackground(String... urls) {
-    String urldisplay = urls[0];
-    Bitmap mIcon11 = null;
-    try {
-        InputStream in = new java.net.URL(urldisplay).openStream();
-        mIcon11 = BitmapFactory.decodeStream(in);
-    } catch (Exception e) {
-        Log.e("Error","Error occured",e);
-        e.printStackTrace();
+    public DownloadImageTask(ImageView bmImage) {
+        this.bmImage = bmImage;
     }
-    return mIcon11;
-}
 
-protected void onPostExecute(Bitmap result) {
-    bmImage.setMinimumHeight(96);
-    bmImage.setImageBitmap(result);
-}
+    protected Bitmap doInBackground(String... urls) {
+        String urldisplay = urls[0];
+        Bitmap mIcon11 = null;
+        try {
+            InputStream in = new java.net.URL(urldisplay).openStream();
+            mIcon11 = BitmapFactory.decodeStream(in);
+        } catch (Exception e) {
+            Log.e("Error", "Error occured", e);
+            e.printStackTrace();
+        }
+        return mIcon11;
+    }
+
+    protected void onPostExecute(Bitmap result) {
+        bmImage.setImageBitmap(result);
+    }
 }

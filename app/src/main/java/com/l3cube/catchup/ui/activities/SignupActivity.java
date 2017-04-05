@@ -44,6 +44,12 @@ public class SignupActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(SignupActivity.this, MainActivity.class));
+    }
+
     private void loginWithFacebook() {
         List<String> permissions = Arrays.asList("public_profile", "email");
         ParseFacebookUtils.logInWithReadPermissionsInBackground(this, permissions, new LogInCallback() {
