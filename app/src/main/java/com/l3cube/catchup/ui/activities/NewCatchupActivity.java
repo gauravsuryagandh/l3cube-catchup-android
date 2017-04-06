@@ -48,6 +48,11 @@ import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Calendar;
@@ -195,6 +200,8 @@ public class NewCatchupActivity extends AppCompatActivity {
                             @Override
                             public void done(final ParseObject object, ParseException e) {
                                 if (e==null){
+                                    JSONArray jsonArray = new JSONArray();
+                                    JSONObject place = new JSONObject();
                                     object.put("title", mTitle.getText().toString());
                                     if (!String.valueOf(mDate).equals("null"))
                                         object.put("date", mDate.toString());
@@ -202,13 +209,33 @@ public class NewCatchupActivity extends AppCompatActivity {
                                         object.put("time", mTime.toString());
                                     object.put("placeName", mEnterPlace.getText().toString());
                                     if (pickedPlace!=null) {
-                                        object.put("placeLat", pickedPlace.getLatLng().latitude);
-                                        object.put("placeLong", pickedPlace.getLatLng().longitude);
-                                        object.put("placeAdd", pickedPlace.getAddress());
+                                        try {
+                                            place.put("name",mEnterPlace.getText().toString());
+                                            place.put("latitude",pickedPlace.getLatLng().latitude);
+                                            place.put("longitude",pickedPlace.getLatLng().longitude);
+                                            place.put("address",pickedPlace.getAddress());
+                                            place.put("id",pickedPlace.getId());
+                                            place.put("votes",0);
+
+                                            jsonArray.put(jsonArray.length(),place);
+                                            object.put("placesJSONArray",jsonArray);
+                                        } catch (JSONException e4) {
+                                            e4.printStackTrace();
+                                        }
                                     } else {
-                                        object.put("placeLat", 0.0);
-                                        object.put("placeLong", 0.0);
-                                        object.put("placeAdd", "NA");
+                                        try {
+                                            place.put("name",mEnterPlace.getText().toString());
+                                            place.put("latitude",0.0);
+                                            place.put("longitude",0.0);
+                                            place.put("address","NA");
+                                            place.put("id", "NA");
+                                            place.put("votes",0);
+
+                                            jsonArray.put(jsonArray.length(),place);
+                                            object.put("placesJSONArray",jsonArray);
+                                        } catch (JSONException e5) {
+                                            e5.printStackTrace();
+                                        }
                                     }
                                     ParseQuery<ParseObject> queryPerson = ParseQuery.getQuery("Person");
                                     List<ParseObject> invited = new ArrayList<ParseObject>();
@@ -300,10 +327,12 @@ public class NewCatchupActivity extends AppCompatActivity {
     }
 
     private void createCatchupOnServer(String title, String date, String time){
-        final ParseObject newCatchup = new ParseObject("Catchup");
+        final ParseObject newCatchup = ParseObject.create("Catchup");
         List<ParseObject> invited = new ArrayList<ParseObject>();
         ParseQuery<ParseObject> query = ParseQuery.getQuery("_User");
         ParseQuery<ParseObject> queryPerson = ParseQuery.getQuery("Person");
+        JSONArray jsonArray = new JSONArray();
+        JSONObject place = new JSONObject();
 
         newCatchup.put("title", title);
         newCatchup.put("inviter", ParseUser.getCurrentUser());
@@ -311,13 +340,33 @@ public class NewCatchupActivity extends AppCompatActivity {
         newCatchup.put("time", time);
         newCatchup.put("placeName", mEnterPlace.getText().toString());
         if (pickedPlace!=null) {
-            newCatchup.put("placeLat", pickedPlace.getLatLng().latitude);
-            newCatchup.put("placeLong", pickedPlace.getLatLng().longitude);
-            newCatchup.put("placeAdd", pickedPlace.getAddress());
+            try {
+                place.put("name",mEnterPlace.getText().toString());
+                place.put("latitude",pickedPlace.getLatLng().latitude);
+                place.put("longitude",pickedPlace.getLatLng().longitude);
+                place.put("address",pickedPlace.getAddress());
+                place.put("id",pickedPlace.getId());
+                place.put("votes",0);
+
+                jsonArray.put(jsonArray.length(),place);
+                newCatchup.put("placesJSONArray",jsonArray);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         } else {
-            newCatchup.put("placeLat", 0.0);
-            newCatchup.put("placeLong", 0.0);
-            newCatchup.put("placeAdd", "NA");
+            try {
+                place.put("name",mEnterPlace.getText().toString());
+                place.put("latitude",0.0);
+                place.put("longitude",0.0);
+                place.put("address","NA");
+                place.put("id", "NA");
+                place.put("votes",0);
+
+                jsonArray.put(jsonArray.length(),place);
+                newCatchup.put("placesJSONArray",jsonArray);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
         for ( final Person person: invitedList){
             ParseObject invitedPerson = null;

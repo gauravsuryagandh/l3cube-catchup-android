@@ -34,9 +34,8 @@ public class InviteeAdapter extends RecyclerView.Adapter<InviteeAdapter.ViewHold
     ArrayList<ParseObject> goingList;
     ArrayList<ParseObject> notGoingList;
 
-    public InviteeAdapter(ArrayList<ParseObject> goingList, ArrayList<ParseObject> notGoingList, ParseCatchup currentCatchup, Context mContext) {
-        this.invitedList = (goingList);
-        this.invitedList.addAll(notGoingList);
+    public InviteeAdapter(ArrayList<ParseObject> invitedList, ArrayList<ParseObject> goingList, ArrayList<ParseObject> notGoingList, ParseCatchup currentCatchup, Context mContext) {
+        this.invitedList = invitedList;
         this.goingList = goingList;
         this.notGoingList = notGoingList;
         this.mContext = mContext;
@@ -84,7 +83,8 @@ public class InviteeAdapter extends RecyclerView.Adapter<InviteeAdapter.ViewHold
 //                                    going.add(ParseUser.getCurrentUser());
 //                                    currentCatchup.remove("going");
 //                                    currentCatchup.put("going", going);
-//                                    currentCatchup.saveInBackground(new SaveCallback() {
+//                                    currentCatchup.saveInBackground(new SaveCal
+// lback() {
 //                                        @Override
 //                                        public void done(ParseException e) {
                                             Toast.makeText(mContext, "RSVPed: Going", Toast.LENGTH_SHORT).show();
@@ -129,6 +129,7 @@ public class InviteeAdapter extends RecyclerView.Adapter<InviteeAdapter.ViewHold
             }
         } catch (ParseException e) {
             e.printStackTrace();
+            Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 

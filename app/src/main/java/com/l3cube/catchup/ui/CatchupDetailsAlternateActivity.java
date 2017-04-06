@@ -45,6 +45,7 @@ public class CatchupDetailsAlternateActivity extends AppCompatActivity {
     private String title;
     private ParseCatchup currentCatchup;
     private List<CatchupPlace> placesInCatchup;
+    private ArrayList<ParseObject> invitedList;
     private ArrayList<ParseObject> notGoingList;
     private ArrayList<ParseObject> goingList;
     RideRequestButton requestButton;
@@ -70,11 +71,11 @@ public class CatchupDetailsAlternateActivity extends AppCompatActivity {
         rvInvitees = (RecyclerView) findViewById(R.id.rv_invitees);
         rvInvitees.canScrollVertically(0);
 
-//        invitedList = new ArrayList<ParseObject>();
+        invitedList = new ArrayList<ParseObject>();
         goingList = new ArrayList<ParseObject>();
         notGoingList = new ArrayList<ParseObject>();
         rvInvitees.setLayoutManager(new LinearLayoutManager(CatchupDetailsAlternateActivity.this,LinearLayoutManager.HORIZONTAL,false));
-        rvInvitees.setAdapter(new InviteeAdapter(goingList, notGoingList, currentCatchup, CatchupDetailsAlternateActivity.this));
+        rvInvitees.setAdapter(new InviteeAdapter(invitedList, goingList, notGoingList, currentCatchup, CatchupDetailsAlternateActivity.this));
 
         rvPlaces = (RecyclerView) findViewById(R.id.rv_places);
 
@@ -97,6 +98,7 @@ public class CatchupDetailsAlternateActivity extends AppCompatActivity {
                         currentCatchup = catchup;
 
                         JSONArray placesArray = catchup.getJSONArray("placesJSONArray");
+                        invitedList.addAll((ArrayList<ParseObject>)catchup.get("invited"));
                         goingList.addAll((ArrayList<ParseObject>) catchup.get("going"));
                         notGoingList.addAll((ArrayList<ParseObject>) catchup.get("notGoing"));
 
