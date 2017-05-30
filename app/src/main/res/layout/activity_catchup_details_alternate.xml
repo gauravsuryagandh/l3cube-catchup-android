@@ -85,37 +85,69 @@
 
         </RelativeLayout>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:background="@color/uber_white"
-            android:elevation="4dp">
-
-            <TextView
-                android:id="@+id/heading_places"
-                android:text="Where to?"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
-                android:textSize="14sp"
-                android:textColor="#555"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginLeft="16dp"
-                android:layout_width="wrap_content"
-
-                android:layout_height="wrap_content" />
-
-            <android.support.v7.widget.RecyclerView
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                android:layout_below="@id/heading_places"
-                android:id="@+id/rv_places"
-                android:background="@color/uber_white"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@color/uber_white"
+                android:elevation="4dp">
 
-            </android.support.v7.widget.RecyclerView>
+                <TextView
+                    android:id="@+id/heading_places"
+                    android:text="Where to?"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
+                    android:textSize="14sp"
+                    android:textColor="#555"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_width="wrap_content"
 
-        </RelativeLayout>
+                    android:layout_height="wrap_content" />
+
+                <android.support.v7.widget.RecyclerView
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                    android:layout_below="@id/heading_places"
+                    android:id="@+id/rv_places"
+                    android:background="@color/uber_white"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                </android.support.v7.widget.RecyclerView>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@color/uber_white"
+                android:elevation="4dp">
+
+                <TextView
+                    android:id="@+id/heading_dates"
+                    android:text="What date?"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
+                    android:textSize="14sp"
+                    android:textColor="#555"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_width="wrap_content"
+
+                    android:layout_height="wrap_content" />
+
+                <android.support.v7.widget.RecyclerView
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                    android:layout_below="@id/heading_dates"
+                    android:id="@+id/rv_dates"
+                    android:background="@color/uber_white"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                </android.support.v7.widget.RecyclerView>
+
+            </RelativeLayout>
 
 
         </LinearLayout>

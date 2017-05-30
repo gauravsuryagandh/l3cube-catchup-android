@@ -2,6 +2,8 @@ package com.l3cube.catchup.application;
 
 import android.app.Application;
 
+import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.answers.Answers;
 import com.digits.sdk.android.Digits;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
@@ -38,7 +40,7 @@ public class CatchupApplication extends Application {
     public void onCreate() {
         super.onCreate();
         TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
-        Fabric.with(this, new TwitterCore(authConfig), new Digits.Builder().build());
+        Fabric.with(this, new TwitterCore(authConfig), new Digits.Builder().build(), new Answers(), new Crashlytics());
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
