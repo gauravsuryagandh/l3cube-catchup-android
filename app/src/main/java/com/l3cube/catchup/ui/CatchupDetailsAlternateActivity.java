@@ -51,7 +51,6 @@ public class CatchupDetailsAlternateActivity extends AppCompatActivity {
     RideRequestButton requestButton;
     LinearLayout layout;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,7 +85,7 @@ public class CatchupDetailsAlternateActivity extends AppCompatActivity {
         rvTimes.canScrollVertically(0);
 
         rvPlaces.setLayoutManager(new LinearLayoutManager(CatchupDetailsAlternateActivity.this,LinearLayoutManager.HORIZONTAL,false));
-        rvPlaces.setAdapter(new PlacesAdapter(placesInCatchup,CatchupDetailsAlternateActivity.this,CatchupDetailsAlternateActivity.this));
+        rvPlaces.setAdapter(new PlacesAdapter(getIntent().getStringExtra("objectId"),placesInCatchup,CatchupDetailsAlternateActivity.this,CatchupDetailsAlternateActivity.this));
 
         rvTimes.setLayoutManager(new LinearLayoutManager(CatchupDetailsAlternateActivity.this,LinearLayoutManager.HORIZONTAL,false));
         rvTimes.setAdapter(new TimesAdapter(getIntent().getStringExtra("objectId"),timesInCatchup,CatchupDetailsAlternateActivity.this,CatchupDetailsAlternateActivity.this));
@@ -114,6 +113,7 @@ public class CatchupDetailsAlternateActivity extends AppCompatActivity {
                                 JSONObject placeJSON = placesArray.getJSONObject(i);
                                 CatchupPlace place = new CatchupPlace(placesArray.getJSONObject(i).getString("id"));
                                 place.setName(placeJSON.getString("name"));
+                                place.setVotes((JSONArray) placeJSON.get("votes"));
 
                                 placesInCatchup.add(0,place);
                             } catch (JSONException e1) {
@@ -125,6 +125,7 @@ public class CatchupDetailsAlternateActivity extends AppCompatActivity {
                                 JSONObject timeJSON = timesArray.getJSONObject(i);
                                 CatchupPlace time = new CatchupPlace(timesArray.getJSONObject(i).getString("id"));
                                 time.setName(timeJSON.getString("name"));
+                                time.setVotes((JSONArray) timeJSON.get("votes"));
 
                                 timesInCatchup.add(0,time);
                             } catch (JSONException e1) {
@@ -176,7 +177,7 @@ public class CatchupDetailsAlternateActivity extends AppCompatActivity {
                     place.put("longitude",pickedPlace.getLatLng().longitude);
                     place.put("address",pickedPlace.getAddress());
                     place.put("id",pickedPlace.getId());
-                    place.put("votes",0);
+                    place.put("votes", new JSONArray());
 
                     jsonArray.put(jsonArray.length(),place);
                     currentCatchup.put("placesJSONArray",jsonArray);

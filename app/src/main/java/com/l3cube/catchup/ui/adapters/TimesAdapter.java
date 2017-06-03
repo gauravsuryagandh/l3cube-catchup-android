@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.os.Build;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -21,6 +22,7 @@ import com.l3cube.catchup.ui.CatchupDetailsAlternateActivity;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import org.json.JSONArray;
@@ -82,14 +84,106 @@ public class TimesAdapter extends RecyclerView.Adapter<TimesAdapter.BaseHolder> 
                 @Override
                 public void onClick(View v) {
                     if (viewHolder.getRsvpButton().getText().toString().equalsIgnoreCase("vote")) {
-                        ((CatchupDetailsAlternateActivity) mActivity).changeVote(true, times.get(position - 1).getId());
-                        viewHolder.getRsvpButton().setText("UnVote");
+                        ParseQuery<ParseCatchup> query = ParseQuery.getQuery(ParseCatchup.class);
+                        query.getInBackground(objectId, new GetCallback<ParseCatchup>() {
+                            @Override
+                            public void done(ParseCatchup catchup, ParseException e) {
+                                if (e == null) {
+                                    if (catchup != null) {
+                                        JSONArray timesArray = catchup.getJSONArray("timesJSONArray");
+                                        Integer voteCount = 0;
+                                        for (int i = 0; i < timesArray.length(); i++) {
+                                            try {
+                                                JSONObject timeJSON = timesArray.getJSONObject(i);
+                                                if (timeJSON.getString("name").equals(times.get(position - 1).getName())) {
+                                                    JSONArray votes = timeJSON.getJSONArray("votes");
+                                                    Boolean flag = true;
+                                                    for (int j = 0; j < votes.length(); j++){
+                                                        if (votes.get(j).equals(ParseUser.getCurrentUser().getObjectId())){
+                                                            flag = false;
+                                                            break;
+                                                        }
+                                                    }
+                                                    if (flag){
+                                                        votes.put(ParseUser.getCurrentUser().getObjectId());
+                                                    }
+                                                    voteCount = votes.length();
+                                                    break;
+                                                }
+                                            } catch (JSONException e1) {
+                                                e1.printStackTrace();
+                                            }
+                                        }
+                                        catchup.put("timesJSONArray", timesArray);
+                                        final Integer finalVoteCount = voteCount;
+                                        catchup.saveInBackground(new SaveCallback() {
+                                            @Override
+                                            public void done(ParseException e) {
+                                                ((CatchupDetailsAlternateActivity) mActivity).changeVote(true, times.get(position - 1).getId());
+                                                viewHolder.getRsvpButton().setText("UnVote");
+                                                viewHolder.getVotes().setText(new String("Votes: ").concat(String.valueOf(finalVoteCount)));
+                                            }
+                                        });
+                                    }
+                                } else {
+                                    Log.e("", "done: Error : " + e.getMessage(),e );
+                                }
+                            }
+                        });
                     } else {
-                        ((CatchupDetailsAlternateActivity) mActivity).changeVote(false, times.get(position - 1).getId());
-                        viewHolder.getRsvpButton().setText("Vote");
+                        ParseQuery<ParseCatchup> query = ParseQuery.getQuery(ParseCatchup.class);
+                        query.getInBackground(objectId, new GetCallback<ParseCatchup>() {
+                            @Override
+                            public void done(ParseCatchup catchup, ParseException e) {
+                                if (e == null) {
+                                    if (catchup != null) {
+                                        JSONArray timesArray = catchup.getJSONArray("timesJSONArray");
+                                        Integer voteCount = 0;
+                                        for (int i = 0; i < timesArray.length(); i++) {
+                                            try {
+                                                JSONObject timeJSON = timesArray.getJSONObject(i);
+                                                if (timeJSON.getString("name").equals(times.get(position - 1).getName())) {
+                                                    JSONArray votes = timeJSON.getJSONArray("votes");
+                                                    int flag = -1;
+                                                    for (int j = 0; j < votes.length(); j++){
+                                                        if (votes.get(j).equals(ParseUser.getCurrentUser().getObjectId())){
+                                                            flag = j;
+                                                            break;
+                                                        }
+                                                    }
+                                                    if (flag!=-1){
+                                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                                                            votes.remove(flag);
+                                                        }
+                                                    }
+                                                    voteCount = votes.length();
+                                                    break;
+                                                }
+                                            } catch (JSONException e1) {
+                                                e1.printStackTrace();
+                                            }
+                                        }
+                                        catchup.put("timesJSONArray", timesArray);
+                                        final Integer finalVoteCount = voteCount;
+                                        catchup.saveInBackground(new SaveCallback() {
+                                            @Override
+                                            public void done(ParseException e) {
+                                                ((CatchupDetailsAlternateActivity) mActivity).changeVote(false, times.get(position - 1).getId());
+                                                viewHolder.getRsvpButton().setText("Vote");
+                                                viewHolder.getVotes().setText(new String("Votes: ").concat(String.valueOf(finalVoteCount)));
+                                            }
+                                        });
+                                    }
+                                } else {
+                                    Log.e("", "done: Error : " + e.getMessage(),e );
+                                }
+                            }
+                        });
                     }
                 }
             });
+
+            viewHolder.getVotes().setText(new String("Votes: ").concat(String.valueOf(times.get(position - 1).getVotes())));
 
         } else {
             TimesAdapter.AddPlaceHolder addPlaceHolder = (TimesAdapter.AddPlaceHolder) holder;
@@ -103,6 +197,8 @@ public class TimesAdapter extends RecyclerView.Adapter<TimesAdapter.BaseHolder> 
                     createdDialog(3).show();
                 }
             });
+
+            addPlaceHolder.getVotes().setText("");
         }
     }
 
@@ -159,7 +255,7 @@ public class TimesAdapter extends RecyclerView.Adapter<TimesAdapter.BaseHolder> 
                             times.add(newTime);
                             place.put("name",aTime);
                             place.put("id", randomId);
-                            place.put("votes",0);
+                            place.put("votes", new JSONArray());
                             timesArray.put(place);
                             catchup.put("timesJSONArray", timesArray);
                             catchup.saveInBackground(new SaveCallback() {
@@ -201,6 +297,7 @@ public class TimesAdapter extends RecyclerView.Adapter<TimesAdapter.BaseHolder> 
         CardView root;
         TextView name;
         TextView rsvpButton;
+        TextView votes;
 
         public CardView getRoot() {
             return root;
@@ -231,8 +328,15 @@ public class TimesAdapter extends RecyclerView.Adapter<TimesAdapter.BaseHolder> 
             root = (CardView) v.findViewById(R.id.root);
             rsvpButton = (TextView) v.findViewById(R.id.rsvp_button);
             name = (TextView) v.findViewById(R.id.name);
+            votes = (TextView) v.findViewById(R.id.votes);
+        }
 
+        public void setVotes(TextView votes) {
+            this.votes = votes;
+        }
 
+        public TextView getVotes() {
+            return votes;
         }
     }
 
@@ -240,6 +344,7 @@ public class TimesAdapter extends RecyclerView.Adapter<TimesAdapter.BaseHolder> 
         CardView root;
         TextView name;
         TextView addButton;
+        TextView votes;
 
         public CardView getRoot() {
             return root;
@@ -261,13 +366,19 @@ public class TimesAdapter extends RecyclerView.Adapter<TimesAdapter.BaseHolder> 
             return name;
         }
 
+        public void setText(TextView votes) {
+            this.votes = votes;
+        }
+
+        public TextView getVotes() {
+            return votes;
+        }
 
         public AddPlaceHolder(View v) {
             super(v);
             root = (CardView) v.findViewById(R.id.root);
             addButton = (TextView) v.findViewById(R.id.rsvp_button);
-
-
+            votes = (TextView) v.findViewById(R.id.votes);
         }
     }
 

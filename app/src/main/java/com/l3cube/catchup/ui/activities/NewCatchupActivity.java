@@ -217,7 +217,7 @@ public class NewCatchupActivity extends AppCompatActivity {
                                     try {
                                         pickedTime.put("name", mTime.toString());
                                         pickedTime.put("id", randomId);
-                                        pickedTime.put("votes", 0);
+                                        pickedTime.put("votes", new JSONArray());
 
                                         timesJSONArray.put(timesJSONArray.length(), pickedTime);
                                         object.put("timesJSONArray", timesJSONArray);
@@ -231,7 +231,7 @@ public class NewCatchupActivity extends AppCompatActivity {
                                             place.put("longitude",pickedPlace.getLatLng().longitude);
                                             place.put("address",pickedPlace.getAddress());
                                             place.put("id",pickedPlace.getId());
-                                            place.put("votes",0);
+                                            place.put("votes", new JSONArray());
 
                                             jsonArray.put(jsonArray.length(),place);
                                             object.put("placesJSONArray",jsonArray);
@@ -245,7 +245,7 @@ public class NewCatchupActivity extends AppCompatActivity {
                                             place.put("longitude",0.0);
                                             place.put("address","NA");
                                             place.put("id", "NA");
-                                            place.put("votes",0);
+                                            place.put("votes", new JSONArray());
 
                                             jsonArray.put(jsonArray.length(),place);
                                             object.put("placesJSONArray",jsonArray);
@@ -359,7 +359,7 @@ public class NewCatchupActivity extends AppCompatActivity {
             Toast.makeText(this, time, Toast.LENGTH_SHORT).show();
             pickedTime.put("name", time);
             pickedTime.put("id", randomId);
-            pickedTime.put("votes", 0);
+            pickedTime.put("votes", new JSONArray());
 
             timesJSONArray.put(timesJSONArray.length(), pickedTime);
             newCatchup.put("timesJSONArray", timesJSONArray);
@@ -374,7 +374,7 @@ public class NewCatchupActivity extends AppCompatActivity {
                 place.put("longitude",pickedPlace.getLatLng().longitude);
                 place.put("address",pickedPlace.getAddress());
                 place.put("id",pickedPlace.getId());
-                place.put("votes",0);
+                place.put("votes",new JSONArray());
 
                 jsonArray.put(jsonArray.length(),place);
                 newCatchup.put("placesJSONArray",jsonArray);
@@ -388,7 +388,7 @@ public class NewCatchupActivity extends AppCompatActivity {
                 place.put("longitude",0.0);
                 place.put("address","NA");
                 place.put("id", "NA");
-                place.put("votes",0);
+                place.put("votes",new JSONArray());
 
                 jsonArray.put(jsonArray.length(),place);
                 newCatchup.put("placesJSONArray",jsonArray);

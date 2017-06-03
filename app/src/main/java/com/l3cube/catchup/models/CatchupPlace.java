@@ -1,5 +1,7 @@
 package com.l3cube.catchup.models;
 
+import org.json.JSONArray;
+
 /**
  * Created by adityashirole on 30-03-2017.
  */
@@ -7,6 +9,7 @@ package com.l3cube.catchup.models;
 public class CatchupPlace {
     String name;
     String id;
+    JSONArray votes;
 
     public CatchupPlace(String id) {
         this.id = id;
@@ -26,5 +29,17 @@ public class CatchupPlace {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public int getVotes() {
+        try {
+            return votes.length();
+        } catch (NullPointerException e){
+            return 0;
+        }
+    }
+
+    public void setVotes(JSONArray votes) {
+        this.votes = votes;
     }
 }

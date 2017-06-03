@@ -28,10 +28,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
+        <TextView
+            android:id="@+id/votes"
+            android:layout_marginTop="16dp"
+            android:text="Votes"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:ellipsize="end"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
+            android:layout_below="@id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
         <Button
             android:id="@+id/rsvp_button"
             android:background="#eee"
-            android:layout_below="@id/name"
+            android:layout_below="@id/votes"
             android:layout_marginTop="16dp"
             android:text="Add a Suggestion"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
