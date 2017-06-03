@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -71,8 +72,11 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
         ParseInstallation installation = ParseInstallation.getCurrentInstallation();
         String userId="";
-        if (ParseUser.getCurrentUser()!=null)
+        try {
             userId = ParseUser.getCurrentUser().getObjectId();
+        } catch (NullPointerException e) {
+            Log.d(TAG, "didNotSignUp: "+e.getMessage());
+        }
         installation.put("GCMSenderId","797163850689");
 
         installation.put("userId",userId);

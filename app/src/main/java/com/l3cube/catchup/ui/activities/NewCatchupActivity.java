@@ -215,7 +215,8 @@ public class NewCatchupActivity extends AppCompatActivity {
                                         object.put("time", mTime.toString());
                                     object.put("placeName", mEnterPlace.getText().toString());
                                     try {
-                                        pickedTime.put("name", mTime.toString());
+                                        if (!String.valueOf(mTime).equals("null"))
+                                            pickedTime.put("name", mTime.toString());
                                         pickedTime.put("id", randomId);
                                         pickedTime.put("votes", new JSONArray());
 

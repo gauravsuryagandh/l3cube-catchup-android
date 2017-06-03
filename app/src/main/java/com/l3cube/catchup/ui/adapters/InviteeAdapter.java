@@ -3,6 +3,7 @@ package com.l3cube.catchup.ui.adapters;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,9 +64,12 @@ public class InviteeAdapter extends RecyclerView.Adapter<InviteeAdapter.ViewHold
                 name = person.getString("firstName");
             if (person.getClassName()=="_User") {
                 holder.name.setText(name);
-                if (!person.getString("profilePicture").equals(null)) {
+//                if (!person.getString("profilePicture").equals(null)) {
+                try {
                     String mImageUrl = person.getString("profilePicture");
                     new DownloadImageTask(holder.avatar).execute(mImageUrl);
+                } catch (NullPointerException e){
+                    Log.d("", "no profile pic: "+e.getMessage());
                 }
                 if (position==0) {
                     holder.rsvp.setText("Inviter");
