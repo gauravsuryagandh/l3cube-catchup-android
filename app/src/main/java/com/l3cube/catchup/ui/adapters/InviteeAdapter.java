@@ -67,12 +67,14 @@ public class InviteeAdapter extends RecyclerView.Adapter<InviteeAdapter.ViewHold
                     String mImageUrl = person.getString("profilePicture");
                     new DownloadImageTask(holder.avatar).execute(mImageUrl);
                 }
-                if (goingList.contains(person.getObjectId())) {
+                if (position==0) {
+                    holder.rsvp.setText("Inviter");
+                } else if (goingList.contains(person.getObjectId())) {
                     holder.rsvp.setText("Going");
                 } else if (notGoingList.contains(person.getObjectId())){
                     holder.rsvp.setText("Not Going");
                 } else{
-                    if (ParseUser.getCurrentUser().getObjectId().equals(person.getObjectId())){
+                    if (ParseUser.getCurrentUser().getObjectId().equals(person.getObjectId()) && position!=0){
                         holder.rsvp.setVisibility(View.GONE);
                         holder.rsvpButtons.setVisibility(View.VISIBLE);
                         holder.going.setOnClickListener(new View.OnClickListener() {

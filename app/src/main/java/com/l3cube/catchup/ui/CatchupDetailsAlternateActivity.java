@@ -2,12 +2,14 @@ package com.l3cube.catchup.ui;
 
 import android.content.Intent;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -17,6 +19,7 @@ import com.l3cube.catchup.R;
 import com.l3cube.catchup.models.CatchupPlace;
 import com.l3cube.catchup.models.ParseCatchup;
 import com.l3cube.catchup.ui.activities.MainActivity;
+import com.l3cube.catchup.ui.activities.NewCatchupActivity;
 import com.l3cube.catchup.ui.adapters.InviteeAdapter;
 import com.l3cube.catchup.ui.adapters.PlacesAdapter;
 import com.l3cube.catchup.ui.adapters.TimesAdapter;
@@ -24,6 +27,7 @@ import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.uber.sdk.android.rides.RideRequestButton;
 
@@ -40,7 +44,7 @@ public class CatchupDetailsAlternateActivity extends AppCompatActivity {
     private RecyclerView rvInvitees;
     private RecyclerView rvPlaces;
     private RecyclerView rvTimes;
-
+    private FloatingActionButton fabUpdate;
     private String title;
     private ParseCatchup currentCatchup;
     private List<CatchupPlace> placesInCatchup;
@@ -100,10 +104,24 @@ public class CatchupDetailsAlternateActivity extends AppCompatActivity {
             public void done(ParseCatchup catchup, ParseException e) {
                 if (e == null) {
                     if (catchup != null) {
+                        if (ParseUser.getCurrentUser().getObjectId().equals(String.valueOf(catchup.getParseUser("inviter").getObjectId()))) {
+                            fabUpdate = (FloatingActionButton) findViewById(R.id.fab_alt_update_catchup);
+                            fabUpdate.show();
+                            fabUpdate.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent intent = new Intent(CatchupDetailsAlternateActivity.this, NewCatchupActivity.class);
+                                    intent.putExtra("operation", "update");
+                                    intent.putExtra("objectId", getIntent().getStringExtra("objectId"));
+                                    startActivity(intent);
+                                }
+                            });
+                        }
                         currentCatchup = catchup;
 
                         JSONArray placesArray = catchup.getJSONArray("placesJSONArray");
                         JSONArray timesArray = catchup.getJSONArray("timesJSONArray");
+                        invitedList.add(catchup.getParseUser("inviter"));
                         invitedList.addAll((ArrayList<ParseObject>)catchup.get("invited"));
                         goingList.addAll((ArrayList<ParseObject>) catchup.get("going"));
                         notGoingList.addAll((ArrayList<ParseObject>) catchup.get("notGoing"));
