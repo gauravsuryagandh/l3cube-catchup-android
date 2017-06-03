@@ -56,6 +56,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Calendar;
+import java.util.Random;
 
 public class NewCatchupActivity extends AppCompatActivity {
     private int year;
@@ -202,12 +203,27 @@ public class NewCatchupActivity extends AppCompatActivity {
                                 if (e==null){
                                     JSONArray jsonArray = new JSONArray();
                                     JSONObject place = new JSONObject();
+                                    JSONArray timesJSONArray = new JSONArray();
+                                    JSONObject pickedTime = new JSONObject();
+                                    Random random = new Random();
+                                    String randomId = String.valueOf(100000 + random.nextInt(900000));
+
                                     object.put("title", mTitle.getText().toString());
                                     if (!String.valueOf(mDate).equals("null"))
                                         object.put("date", mDate.toString());
                                     if (!String.valueOf(mTime).equals("null"))
                                         object.put("time", mTime.toString());
                                     object.put("placeName", mEnterPlace.getText().toString());
+                                    try {
+                                        pickedTime.put("name", mTime.toString());
+                                        pickedTime.put("id", randomId);
+                                        pickedTime.put("votes", 0);
+
+                                        timesJSONArray.put(timesJSONArray.length(), pickedTime);
+                                        object.put("timesJSONArray", timesJSONArray);
+                                    } catch (JSONException e6) {
+                                        e6.printStackTrace();
+                                    }
                                     if (pickedPlace!=null) {
                                         try {
                                             place.put("name",mEnterPlace.getText().toString());
@@ -303,8 +319,6 @@ public class NewCatchupActivity extends AppCompatActivity {
 
     }
 
-
-
     private void setupVariables() {
 
         selectDate = (TextView) findViewById(R.id.tv_new_catchup_date);
@@ -323,7 +337,6 @@ public class NewCatchupActivity extends AppCompatActivity {
         mPlace = (Button) findViewById(R.id.btn_new_catchup_place);
         mEnterPlace = (EditText) findViewById(R.id.tv_enter_a_place);
         mTitle = (TextView) findViewById(R.id.tv_new_catchup_title);
-
     }
 
     private void createCatchupOnServer(String title, String date, String time){
@@ -333,11 +346,26 @@ public class NewCatchupActivity extends AppCompatActivity {
         ParseQuery<ParseObject> queryPerson = ParseQuery.getQuery("Person");
         JSONArray jsonArray = new JSONArray();
         JSONObject place = new JSONObject();
+        JSONArray timesJSONArray = new JSONArray();
+        JSONObject pickedTime = new JSONObject();
+        Random random = new Random();
+        String randomId = String.valueOf(100000 + random.nextInt(900000));
 
         newCatchup.put("title", title);
         newCatchup.put("inviter", ParseUser.getCurrentUser());
         newCatchup.put("date", date);
         newCatchup.put("time", time);
+        try {
+            Toast.makeText(this, time, Toast.LENGTH_SHORT).show();
+            pickedTime.put("name", time);
+            pickedTime.put("id", randomId);
+            pickedTime.put("votes", 0);
+
+            timesJSONArray.put(timesJSONArray.length(), pickedTime);
+            newCatchup.put("timesJSONArray", timesJSONArray);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         newCatchup.put("placeName", mEnterPlace.getText().toString());
         if (pickedPlace!=null) {
             try {
@@ -633,7 +661,6 @@ public class NewCatchupActivity extends AppCompatActivity {
         }
     };
 
-
     public String month(int month)
     {
         String mmonth=null;
@@ -678,7 +705,6 @@ public class NewCatchupActivity extends AppCompatActivity {
         }
 
     }
-
 
     private TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDialog.OnTimeSetListener() {
 

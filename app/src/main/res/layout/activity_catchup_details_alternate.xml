@@ -125,8 +125,8 @@
                 android:elevation="4dp">
 
                 <TextView
-                    android:id="@+id/heading_dates"
-                    android:text="What date?"
+                    android:id="@+id/heading_times"
+                    android:text="What time?"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
                     android:textSize="14sp"
                     android:textColor="#555"
@@ -139,8 +139,8 @@
 
                 <android.support.v7.widget.RecyclerView
                     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                    android:layout_below="@id/heading_dates"
-                    android:id="@+id/rv_dates"
+                    android:layout_below="@id/heading_times"
+                    android:id="@+id/rv_times"
                     android:background="@color/uber_white"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">

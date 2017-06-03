@@ -16,16 +16,14 @@ import com.google.android.gms.location.places.ui.PlacePicker;
 import com.l3cube.catchup.R;
 import com.l3cube.catchup.models.CatchupPlace;
 import com.l3cube.catchup.models.ParseCatchup;
-import com.l3cube.catchup.ui.activities.CatchupDetailsActivity;
 import com.l3cube.catchup.ui.activities.MainActivity;
 import com.l3cube.catchup.ui.adapters.InviteeAdapter;
 import com.l3cube.catchup.ui.adapters.PlacesAdapter;
-import com.parse.FindCallback;
+import com.l3cube.catchup.ui.adapters.TimesAdapter;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
-import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.uber.sdk.android.rides.RideRequestButton;
 
@@ -38,16 +36,15 @@ import java.util.List;
 
 public class CatchupDetailsAlternateActivity extends AppCompatActivity {
     private static final int PLACE_PICKER_REQUEST = 2;
-    private static final int DATE_PICKER_REQUEST = 3;
     private static final String TAG = CatchupDetailsAlternateActivity.class.getSimpleName();
     private RecyclerView rvInvitees;
     private RecyclerView rvPlaces;
-    private RecyclerView rvDates;
+    private RecyclerView rvTimes;
 
     private String title;
     private ParseCatchup currentCatchup;
     private List<CatchupPlace> placesInCatchup;
-    private List<CatchupPlace> datesInCatchup;
+    private List<CatchupPlace> timesInCatchup;
     private ArrayList<ParseObject> invitedList;
     private ArrayList<ParseObject> notGoingList;
     private ArrayList<ParseObject> goingList;
@@ -81,19 +78,18 @@ public class CatchupDetailsAlternateActivity extends AppCompatActivity {
         rvInvitees.setAdapter(new InviteeAdapter(invitedList, goingList, notGoingList, currentCatchup, CatchupDetailsAlternateActivity.this));
 
         rvPlaces = (RecyclerView) findViewById(R.id.rv_places);
-        rvDates = (RecyclerView) findViewById(R.id.rv_dates);
+        rvTimes = (RecyclerView) findViewById(R.id.rv_times);
 
         placesInCatchup = new ArrayList<>();
-        datesInCatchup = new ArrayList<>();
+        timesInCatchup = new ArrayList<>();
         rvPlaces.canScrollVertically(0);
-        rvDates.canScrollVertically(0);
+        rvTimes.canScrollVertically(0);
 
         rvPlaces.setLayoutManager(new LinearLayoutManager(CatchupDetailsAlternateActivity.this,LinearLayoutManager.HORIZONTAL,false));
         rvPlaces.setAdapter(new PlacesAdapter(placesInCatchup,CatchupDetailsAlternateActivity.this,CatchupDetailsAlternateActivity.this));
 
-        rvDates.setLayoutManager(new LinearLayoutManager(CatchupDetailsAlternateActivity.this,LinearLayoutManager.HORIZONTAL,false));
-        //change to dates adapter
-        rvDates.setAdapter(new PlacesAdapter(datesInCatchup,CatchupDetailsAlternateActivity.this,CatchupDetailsAlternateActivity.this));
+        rvTimes.setLayoutManager(new LinearLayoutManager(CatchupDetailsAlternateActivity.this,LinearLayoutManager.HORIZONTAL,false));
+        rvTimes.setAdapter(new TimesAdapter(getIntent().getStringExtra("objectId"),timesInCatchup,CatchupDetailsAlternateActivity.this,CatchupDetailsAlternateActivity.this));
 
         requestButton = new RideRequestButton(CatchupDetailsAlternateActivity.this);
         layout = (LinearLayout) findViewById(R.id.cl_catchup_details);
@@ -108,7 +104,7 @@ public class CatchupDetailsAlternateActivity extends AppCompatActivity {
                         currentCatchup = catchup;
 
                         JSONArray placesArray = catchup.getJSONArray("placesJSONArray");
-                        JSONArray datesArray = catchup.getJSONArray("datesJSONArray");
+                        JSONArray timesArray = catchup.getJSONArray("timesJSONArray");
                         invitedList.addAll((ArrayList<ParseObject>)catchup.get("invited"));
                         goingList.addAll((ArrayList<ParseObject>) catchup.get("going"));
                         notGoingList.addAll((ArrayList<ParseObject>) catchup.get("notGoing"));
@@ -120,11 +116,17 @@ public class CatchupDetailsAlternateActivity extends AppCompatActivity {
                                 place.setName(placeJSON.getString("name"));
 
                                 placesInCatchup.add(0,place);
-                                JSONObject dateJSON = datesArray.getJSONObject(i);
-                                CatchupPlace date = new CatchupPlace(datesArray.getJSONObject(i).getString("id"));
-                                date.setName(dateJSON.getString("name"));
+                            } catch (JSONException e1) {
+                                e1.printStackTrace();
+                            }
+                        }
+                        for (int i = 0; i < timesArray.length(); i++) {
+                            try {
+                                JSONObject timeJSON = timesArray.getJSONObject(i);
+                                CatchupPlace time = new CatchupPlace(timesArray.getJSONObject(i).getString("id"));
+                                time.setName(timeJSON.getString("name"));
 
-                                datesInCatchup.add(0,place);
+                                timesInCatchup.add(0,time);
                             } catch (JSONException e1) {
                                 e1.printStackTrace();
                             }
@@ -132,7 +134,7 @@ public class CatchupDetailsAlternateActivity extends AppCompatActivity {
 
                         rvInvitees.getAdapter().notifyDataSetChanged();
                         rvPlaces.getAdapter().notifyDataSetChanged();
-                        rvDates.getAdapter().notifyDataSetChanged();
+                        rvTimes.getAdapter().notifyDataSetChanged();
                         layout.addView(requestButton);
                         Log.i(TAG, "done: Found Catchup : " + catchup.getString("title"));
                     }
@@ -198,51 +200,6 @@ public class CatchupDetailsAlternateActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-            } else if (requestCode == DATE_PICKER_REQUEST && resultCode == RESULT_OK) {
-//                final Place pickedDate = PlacePicker.getPlace(this,data);
-                String toastMsg1 = String.format("Adding Date to dates suggestions");
-                Toast.makeText(this, toastMsg1, Toast.LENGTH_LONG).show();
-
-//                if (currentCatchup != null) {
-//
-//                    JSONArray jsonArray = null;
-//
-//                    jsonArray = currentCatchup.getJSONArray("placesJSONArray");
-//
-//                    if (jsonArray == null) {
-//                        jsonArray = new JSONArray();
-//                    }
-//                    JSONObject place = new JSONObject();
-//                    try {
-//                        place.put("name",pickedPlace.getName());
-//                        place.put("latitude",pickedPlace.getLatLng().latitude);
-//                        place.put("longitude",pickedPlace.getLatLng().longitude);
-//                        place.put("address",pickedPlace.getAddress());
-//                        place.put("id",pickedPlace.getId());
-//                        place.put("votes",0);
-//
-//                        jsonArray.put(jsonArray.length(),place);
-//                        currentCatchup.put("placesJSONArray",jsonArray);
-//
-//                        currentCatchup.saveInBackground(new SaveCallback() {
-//                            @Override
-//                            public void done(ParseException e) {
-//                                if (e == null) {
-//
-//                                    CatchupPlace place1 = new CatchupPlace(pickedPlace.getId());
-//                                    place1.setName(pickedPlace.getName().toString());
-//
-//                                    placesInCatchup.add(0,place1);
-//                                    rvPlaces.getAdapter().notifyDataSetChanged();
-//                                    Toast.makeText(CatchupDetailsAlternateActivity.this, "Added CatchupPlace Suggestion of " + pickedPlace.getName(), Toast.LENGTH_SHORT).show();
-//                                } else {
-//                                    Log.e(TAG, "done: Error: " + e.getMessage(),e );
-//                                }
-//                            }
-//                        });
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
             }
 
         }

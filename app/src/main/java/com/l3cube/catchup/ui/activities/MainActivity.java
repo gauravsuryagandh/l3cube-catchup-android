@@ -2,7 +2,6 @@ package com.l3cube.catchup.ui.activities;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -10,12 +9,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -65,40 +62,30 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             startActivity(new Intent(MainActivity.this, GetUserDetailsActivity.class));
         } else {
             setupVariables();
-
             populateCatchups();
-
-
         }
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
 
-
-
-
-
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 
         ParseInstallation installation = ParseInstallation.getCurrentInstallation();
-        String userId = ParseUser.getCurrentUser().getObjectId().toString();
+        String userId="";
+        if (ParseUser.getCurrentUser()!=null)
+            userId = ParseUser.getCurrentUser().getObjectId();
         installation.put("GCMSenderId","797163850689");
 
         installation.put("userId",userId);
         installation.saveInBackground();
     }
 
-
-
-
-
-        //from here
+    //from here
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
         return super.onCreateOptionsMenu(menu);
     }
-
 
     public boolean onOptionsItemSelected(MenuItem item) {
         // Take appropriate action for each action item click
@@ -123,9 +110,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         Intent i = new Intent(MainActivity.this, DiscountActivity.class);
         startActivity(i);
     }
-
     //till here
-
 
     private void setupVariables() {
 
@@ -154,8 +139,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         mRecyclerView.setAdapter(mCatchupListAdapter);
         mSwipeRefreshLayout= (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
         mSwipeRefreshLayout.setOnRefreshListener(this );
-//        spinner = (ProgressBar)findViewById(R.id.progressBar1);
-
 
     }
 
@@ -176,10 +159,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         //notifyCatchupsAdapter();
 
         // Adding from Parse
-
         addCatchupsFromParse();
-
-
     }
 
     private void addCatchupsFromParse() {
@@ -212,9 +192,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private void notifyCatchupsAdapter() {
         mCatchupListAdapter.notifyDataSetChanged();
     }
-
-
-
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
