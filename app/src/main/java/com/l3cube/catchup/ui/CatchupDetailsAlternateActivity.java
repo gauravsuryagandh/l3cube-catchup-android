@@ -1,8 +1,10 @@
 package com.l3cube.catchup.ui;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -23,6 +26,7 @@ import com.l3cube.catchup.ui.activities.NewCatchupActivity;
 import com.l3cube.catchup.ui.adapters.InviteeAdapter;
 import com.l3cube.catchup.ui.adapters.PlacesAdapter;
 import com.l3cube.catchup.ui.adapters.TimesAdapter;
+import com.parse.DeleteCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -45,6 +49,7 @@ public class CatchupDetailsAlternateActivity extends AppCompatActivity {
     private RecyclerView rvPlaces;
     private RecyclerView rvTimes;
     private FloatingActionButton fabUpdate;
+    private Button btnDeleteCatchup;
     private String title;
     private ParseCatchup currentCatchup;
     private List<CatchupPlace> placesInCatchup;
@@ -116,6 +121,63 @@ public class CatchupDetailsAlternateActivity extends AppCompatActivity {
                                     startActivity(intent);
                                 }
                             });
+                            btnDeleteCatchup = (Button) findViewById(R.id.btn_del_catchup);
+                            btnDeleteCatchup.setVisibility(View.VISIBLE);
+                            btnDeleteCatchup.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    AlertDialog myQuittingDialogBox = new AlertDialog.Builder(CatchupDetailsAlternateActivity.this)
+                                            //set message, title, and icon
+                                            .setTitle("Delete")
+                                            .setMessage("Are you sure you want to Delete the Catchup?")
+                                            .setIcon(R.drawable.ic_delete_black_36dp)
+
+                                            .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+
+                                                public void onClick(DialogInterface dialog, int whichButton) {
+//                                                    notifyDataSetChanged();
+                                                    ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery("Catchup");
+                                                    parseQuery.whereEqualTo("objectId", getIntent().getStringExtra("objectId"));
+                                                    Log.d("ObjectId", "onMenuItemClick: " + getIntent().getStringExtra("objectId"));
+                                                    parseQuery.getFirstInBackground(new GetCallback<ParseObject>() {
+                                                        @Override
+                                                        public void done(ParseObject object, ParseException e) {
+                                                            if (e == null){
+                                                                object.deleteInBackground(new DeleteCallback() {
+                                                                    @Override
+                                                                    public void done(ParseException e) {
+                                                                        if(e == null){
+                                                                            startActivity(new Intent(CatchupDetailsAlternateActivity.this, MainActivity.class));
+                                                                        } else {
+                                                                            Toast.makeText(CatchupDetailsAlternateActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                                        }
+                                                                    }
+                                                                });
+                                                            } else {
+                                                                Toast.makeText(CatchupDetailsAlternateActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                            }
+                                                        }
+                                                    });
+
+                                                    dialog.dismiss();
+                                                }
+
+                                            })
+
+
+
+                                            .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+
+                                                    dialog.dismiss();
+
+                                                }
+                                            })
+                                            .create();
+
+                                    myQuittingDialogBox.show();
+                                }
+                            });
                         }
                         currentCatchup = catchup;
 
@@ -154,7 +216,8 @@ public class CatchupDetailsAlternateActivity extends AppCompatActivity {
                         rvInvitees.getAdapter().notifyDataSetChanged();
                         rvPlaces.getAdapter().notifyDataSetChanged();
                         rvTimes.getAdapter().notifyDataSetChanged();
-                        layout.addView(requestButton);
+                        layout.addView(requestButton,3
+                        );
                         Log.i(TAG, "done: Found Catchup : " + catchup.getString("title"));
                     }
                 } else {

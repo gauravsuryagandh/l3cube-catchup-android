@@ -299,6 +299,8 @@ public class NewCatchupActivity extends AppCompatActivity {
                                         public void done(ParseException e) {
                                             if (e==null){
                                                 Intent intent = new Intent(NewCatchupActivity.this, CatchupDetailsAlternateActivity.class);
+                                                intent.putExtra("title", mTitle.getText().toString());
+                                                intent.putExtra("inviterId",ParseUser.getCurrentUser().getObjectId());
                                                 intent.putExtra("objectId", object.getObjectId());
                                                 startActivity(intent);
                                             }
@@ -444,6 +446,8 @@ public class NewCatchupActivity extends AppCompatActivity {
                     Toast.makeText(NewCatchupActivity.this, "Created Catchup Successfully", Toast.LENGTH_SHORT).show();
 
                     Intent intent = new Intent(NewCatchupActivity.this, CatchupDetailsAlternateActivity.class);
+                    intent.putExtra("title", mTitle.getText().toString());
+                    intent.putExtra("inviterId",ParseUser.getCurrentUser().getObjectId());
                     intent.putExtra("objectId", newCatchup.getObjectId());
                     startActivity(intent);
                 } else {

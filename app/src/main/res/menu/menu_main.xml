@@ -6,12 +6,12 @@
 
     <!-- Location Found -->
     <item android:id="@+id/view_discount"
-        android:icon="@drawable/ic_action_about"
+        android:icon="@drawable/ic_trending_up_black_24dp"
         android:title="User Details"
         app:showAsAction="always" />
 
         <item android:id="@+id/action_bar"
-              android:icon="@drawable/ic_action_edit"
+              android:icon="@drawable/ic_person_black_24dp"
               android:title="User Details"
               app:showAsAction="always" />
 </menu>

@@ -52,38 +52,38 @@
             android:layout_height="match_parent"
             android:id="@+id/cl_catchup_details">
 
-        <RelativeLayout
+            <RelativeLayout
 
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:background="@color/uber_white"
-            android:elevation="4dp">
-
-            <TextView
-                android:id="@+id/heading_invitees"
-                android:text="Who's invited?"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
-                android:textSize="14sp"
-                android:textColor="#555"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginLeft="16dp"
-                android:layout_width="wrap_content"
-
-                android:layout_height="wrap_content" />
-
-            <android.support.v7.widget.RecyclerView
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                android:layout_below="@id/heading_invitees"
-                android:id="@+id/rv_invitees"
-                android:background="@color/uber_white"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@color/uber_white"
+                android:elevation="4dp">
 
-            </android.support.v7.widget.RecyclerView>
+                <TextView
+                    android:id="@+id/heading_invitees"
+                    android:text="Who's invited?"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
+                    android:textSize="14sp"
+                    android:textColor="#555"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_width="wrap_content"
 
-        </RelativeLayout>
+                    android:layout_height="wrap_content" />
+
+                <android.support.v7.widget.RecyclerView
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                    android:layout_below="@id/heading_invitees"
+                    android:id="@+id/rv_invitees"
+                    android:background="@color/uber_white"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                </android.support.v7.widget.RecyclerView>
+
+            </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -149,6 +149,17 @@
 
             </RelativeLayout>
 
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Delete Catchup"
+                android:id="@+id/btn_del_catchup"
+                android:textAlignment="center"
+                android:padding="16dp"
+                android:background="@color/Orange"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:visibility="gone"/>
 
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>

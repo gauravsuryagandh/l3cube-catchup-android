@@ -131,35 +131,39 @@ public class CatchupListAdapter extends RecyclerView.Adapter<CatchupListAdapter.
             }
         });
 
-        holder.menuButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        if (catchup.getInviter().getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
+            holder.menuButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
 
-                PopupMenu popupMenu = new PopupMenu(mContext, holder.menuButton);
-                popupMenu.inflate(R.menu.main_catchup_menu);
-                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
+                    PopupMenu popupMenu = new PopupMenu(mContext, holder.menuButton);
+                    popupMenu.inflate(R.menu.main_catchup_menu);
+                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
 
-                        switch (item.getItemId()) {
-                            case R.id.delete_catchup:
-                                AlertDialog dialog = AskOption();
-                                dialog.show();
-                                break;
-                            case R.id.update_catchup:
-                                Intent intent = new Intent(mContext, NewCatchupActivity.class);
-                                intent.putExtra("operation", "update");
-                                intent.putExtra("objectId", mCatchupList.get(position).getObjectId());
-                                mContext.startActivity(intent);
+                            switch (item.getItemId()) {
+                                case R.id.delete_catchup:
+                                    AlertDialog dialog = AskOption();
+                                    dialog.show();
+                                    break;
+                                case R.id.update_catchup:
+                                    Intent intent = new Intent(mContext, NewCatchupActivity.class);
+                                    intent.putExtra("operation", "update");
+                                    intent.putExtra("objectId", mCatchupList.get(position).getObjectId());
+                                    mContext.startActivity(intent);
+                            }
+                            return false;
                         }
-                        return false;
-                    }
-                });
+                    });
 
-                 popupMenu.show();
-            }
-        });
+                    popupMenu.show();
+                }
+            });
+        } else {
+            holder.menuButton.setVisibility(View.INVISIBLE);
+        }
     }
 
     private AlertDialog AskOption()
