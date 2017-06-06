@@ -56,12 +56,13 @@ public class InviteeAdapter extends RecyclerView.Adapter<InviteeAdapter.ViewHold
 
         try {
             person.fetchIfNeeded();
-            if (!person.getString("lastName").equals(null))
+            try {
                 name = person.getString("firstName")
                         .concat(" ")
                         .concat(person.getString("lastName"));
-            else
+            } catch (NullPointerException e) {
                 name = person.getString("firstName");
+            }
             if (person.getClassName()=="_User") {
                 holder.name.setText(name);
 //                if (!person.getString("profilePicture").equals(null)) {
